@@ -1,0 +1,41 @@
+.formScroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 38rem;
+  width: 50%;
+}
+.formScroll::-webkit-scrollbar {
+  margin-top: 5px;
+  width: 5px;
+  height: 66px;
+}
+.formScroll::-webkit-scrollbar-track {
+  top: 5px;
+  border: 1px solid #d7d7d7;
+  padding: 2px 0;
+  background-color: #d7d7d7;
+}
+.formScroll::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #999;
+  border: 1px solid #999;
+}
+.Form {
+  margin-top: 2.5rem;
+  width: 100%;
+}
+/* Chip */
+.css-17uk782-JoyChip-root{
+  min-height: 8px !important;
+}
+.searchBar {
+  height: 30px;
+}
+/* searchbar input */
+.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input{
+ padding: 10px !important;
+}
+tr:hover{
+  background-color: #d7d7d7 !important;
+  cursor: pointer;
+}

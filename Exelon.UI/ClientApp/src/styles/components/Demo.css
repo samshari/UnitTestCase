@@ -1,0 +1,12 @@
+
+.MuiTableCell-root {
+    padding: 8px !important;
+}
+.MuiTableCell-root:last-child {
+    padding-left: 4.25rem !important;
+    width: 5%;
+}
+.MuiTableCell-root:first-child {
+    padding-right: 3.50rem !important;
+    width: 5%;
+}
