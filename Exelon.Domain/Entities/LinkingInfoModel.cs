@@ -18,7 +18,7 @@ namespace Exelon.Domain
         public Nullable<int> BarnId { get; set; }
         public string WorkOrder { get; set; }
         public string ProjectId { get; set; }
-        public Nullable<int> FiberCount { get; set; }
+        public string FiberCount { get; set; }
         public string Comments { get; set; }
         public string ScopeComments { get; set; }
         public string ITN { get; set; }

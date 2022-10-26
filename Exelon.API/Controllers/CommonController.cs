@@ -11,9 +11,7 @@ namespace Exelon.API.Controllers
     [ApiController]
     public class CommonController : ControllerBase
     {
-
         private readonly IUnitOfWorkService _unitOfWorkService;
-
 
         public CommonController(IUnitOfWorkService unitOfWorkService)
         {
@@ -428,78 +426,6 @@ namespace Exelon.API.Controllers
             else
                 return Ok(result);
         }
-
-        #endregion
-
-        #region Real Estate Support EOC
-
-        [HttpGet]
-        public async Task<ActionResult> GetMEOCREALSTATE()
-        {
-            var result = await _unitOfWorkService.mEOCREALSTATEService.GetMEOCREALSTATE();
-
-
-            if (result.Count == 0)
-                return NotFoundResult();
-            else
-                return Ok(result);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetMEOCREALSTATE(int id)
-        {
-            var result = await _unitOfWorkService.mEOCREALSTATEService.GetMEOCREALSTATE(id);
-            if (result.Count == 0)
-                return NotFoundResult();
-            else
-                return Ok(result);
-
-        }
-
-
-        [HttpPost]
-        public async Task<ActionResult> CreateMEOCREALSTATE([FromBody] MEOCREALSTATEModel mEOCREALSTATEModel)
-        {
-
-            mEOCREALSTATEModel.CreatedBy = "1";
-            var result = await _unitOfWorkService.mEOCREALSTATEService.CreateMEOCREALSTATE(mEOCREALSTATEModel);
-            KeyValuePair<MEOCREALSTATEModel, string> i = result.First();
-            if (i.Value == "ok")
-                return Ok(new { ID = i.Key.EOCRealEstateID });
-            else if (i.Value == "")
-                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
-            else
-                return BadRequest(new { status = 400, message = i.Value });
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateMEOCREALSTATE(int id, [FromBody] MEOCREALSTATEModel mEOCREALSTATEModel)
-        {
-            mEOCREALSTATEModel.EOCRealEstateID = id;
-            mEOCREALSTATEModel.UpdatedBy = "1";
-            var result = await _unitOfWorkService.mEOCREALSTATEService.UpdateMEOCREALSTATE(mEOCREALSTATEModel);
-            KeyValuePair<MEOCREALSTATEModel, string> i = result.First();
-            if (i.Value == "ok")
-                return Ok(new { status = 200 });
-            else if (i.Value == "")
-                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
-            else
-                return BadRequest(new { status = 400, message = i.Value });
-           
-        }
-
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteMEOCREALSTATE(int id)
-        {
-
-            var result = await _unitOfWorkService.mEOCREALSTATEService.DeleteMEOCREALSTATE(id);
-            if (result == 1)
-                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
-            else
-                return Ok(new { status = 404 });
-        }
-
 
         #endregion
 

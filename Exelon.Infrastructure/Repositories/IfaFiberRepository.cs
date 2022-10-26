@@ -116,7 +116,7 @@ namespace Exelon.Infrastructure.Repositories
                     }
                     return lstMIFAFIBER;
                 }
-                catch (Exception ex) { return new List<IfaFiberModel>(); }
+                catch (Exception ex) { throw ex; }
             });
         }
 

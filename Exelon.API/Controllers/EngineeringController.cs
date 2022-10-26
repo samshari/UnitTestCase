@@ -662,6 +662,72 @@ namespace ExelonPOC.API.Controllers
         }
         #endregion
 
+        #region Real Estate Support EOC
+        [HttpGet]
+        public async Task<ActionResult> GetMEOCREALSTATE()
+        {
+            var result = await _unitOfWorkService.mEOCREALSTATEService.GetMEOCREALSTATE();
+
+
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetMEOCREALSTATE(int id)
+        {
+            var result = await _unitOfWorkService.mEOCREALSTATEService.GetMEOCREALSTATE(id);
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateMEOCREALSTATE([FromBody] MEOCREALSTATEModel mEOCREALSTATEModel)
+        {
+            mEOCREALSTATEModel.CreatedBy = "1";
+            var result = await _unitOfWorkService.mEOCREALSTATEService.CreateMEOCREALSTATE(mEOCREALSTATEModel);
+            KeyValuePair<MEOCREALSTATEModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { ID = i.Key.EOCRealEstateID });
+            else if (i.Value == "")
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return BadRequest(new { status = 400, message = i.Value });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateMEOCREALSTATE(int id, [FromBody] MEOCREALSTATEModel mEOCREALSTATEModel)
+        {
+            mEOCREALSTATEModel.EOCRealEstateID = id;
+            mEOCREALSTATEModel.UpdatedBy = "1";
+            var result = await _unitOfWorkService.mEOCREALSTATEService.UpdateMEOCREALSTATE(mEOCREALSTATEModel);
+            KeyValuePair<MEOCREALSTATEModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { status = 200 });
+            else if (i.Value == "")
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return BadRequest(new { status = 400, message = i.Value });
+
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteMEOCREALSTATE(int id)
+        {
+
+            var result = await _unitOfWorkService.mEOCREALSTATEService.DeleteMEOCREALSTATE(id);
+            if (result == 1)
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return Ok(new { status = 404 });
+        }
+        #endregion
+
         [HttpGet("{id}")]
         public async Task<ActionResult> GetPrimaryKeysByPDId(int id)
         {
@@ -682,5 +748,62 @@ namespace ExelonPOC.API.Controllers
             var result = await _unitOfWorkService.linkInfoService.GetLinkInfo((int)linkInfoId);
             return Ok(result);
         }
+
+        #region COC BID Complete
+        [HttpGet]
+        public async Task<ActionResult> GetMCOCBID()
+        {
+            var result = await _unitOfWorkService.mCOCBIDCOMService.GetMCOCBID();
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetMCOCBID(int id)
+        {
+            var result = await _unitOfWorkService.mCOCBIDCOMService.GetMCOCBID(id);
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+        [HttpPost]
+        public async Task<ActionResult> CreateMCOCBID([FromBody] MCocBidComModel mCOCBIDCOMModel)
+        {
+            mCOCBIDCOMModel.CreatedBy = "1";
+            var result = await _unitOfWorkService.mCOCBIDCOMService.CreateMCOCBID(mCOCBIDCOMModel);
+            KeyValuePair<MCocBidComModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { ID = mCOCBIDCOMModel.COCBidCompleteID });
+            else if (i.Value == "")
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return BadRequest(new { status = 400, message = i.Value });
+
+        }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateMCOCBID(int id, [FromBody] MCocBidComModel mCOCBIDCOMModel)
+        {
+            mCOCBIDCOMModel.COCBidCompleteID = id;
+            mCOCBIDCOMModel.UpdatedBy = "1";
+            var result = await _unitOfWorkService.mCOCBIDCOMService.UpdateMCOCBID(mCOCBIDCOMModel);
+            if (result.COCBidCompleteID == 0)
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return Ok(new { status = 200 });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteMCOCBID(int id)
+        {
+            var result = await _unitOfWorkService.mCOCBIDCOMService.DeleteMCOCBID(id);
+            if (result == 0)
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return Ok(new { status = 200 });
+        }
+        #endregion
     }
 }
