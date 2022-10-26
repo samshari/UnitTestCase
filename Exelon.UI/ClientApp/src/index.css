@@ -1,0 +1,32 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f8f8;
+  font-family: "Nunito",sans-serif;
+    font-size: .8rem;
+    font-weight: 400;
+    color: #3a3a3a;
+}
+/* body::-webkit-scrollbar{
+  display: none;
+} */
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.body {
+  margin-left:7.3rem;
+  /* margin-top: 6.33rem; */
+  display: flex;
+  flex-direction: column;
+}
+a {
+  text-decoration: none;
+}
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
