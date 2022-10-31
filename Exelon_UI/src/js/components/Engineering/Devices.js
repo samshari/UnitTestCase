@@ -20,8 +20,7 @@ const Devices = (props) => {
     
 
   const updateData=(data,dropData)=>{
-    console.log(data)
-    dispatch(updateApi(ID,data,apiData)).then((res)=>{
+    updateApi(ID,data,apiData).then((res)=>{
 
       if(res.status === 200)
         alert(`Data Updated SuccessFully!`);
@@ -29,9 +28,11 @@ const Devices = (props) => {
         alert(res.message);
       })
   }
-
-  const createData=(data)=>{
-    createApi(data,linkID,stepID).then(res=>{
+  const datatest = useSelector((state)=>state.engineeringFormReducer?.data)
+  const datatest1=useSelector((state)=>state.engineeringFormReducer?.linkId)
+  
+  const createData=(data,dropData,multiDrop)=>{
+    createApi(data,datatest1,stepID).then(res=>{
       if(res.id>0)
         alert(`Data Created SuccessFully!`);
       else 
@@ -42,16 +43,18 @@ const Devices = (props) => {
   
 
 useEffect( ()=>{
-  dispatch(getApi()).then((res)=> {
+  {datatest!==undefined ? dispatch(getApi()).then((res)=> {
     res.map((data)=>{
-      if(data.linkingId === linkID){
+      if(data.linkingId === datatest.linkingId){
         setID(data.deviceId);
         setapiData(data);
       }
       return data;
     })
     setLoading(false);
-  })
+  }): setLoading(false)
+    setapiData([])
+}
   
 },[dispatch])
 

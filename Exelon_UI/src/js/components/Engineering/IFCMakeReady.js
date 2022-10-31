@@ -2,15 +2,13 @@ import React from "react";
 import Card from "../../utils/Card";
 import { useState,useEffect } from "react";
 import {getApi,createApi,updateApi} from '../../../redux/components/Engineering/IFCMakeReady/IFCMakeReadyAction'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {Circles} from 'react-loader-spinner'
 
 
-let id = 1;
-let linkID = 1;
+
 let stepID = 1;
 const IFCMakeReady = (props) => {
-
   const [apiData,setapiData]=useState([]);  
   const [loading,setLoading]=useState(true) 
   const [ID,setID]=useState(0);
@@ -24,9 +22,10 @@ const IFCMakeReady = (props) => {
         alert(res.message);
       })
   }
-
+  const datatest=useSelector((state)=>state.engineeringFormReducer?.data)
+  const datatest1=useSelector((state)=>state.engineeringFormReducer?.linkId)
   const createData=(data)=>{
-    createApi(data,linkID,stepID).then(res=>{
+    createApi(data,datatest1,stepID).then(res=>{
       if(res.id>0)
         alert(`Data Created SuccessFully!`);
       else 
@@ -36,18 +35,19 @@ const IFCMakeReady = (props) => {
 
 
 
-
+  
 useEffect( ()=>{
-  dispatch(getApi()).then((res)=>{
+  {datatest!==undefined ? dispatch(getApi()).then((res)=>{
     res.map((data)=>{
-      if(data.fK_LinkingID === id){
+      if(data.fK_LinkingID === datatest.linkingId){
         setID(data.ifcMakeReadyID);
         setapiData(data);
       }
       return data;
     })
     setLoading(false);
-  })
+  }):setLoading(false)
+    setapiData([])}
 },[dispatch])
 
 

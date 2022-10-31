@@ -31,16 +31,14 @@ const getApiSuccess = (value) => {
 };
 
 export function updateApi(id,data,dropData,apiData) {
-    
-    return (dispatch)=>{
       return new Promise((resolve, reject) => {  
         
         fetch(`http://localhost:63006/api/engineering/UpdateMCOCBID/${id}`,
         {
             method:'PUT',
             body: JSON.stringify({
-              'fK_COCBidCompMkReadyID' : dropData[0].value === null?null: dropData[0].value,
-              'fK_COCBidCompFiberID' : dropData[1].value === null ?null:dropData[1].value
+              'fK_COCBidCompMkReadyID' : dropData[0].value?dropData[0].value:null,
+              'fK_COCBidCompFiberID' : dropData[1].value?dropData[1].value:null
             }),
             headers: {
               'Content-Type': 'application/json; charset=utf-8'
@@ -48,14 +46,13 @@ export function updateApi(id,data,dropData,apiData) {
         }
         ).then((res)=>{
             const data  = res.json().then(res=> {
-               dispatch(updateApiSuccess(res));
+               updateApiSuccess(res);
                 resolve(res);
               }); 
             return data;   
         })
         .catch((error) => reject(error));
         })
-    }
     }
     
     

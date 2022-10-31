@@ -79,12 +79,12 @@ export function updateApi(id,data,apiData) {
               body: JSON.stringify({
                 'FK_LinkingID':linkID,
                 'StepId':stepID,
-                'originalScheduledDate': data[0].value,
-                'currentScheduledDate':data[1].value,
-                'missedReason':data[2].value,
-                'initialIssueDate':data[3].value,
-                'finalIssueDate':data[4].value,
-                'missedDates':data[5].value
+                'originalScheduledDate': data[0].value?data[0].value:null,
+                'currentScheduledDate':data[1].value?data[1].value:null,
+                'missedReason':data[2].value?data[2].value:null,
+                'initialIssueDate':data[3].value?data[3].value:null,
+                'finalIssueDate':data[4].value?data[4].value:null,
+                'missedDates':data[5].value?data[5].value:null
               }),
               headers: {
                 'Content-Type': 'application/json; charset=utf-8'

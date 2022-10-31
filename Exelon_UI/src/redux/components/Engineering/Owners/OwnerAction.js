@@ -40,9 +40,9 @@ export function updateApi(id,data,dropData,apiData) {
         {
         method:'PUT',
         body: JSON.stringify({
-            'fK_ReactsLRE_ID' : dropData[0].value.length===0?apiData.fK_ReactsLRE_ID:parseInt(dropData[0].value),
-            'fK_UCOMMSPOC_ID' : dropData[1].value.length ===0?apiData.fK_UCOMMSPOC_ID:parseInt(dropData[1].value),
-            'fK_ProjectManagerID':dropData[2].value.length===0?apiData.fK_ProjectManagerID: parseInt(dropData[2].value)
+            'fK_ReactsLRE_ID' : dropData[0].value.length===0?null:parseInt(dropData[0].value),
+            'fK_UCOMMSPOC_ID' : dropData[1].value.length ===0?null:parseInt(dropData[1].value),
+            'fK_ProjectManagerID':dropData[2].value.length===0?null: parseInt(dropData[2].value)
         }),
         headers: {
             'Content-Type': 'application/json; charset=utf-8'

@@ -17,7 +17,7 @@ const DesignMiles = (props) => {
   const dispatch= useDispatch();
 
   const updateData=(data)=>{
-    dispatch(updateApi(ID,data,apiData)).then(res=>{
+    updateApi(ID,data,apiData).then(res=>{
       
       if(res.status === 200)
         alert('Data Updated SuccessFully!');
@@ -26,8 +26,11 @@ const DesignMiles = (props) => {
     });
   }
 
-  const createData=(data)=>{
-    createApi(data,linkID,stepID).then(res=>{
+  const datatest=useSelector((state)=>state.engineeringFormReducer?.data)
+  const datatest1=useSelector((state)=>state.engineeringFormReducer?.linkId)
+  
+  const createData=(data,dropData,multiDrop)=>{
+    createApi(data,datatest1,stepID).then(res=>{
       if(res.id > 0)
         alert('Data Created SuccessFully!');
       else 
@@ -36,16 +39,18 @@ const DesignMiles = (props) => {
   }
 
   useEffect( ()=>{
-    dispatch(getApi()).then((res)=>{
+    {datatest ? dispatch(getApi()).then((res)=>{
       res.map((data)=>{
-        if(data.fK_LinkingID === id){
+        if(data.fK_LinkingID === datatest.linkingId){
           setID(data.designMilesID);
           setapiData(data);
         }
         return data;
       })
       setLoading(false)
-    })
+    }):setLoading(false)
+    setapiData([])
+  }
     
  },[dispatch])
 

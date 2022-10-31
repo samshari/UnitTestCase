@@ -32,16 +32,15 @@ const getApiSuccess = (value) => {
 
 export function updateApi(id,data,apiData) {
     
-    return (dispatch)=>{
       return new Promise((resolve, reject) => {  
         
         fetch(`http://localhost:63006/api/engineering/updatedesign/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
-            'ugMiles' : data[0].value.length ===0?apiData.ugMiles: parseFloat(data[0].value),
-            'ohMiles' : data[1].value.length===0?apiData.ohMiles: parseFloat(data[1].value),
-            'totalMiles': data[2].value.length===0?apiData.totalMiles:parseFloat(data[2].value)
+            'ugMiles' : parseFloat(data[0].value),
+            'ohMiles' : parseFloat(data[1].value),
+            'totalMiles': parseFloat(data[2].value)
         }),
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
@@ -49,14 +48,13 @@ export function updateApi(id,data,apiData) {
         }
         ).then((res)=>{
             const data  = res.json().then(res=> {
-               dispatch(updateApiSuccess(res));
+               updateApiSuccess(res);
                 resolve(res);
               }); 
             return data;   
         })
         .catch((error) => reject(error));
         })
-    }
     }
     
     

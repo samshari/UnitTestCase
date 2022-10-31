@@ -35,9 +35,11 @@ const Owners = (props) => {
         alert(res.message);
       })
   }
-
+  const datatest=useSelector((state)=>state.engineeringFormReducer?.data)
+  const datatest1=useSelector((state)=>state.engineeringFormReducer?.linkId)
+  
   const createData=(data,dropData)=>{
-    createApi(data,dropData,id,stepID).then(res=>{
+    createApi(data,dropData,datatest1,stepID).then(res=>{
       if(res.id>0)
         alert(`Data Created SuccessFully!`);
       else 
@@ -53,16 +55,17 @@ const data2 = useSelector((state)=>{
 
 
 useEffect( ()=>{
-  dispatch(getApi()).then((res)=> {
+  {datatest!==undefined ? dispatch(getApi()).then((res)=> {
     res.map((data)=>{
-      if(data.fK_LinkingID === id){
+      if(data.fK_LinkingID === datatest.linkingId){
         setID(data.ownerID);
         setapiData(data);
       }
       return data;
     })
     setLoading(false)
-  })
+  }):setLoading(false)
+  setapiData([])}
 
   dispatch(getReactApi()).then((res)=> setLoading1(false))
   dispatch(getUcomApi()).then((res)=> setLoading2(false))
@@ -75,7 +78,10 @@ let item1 = data2?.ReactLREReducer?.data;
 item1?.map((value)=>{
   let id = 0; 
   if(data2?.OwnerReducer?.data ){
-    id = data2?.OwnerReducer?.data[0].fK_ReactsLRE_ID
+    data2?.OwnerReducer?.data.filter((res)=>{
+      if(res.fK_LinkingID === datatest?.linkingId)
+        id = res.fK_ReactsLRE_ID;
+    })
   }
   if(value.id === id){
     fK_ReactsLRE_ID = id
@@ -87,8 +93,11 @@ let item2 = data2?.UcomSPOCReducer?.data;
 
 item2?.map((value)=>{
   let id = 0; 
-  if(data2?.OwnerReducer?.data ){
-    id = data2?.OwnerReducer?.data[0].fK_UCOMMSPOC_ID
+  if(data2?.OwnerReducer?.data){
+    data2?.OwnerReducer?.data.filter((res)=>{
+      if(res.fK_LinkingID === datatest?.linkingId)
+        id = res.fK_UCOMMSPOC_ID;
+    })
   }
   if(value.id === id){
     fK_UCOMMSPOC_ID = id
@@ -99,10 +108,13 @@ item2?.map((value)=>{
 let item3 = data2?.PMReducer?.data;
 
 item3?.map((value)=>{
+  
   let id = 0; 
-  if(data2?.OwnerReducer?.data ){
-    id = data2?.OwnerReducer?.data[0].fK_ProjectManagerID
-
+  if(data2?.OwnerReducer?.data){
+    data2?.OwnerReducer?.data.filter((res)=>{
+      if(res.fK_LinkingID === datatest?.linkingId)
+        id = res.fK_ProjectManagerID;
+    })
   }
   if(value.pmid === id){
     fK_ProjectManagerID = id

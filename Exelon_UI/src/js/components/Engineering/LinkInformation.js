@@ -9,6 +9,11 @@ import {getRegionApi} from '../../../redux/components/Engineering/LinkInformatio
 import {getProjectStatusApi} from '../../../redux/components/Engineering/LinkInformation/ProjectStatusAction'
 import {getTechApi} from '../../../redux/components/Engineering/LinkInformation/TechAction'
 import {getFiberApi} from '../../../redux/components/Engineering/LinkInformation/FiberAction'
+import {
+  getLinkInfoByPrimaryKey,
+  
+} from "../../../redux/components/Engineering/EngineeringAction";
+import {createLinkData} from "../../../redux/components/Engineering/EngineeringAction"
 
 let fK_TechnologyID = 0;
 let fK_RegionID =0;
@@ -18,10 +23,9 @@ let techName = '';
 let regionName = '';
 let barnName = '';
 let projectName ='';
-let id =10;
 let stepID=1;
 const LinkInformation = (props) => {
-
+  const [ID,setID]=useState(0);
   const pdID =useSelector((state)=> state.engineeringFormReducer.id);
   
   const [apiData,setApiData]=useState([]); 
@@ -43,7 +47,7 @@ const LinkInformation = (props) => {
       })
       fiberCount+=',';
     })
-    updateApi(id,data,dropData,fiberCount,apiData).then((res)=>{
+    updateApi(ID,data,dropData,fiberCount,apiData).then((res)=>{
       if(res.status === 200)
         alert(`Data Updated SuccessFully!`);
       else 
@@ -62,8 +66,10 @@ const LinkInformation = (props) => {
       fiberCount+= ',';
     })
     createApi(data,dropData,fiberCount,stepID,pdID).then(res=>{
-      if(res.id>0)
+      if(res.id>0){
         alert(`Data Created SuccessFully!`);
+        dispatch(createLinkData(res.id))
+      }
       else 
         alert(res.message);
     });
@@ -72,19 +78,20 @@ const LinkInformation = (props) => {
   const data2 = useSelector((state)=>{
     return state
   })
-
+  const datatest=useSelector((state)=>state.engineeringFormReducer?.data)
   useEffect(() => {
-    dispatch(getApi(id)).then((res)=> {
+    {datatest !==undefined?dispatch(getApi(datatest.linkingId)).then((res)=> {
       setApiData(res[0]);
+      setID(res[0].linkingId)
       setLoading(false);
-    });
+    }):setLoading(false)
+     setApiData([])}
     dispatch(getBarnApi()).then((res)=>setLoading1(false));
     dispatch(getRegionApi()).then((res)=>setLoading2(false));
     dispatch(getTechApi()).then((res)=>setLoading3(false));
     dispatch(getProjectStatusApi()).then((res)=>setLoading4(false));
     dispatch(getFiberApi()).then((res)=>setLoading5(false));
-  }, [dispatch]);
-
+  }, [dispatch,datatest]);
 
 let item5 = data2?.FiberReducer?.data;
 const optionsID = apiData.fiberCount?.split(",");
@@ -158,7 +165,6 @@ item4?.map((value)=>{
 
 })
 
-console.log(data2);
 
   const data = [
     { placeholder: "Primary Key", defaultValue: apiData.primaryKey },
@@ -211,7 +217,8 @@ console.log(data2);
   return (
     <>
 
-    {!loading && !loading1 && !loading2 && !loading3 && !loading4 && !loading5 && <Card
+    {!loading && !loading1 && !loading2 && !loading3 && !loading4 && !loading5 &&
+     <Card
         data={data}
         moveToTab={props.moveToTab}
         disable={props.disableFields}

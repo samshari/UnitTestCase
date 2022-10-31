@@ -2,7 +2,7 @@ import React from "react";
 import Card from "../../utils/Card";
 import { useSelector,useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { getApi,updateApi,createApi } from "../../../redux/components/Engineering/LinkInformation/LinkInformationAction";
+import { getLinkApi,updateLinkApi,createLinkApi } from "../../../redux/components/ExecutionLinks/LinkInformation/LinkinformationAction";
 import {getBarnApi} from '../../../redux/components/Engineering/LinkInformation/BarnAction'
 import {getRegionApi} from '../../../redux/components/Engineering/LinkInformation/RegionAction'
 import {getProjectStatusApi} from '../../../redux/components/Engineering/LinkInformation/ProjectStatusAction'
@@ -17,7 +17,7 @@ let techName = '';
 let regionName = '';
 let barnName = '';
 let projectName ='';
-let id =10;
+let id =39;
 let stepID=1;
 
 const LinkInformation = (props) => {
@@ -34,7 +34,7 @@ const LinkInformation = (props) => {
 
   const updateData=(data,dropData)=>{
     let fiberCount='';
-    data[14].value.map((val)=>{
+    data[8].value.map((val)=>{
       item5.map((value)=>{
         if(val === value.fiberCountValue)
           fiberCount += String(val);
@@ -42,7 +42,7 @@ const LinkInformation = (props) => {
       })
       fiberCount+=',';
     })
-    updateApi(id,data,dropData,fiberCount,apiData).then((res)=>{
+    updateLinkApi(id,data,dropData,fiberCount,apiData).then((res)=>{
       if(res.status === 200)
         alert(`Data Updated SuccessFully!`);
       else 
@@ -52,7 +52,7 @@ const LinkInformation = (props) => {
 
   const createData=(data,dropData,multiDrop)=>{
     let fiberCount='';
-    multiDrop[14].value.map((val)=>{
+    multiDrop[8].value.map((val)=>{
       item5.map((value)=>{
         if(val === value.fiberCountValue)
           fiberCount += String(val);
@@ -60,7 +60,7 @@ const LinkInformation = (props) => {
       })
       fiberCount+= ',';
     })
-    createApi(data,dropData,fiberCount,stepID,pdID).then(res=>{
+    createLinkApi(data,dropData,fiberCount,stepID,pdID).then(res=>{
       if(res.id>0)
         alert(`Data Created SuccessFully!`);
       else 
@@ -73,7 +73,7 @@ const LinkInformation = (props) => {
   })
 
   useEffect(() => {
-    dispatch(getApi(id)).then((res)=> {
+    dispatch(getLinkApi(id)).then((res)=> {
       setApiData(res[0]);
       setLoading(false);
     });
@@ -86,7 +86,7 @@ const LinkInformation = (props) => {
 
 
 let item5 = data2?.FiberReducer?.data;
-const optionsID = apiData.fiberCount?.split(",");
+const optionsID = apiData?.fiberCount?.split(",");
 let options=[]
 item5?.map((val)=>{
   options.push(val.fiberCountValue);
@@ -108,7 +108,7 @@ let item1 = data2?.TechReducer?.data;
 item1?.map((value)=>{
   let id = 0; 
   if(data2?.linkInformationReducer?.data ){
-    id = data2?.linkInformationReducer?.data[0].fK_TechnologyID
+    id = data2?.linkInformationReducer?.data[0].technologyId
   }
   if(value.id === id){
     fK_TechnologyID = value.id
@@ -121,7 +121,7 @@ let item2 = data2?.RegionReducer?.data;
 item2?.map((value)=>{
   let id = 0; 
   if(data2?.linkInformationReducer?.data ){
-    id = data2?.linkInformationReducer?.data[0].fK_RegionID
+    id = data2?.linkInformationReducer?.data[0].regionId
   }
   if(value.regionID === id){
     fK_RegionID = value.regionID
@@ -134,10 +134,10 @@ let item3 = data2?.BarnReducer?.data;
 item3?.map((value)=>{
   let id = 0; 
   if(data2?.linkInformationReducer?.data ){
-    id = data2?.linkInformationReducer?.data[0].fK_BarnID
+    id = data2?.linkInformationReducer?.data[0].barnId
   }
   if(value.barnID === id){
-    fK_BarnID = value.barnID
+    fK_BarnID = value.barnId
     barnName = value.barnName
   }
 
@@ -148,7 +148,7 @@ let item4 = data2?.ProjectStatusReducer?.data;
 item4?.map((value)=>{
   let id = 0; 
   if(data2?.linkInformationReducer?.data ){
-    id = data2?.linkInformationReducer?.data[0].fK_ProjectStatusID
+    id = data2?.linkInformationReducer?.data[0].projectStatusId
   }
   if(value.statusID === id){
     fK_ProjectStatusID = value.statusID
@@ -156,9 +156,10 @@ item4?.map((value)=>{
   }
 
 })
+
   const data = [
-    { placeholder: "Engineering Year",defaultValue: apiData.engineeringYear },
-    { placeholder: "Execution Year",defaultValue: apiData.executionYear },
+    { placeholder: "Engineering Year",defaultValue: apiData?.engineeringYear },
+    { placeholder: "Execution Year",defaultValue: apiData?.executionYear },
     { 
       type: "dropdown",
       placeholder: "Technology",
@@ -180,8 +181,8 @@ item4?.map((value)=>{
       defaultDrop: fK_BarnID,
       defaultValue: barnName
     },
-    { placeholder: "Work Order",defaultValue:apiData.workOrder },
-    { placeholder: "Project Id", defaultValue: apiData.projectID },
+    { placeholder: "Work Order",defaultValue:apiData?.workOrder },
+    { placeholder: "Project Id", defaultValue: apiData?.projectID },
     {placeholder:"Fiber PID Split"},
     { 
       type: "multiSelect",
@@ -189,8 +190,8 @@ item4?.map((value)=>{
       optionValues: options,
       defaultValue:option
     },
-    { placeholder: "Link Information Comments" ,defaultValue: apiData.comments},
-    { placeholder: "ITN",defaultValue: apiData.itn },
+    { placeholder: "Link Information Comments" ,defaultValue: apiData?.comments},
+    { placeholder: "ITN",defaultValue: apiData?.itn },
     {
       type: "dropdown",
       placeholder: "Project Status",
@@ -198,7 +199,7 @@ item4?.map((value)=>{
       defaultDrop: fK_ProjectStatusID,
       defaultValue: projectName
     },
-    { type: "textarea", placeholder: "Scope Comments",defaultValue: apiData.scopeComments },
+    { type: "textarea", placeholder: "Scope Comments",defaultValue: apiData?.scopeComments },
   ];
   return (
     <>
@@ -208,8 +209,8 @@ item4?.map((value)=>{
         disable={props.disableFields}
         cardTitle="Link Information"
         tabColor={props.tabColor}
-        onClick={updateData}
-        onSubmit={createData}
+        // onClick={updateData}
+        // onSubmit={createData}
       />
     }
     </>

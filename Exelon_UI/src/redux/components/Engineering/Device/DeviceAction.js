@@ -32,15 +32,14 @@ const getApiSuccess = (value) => {
 
 export function updateApi(id,data,apiData) {
     
-    return (dispatch)=>{
       return new Promise((resolve, reject) => {  
         
         fetch(`http://localhost:63006/api/engineering/updatedevice/${id}`,
         {
             method:'PUT',
             body: JSON.stringify({
-              'totalDevices' : data[0].value.length===0?apiData.totalDevices: parseInt(data[0].value),
-              'deviceType' : data[1].value.length===0?apiData.deviceType:data[1].value
+              'totalDevices' : parseInt(data[0].value),
+              'deviceType' : data[1].value
             }),
             headers: {
               'Content-Type': 'application/json; charset=utf-8'
@@ -48,14 +47,14 @@ export function updateApi(id,data,apiData) {
         }
         ).then((res)=>{
             const data  = res.json().then(res=> {
-              dispatch(updateApiSuccess(res));
+              updateApiSuccess(res);
                 resolve(res);
               }); 
             return data;   
         })
         .catch((error) => reject(error));
         })
-    }
+    
     }
     
     
@@ -69,6 +68,7 @@ export function updateApi(id,data,apiData) {
 
 
     export function createApi(data,linkID,stepID) {
+      
         return new Promise((resolve, reject) => {  
               fetch(`http://localhost:63006/api/engineering/createdevice`,
             {

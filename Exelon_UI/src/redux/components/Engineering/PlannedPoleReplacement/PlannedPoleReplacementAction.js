@@ -39,17 +39,17 @@ export function updateApi(id,data,apiData) {
       {
         method:'PUT',
         body: JSON.stringify({
-          'totalNoOfPolesInRoute' : data[0].value,
-          'replacedNoOfOsmos' : data[1].value,
-          'replacedLoading' : data[2].value,
-          'replacedClearance' :  data[3].value,
-          'replacedReliability' : data[4].value,
-          'newOrMidspanPoles' : data[5].value,
-          'totalRelocatedPoles' : data[6].value,
-          'totalPolesNeedingReplaced' : data[7].value,
-          'newAnchor': data[8].value,
-          'otherWorkOnPole':data[9].value,
-          'poleReplacementPercentage':  parseFloat(data[10].value)
+          'totalNoOfPolesInRoute' :  !data[0].value?0 : data[0].value,
+          'replacedNoOfOsmos' : !data[1].value? 0 : data[1].value,
+          'replacedLoading' : !data[2].value? 0 : data[2].value,
+          'replacedClearance' : !data[3].value? 0 : data[3].value,
+          'replacedReliability' : !data[4].value? 0 : data[4].value,
+          'newOrMidspanPoles' : !data[5].value? 0 : data[5].value,
+          'totalRelocatedPoles' : !data[6].value? 0 : data[6].value,
+          'totalPolesNeedingReplaced' : !data[7].value? 0 : data[7].value,
+          'newAnchor': !data[8].value? 0 : data[8].value,
+          'otherWorkOnPole': !data[9].value? 0 : data[9].value,
+          'poleReplacementPercentage': !data[10].value? 0 : parseFloat(data[10].value)
         }),
         headers: {
           'Content-Type': 'application/json; charset=utf-8'
@@ -84,17 +84,17 @@ export function updateApi(id,data,apiData) {
       body: JSON.stringify({
         'FK_linkingID': linkID,
         'stepID': stepID,
-        'totalNoOfPolesInRoute' :  data[0].value.length === 0?0 : data[0].value,
-        'replacedNoOfOsmos' : data[1].value.length === 0? 0 : data[1].value,
-        'replacedLoading' : data[2].value.length === 0? 0 : data[2].value,
-        'replacedClearance' : data[3].value.length === 0? 0 : data[3].value,
-        'replacedReliability' : data[4].value.length === 0? 0 : data[4].value,
-        'newOrMidspanPoles' : data[5].value.length === 0? 0 : data[5].value,
-        'totalRelocatedPoles' : data[6].value.length === 0? 0 : data[6].value,
-        'totalPolesNeedingReplaced' : data[7].value.length === 0? 0 : data[7].value,
-        'newAnchor': data[8].value.length === 0? 0 : data[8].value,
-        'otherWorkOnPole': data[9].value.length === 0? 0 : data[9].value,
-        'poleReplacementPercentage': data[10].value.length === 0? 0 : parseFloat(data[10].value)
+        'totalNoOfPolesInRoute' :  !data[0].value?0 : data[0].value,
+        'replacedNoOfOsmos' : !data[1].value? 0 : data[1].value,
+        'replacedLoading' : !data[2].value? 0 : data[2].value,
+        'replacedClearance' : !data[3].value? 0 : data[3].value,
+        'replacedReliability' : !data[4].value? 0 : data[4].value,
+        'newOrMidspanPoles' : !data[5].value? 0 : data[5].value,
+        'totalRelocatedPoles' : !data[6].value? 0 : data[6].value,
+        'totalPolesNeedingReplaced' : !data[7].value? 0 : data[7].value,
+        'newAnchor': !data[8].value? 0 : data[8].value,
+        'otherWorkOnPole': !data[9].value? 0 : data[9].value,
+        'poleReplacementPercentage': !data[10].value? 0 : parseFloat(data[10].value)
       }),
       headers: {
         'Content-Type': 'application/json; charset=utf-8'

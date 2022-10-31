@@ -35,12 +35,12 @@ const getApiSuccess = (value) => {
 
 export function updateApi(id,data,dropData,apiData) {
     console.log(JSON.stringify({
-      'fK_EOCID' : dropData[0].value,
+      'fK_EOCID' : dropData[0].value?dropData[0].value:null,
       'eocReleaseDate' : data[1].value,
       'eocPoleForemanComplete' : data[2].value,
       'reefSubmittal' : data[3].value,
       'reef' :  data[4].value,
-      'fK_RealEstateSupportCOCID' : dropData[5].value,
+      'fK_RealEstateSupportCOCID' : dropData[5].value?dropData[0].value:null,
       'ugCnCInvestigation' : data[6].value,
       'mhDefects' : data[7].value,
       'investigationComments': data[8].value,
@@ -92,23 +92,24 @@ export function updateApi(id,data,dropData,apiData) {
 
 
     export function createApi(data,dropData,linkID,stepID) {
+      
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/common/CreateMEOCREALSTATE`,
+            fetch(`http://localhost:63006/api/engineering/CreateMEOCREALSTATE`,
     {
       method:'POST',
       body: JSON.stringify({
         'FK_linkingID': linkID,
         'stepID': stepID,
-        'fK_EOCID' : dropData[0].value,
-        'eocReleaseDate' : dropData[1].value,
-        'eocPoleForemanComplete' : dropData[2].value,
-        'reefSubmittal' : dropData[3].value,
-        'reef' :  dropData[4].value,
-        'fK_RealEstateSupportCOCID' : dropData[5].value,
-        'ugCnCInvestigation' : dropData[6].value,
-        'mhDefects' : dropData[7].value,
-        'investigationComments': dropData[8].value,
-        'mRs':dropData[9].value
+        'fK_EOCID' : dropData[0].value?dropData[0].value:null,
+        'eocReleaseDate' : data[1].value?data[1].value:null,
+        'eocPoleForemanComplete' : data[2].value?data[2].value:null,
+        'reefSubmittal' : data[3].value?data[3].value:null,
+        'reef' :  data[4].value?data[4].value:null,
+        'fK_RealEstateSupportCOCID' : dropData[5].value?data[5].value:null,
+        'ugCnCInvestigation' : data[6].value?data[6].value:null,
+        'mhDefects' : data[7].value?data[7].value:null,
+        'investigationComments': data[8].value?data[8].value:null,
+        'mRs':data[9].value?data[9].value:null
       }),
       headers: {
         'Content-Type': 'application/json; charset=utf-8'

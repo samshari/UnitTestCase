@@ -31,13 +31,27 @@ const getApiSuccess = (value) => {
 };
 
 export function updateApi(id,data,dropData,apiData) {
-    
+    console.log(JSON.stringify({
+      'fK_FiberCOCID':dropData[0].value?dropData[0].value:null,
+      'issuesOrComments':data[4].value,
+      'startDate':data[1].value,
+      'endDate':data[2].value,
+      'weeklyFTECount':data[3].value,
+      'otdrCompletionDate':data[5].value
+
+    }))
     return new Promise((resolve, reject) => {  
         
         fetch(`http://localhost:63006/api/executionlinks/UpdateFIBER/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
+          'fK_FiberCOCID':dropData[0].value?dropData[0].value:null,
+          'issuesOrComments':data[4].value,
+          'startDate':data[1].value,
+          'endDate':data[2].value,
+          'weeklyFTECount':data[3].value,
+          'otdrCompletionDate':data[5].value
 
         }),
         headers: {
@@ -72,7 +86,13 @@ export function updateApi(id,data,dropData,apiData) {
               method:'POST',
               body: JSON.stringify({
                 'FK_LinkingID':linkID,
-                'StepId':stepID
+                'StepId':stepID,
+                'fK_FiberCOCID':dropData[0].value==0?null:dropData[0].value,
+                'issuesOrComments':data[4].value,
+                'startDate':data[1].value,
+                'endDate':data[2].value,
+                'weeklyFTECount':data[3].value,
+                'otdrCompletionDate':data[5].value
               }),
               headers: {
                 'Content-Type': 'application/json; charset=utf-8'

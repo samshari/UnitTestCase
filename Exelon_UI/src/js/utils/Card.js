@@ -16,7 +16,7 @@ const Card = (props) => {
   const [defaultCreate, setDefaultCreate] = useState([]);
   const [defaultCreateDrop, setdefaultCreateDrop] = useState([]);
   const [defaultmultiDrop, setdefaultmultiDrop] = useState([]);
-  const [blankState, setblankState] = useState('');
+  const [blankState, setblankState] = useState(null);
 
   const [selectedPhase1ButtonColor, setSelectedPhase1ButtonColor] =
     useState("");
@@ -192,7 +192,7 @@ const Card = (props) => {
                 size="small"
                 inputProps={{ style: { fontSize: 13 } }} // font size of input text
                 InputLabelProps={{ style: { fontSize: 13 } }} // font size of input label
-                value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ? defaultData[index]?.value : defaultCreate[index].value) : ''}
+                value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ? defaultData[index]?.value : defaultCreate[index]?.value) : ''}
                 onChange={(value) => {
                   if (showEngineeringUpdateButton || showExecutionLinksUpdateButton)
                     setDefaultData([...defaultData], (defaultData[index].value = value.target.value));
@@ -243,7 +243,7 @@ const Card = (props) => {
                           id = values.statusID
                         else if(item.placeholder === "Eng Investigation/ innerduct coc")
                           id = values.innerductCOCID;
-                        else if(item.placeholder === "OVHD COC")
+                        else if(item.placeholder === "OVHD COC" || item.placeholder === "Fiber COC")
                           id = values.cocid
                         else
                           id = values.id
@@ -267,7 +267,7 @@ const Card = (props) => {
                               id = values.statusID
                             else if(item.placeholder === "Eng Investigation/ innerduct coc")
                               id = values.innerductCOCID;
-                            else if(item.placeholder === "OVHD COC")
+                            else if(item.placeholder === "OVHD COC" || item.placeholder === "Fiber COC")
                               id = values.cocid
                             else
                               id = values.id
@@ -298,16 +298,16 @@ const Card = (props) => {
                 <BasicDatePicker
                   placeholder={item.placeholder}
                   style={{ padding: "3rem" }}
-                  value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ? defaultData[index]?.value : defaultCreate[index].value) : blankState}
+                  value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ? defaultData[index]?.value : defaultCreate[index]?.value) : blankState}
                   onChange={(value) => {
 
                     if (showEngineeringUpdateButton || showExecutionLinksUpdateButton) {
-                      setDefaultData([...defaultData], defaultData[index].value = `${value.$d.getDate()}/${value.$d.getMonth() + 1
-                        }/${value.$d.getFullYear()}`);
+                      setDefaultData([...defaultData], defaultData[index].value = `${value.$d.getMonth() + 1
+                      }/${value.$d.getDate()}/${value.$d.getFullYear()}`);
                     }
                     else {
-                      setDefaultCreate([...defaultCreate], defaultCreate[index].value = `${value.$d.getDate()}/${value.$d.getMonth() + 1
-                        }/${value.$d.getFullYear()}`);
+                      setDefaultCreate([...defaultCreate], defaultCreate[index].value = `${value.$d.getMonth() + 1
+                      }/${value.$d.getDate()}/${value.$d.getFullYear()}`);
                     }
                   }
                   }

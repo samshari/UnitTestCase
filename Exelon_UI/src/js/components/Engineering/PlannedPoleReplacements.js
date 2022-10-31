@@ -22,9 +22,11 @@ const PlannedPoleReplacements = (props) => {
         alert(res.message);
       })
   }
-
-  const createData=(data)=>{
-    createApi(data,linkID,stepID).then(res=>{
+  const datatest=useSelector((state)=>state.engineeringFormReducer?.data)
+  const datatest1=useSelector((state)=>state.engineeringFormReducer?.linkId)
+  
+  const createData=(data,dropData,multiDrop)=>{
+    createApi(data,datatest1,stepID).then(res=>{
       if(res.id>0)
         alert(`Data Created SuccessFully!`);
       else 
@@ -34,16 +36,17 @@ const PlannedPoleReplacements = (props) => {
 
 
 useEffect( ()=>{
-  dispatch(getApi()).then((res)=>{
+  {datatest!==undefined ? dispatch(getApi()).then((res)=>{
     res.map((data)=>{
-      if(data.fK_LinkingID === linkID){
+      if(data.fK_LinkingID === datatest.linkingId){
         setID(data.polesRepacementID);
         setapiData(data);
       }
       return data;
     })
     setLoading(false);
-  })
+  }): setLoading(false)
+    setapiData([])}
 },[dispatch])
 
 

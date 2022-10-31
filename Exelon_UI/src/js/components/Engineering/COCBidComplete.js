@@ -11,8 +11,6 @@ let mkID = 0
 let fiberId = 0
 let mkName = ''
 let fiberName = ''
-let id =1 ;
-let linkID = 2;
 let stepID = 1;
 const COCBidComplete = (props) => {
   const [apiData,setapiData]=useState([]); 
@@ -26,8 +24,7 @@ const COCBidComplete = (props) => {
   const dispatch = useDispatch();
 
   const updateData=(data,dropData)=>{
-    
-   dispatch(updateApi(ID,data,dropData,apiData)).then((res)=>{
+    updateApi(ID,data,dropData,apiData).then((res)=>{
       if(res.status === 200)
         alert(`Data Updated SuccessFully!`);
       else 
@@ -35,9 +32,10 @@ const COCBidComplete = (props) => {
       })
   }
 
-  const createData=(data,dropData)=>{
-    console.log('drop',dropData);
-    createApi(data,dropData,linkID,stepID).then(res=>{
+  const datatest=useSelector((state)=>state.engineeringFormReducer?.data)
+  const datatest1=useSelector((state)=>state.engineeringFormReducer?.linkId)
+  const createData=(data,dropData,multiDrop)=>{
+    createApi(data,dropData,datatest1,stepID).then(res=>{
       if(res.id>0)
         alert(`Data Created SuccessFully!`);
       else 
@@ -54,16 +52,17 @@ const data2 = useSelector((state)=>{
 
 
 useEffect( ()=>{
-  dispatch(getApi()).then((res)=>{
+  {datatest!==undefined? dispatch(getApi()).then((res)=>{
     res.map((data)=>{
-      if(data.fK_LinkingID === id){
+      if(data.fK_LinkingID === datatest.linkingId){
         setID(data.cocBidCompleteID);
         setapiData(data);
       }
       return data;
     })
     setLoading(false)
-  })
+  }):setLoading(false)
+    setapiData([])}
   dispatch(getMkApi()).then((res)=>{
     setMk(res);
     setLoading1(false)
@@ -81,7 +80,11 @@ let item2 = data2?.COCBIDFiberReducer?.data;
 
 if(data2?.COCBIDReducer?.data && data2?.COCBIDReducer?.data.status === undefined){
   item1?.map((value)=>{
-    let id = data2?.COCBIDReducer?.data[0].fK_COCBidCompMkReadyID
+    let id=0;
+    data2?.COCBIDReducer?.data.filter((res)=>{
+      if(res.fK_LinkingID === datatest?.linkingId)
+        id = res.fK_COCBidCompMkReadyID
+    })
     if(value.id === id){
       mkID = value.id
       mkName = value.name
@@ -91,7 +94,11 @@ if(data2?.COCBIDReducer?.data && data2?.COCBIDReducer?.data.status === undefined
   
   
   item2?.map((value)=>{
-    let id = data2?.COCBIDReducer?.data[0].fK_COCBidCompFiberID
+    let id = 0;
+    data2?.COCBIDReducer?.data.filter((res)=>{
+      if(res.fK_LinkingID === datatest?.linkingId)
+        id = res.fK_COCBidCompFiberID
+    })
     if(value.id === id){
       fiberId = value.id
       fiberName = value.name
@@ -105,7 +112,6 @@ if(data2?.COCBIDReducer?.data && data2?.COCBIDReducer?.data.status === undefined
     { type:"dropdown",placeholder: "COC Bid Complete Fiber",dropDownValues:Fiber,defaultValue: fiberName , defaultDrop: fiberId},
   ];
 
-  console.log('data',data);
 
   return (
     <>
