@@ -162,7 +162,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@OwnerID", oWNERSModel.OwnerID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", oWNERSModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@FK_ReactsLRE_ID", checkNull(oWNERSModel.FK_ReactsLRE_ID));
@@ -173,35 +173,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", oWNERSModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var owner = new OWNERSModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    owner.OwnerID = (long)dataReader["OwnerID"];
-                                    owner.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    if (dataReader["FK_ReactsLRE_ID"] != DBNull.Value)
-                                        owner.FK_ReactsLRE_ID = (int)dataReader["FK_ReactsLRE_ID"];
-
-                                    if (dataReader["FK_UCOMMSPOC_ID"] != DBNull.Value)
-                                        owner.FK_UCOMMSPOC_ID = (int)dataReader["FK_UCOMMSPOC_ID"];
-
-                                    owner.FK_ProjectManagerID = (int)dataReader["FK_ProjectManagerID"];
-                                    owner.StepID = (int)dataReader["StepID"];
-                                    
-
-                                }
-                            }
-
-                            cmd.Parameters["@FK_ReactsLRE_ID"].Value = checkNullWithValue(oWNERSModel.FK_ReactsLRE_ID,owner.FK_ReactsLRE_ID);
-                            cmd.Parameters["@FK_UCOMMSPOC_ID"].Value =checkNullWithValue(oWNERSModel.FK_UCOMMSPOC_ID,owner.FK_UCOMMSPOC_ID);
-
-                            if (string.IsNullOrEmpty(oWNERSModel.FK_ProjectManagerID.ToString()))
-                                cmd.Parameters["@FK_ProjectManagerID"].Value = owner.FK_ProjectManagerID;
-                                
-
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
 

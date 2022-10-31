@@ -173,7 +173,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@OVHDMakeReadyID", oVHDMKModel.OVHDMakeReadyID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", oVHDMKModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@FK_stepID", oVHDMKModel.FK_stepID);
@@ -200,51 +200,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", oVHDMKModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-
-
-                            var ovhd = new OVHDMKModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-
-                                    ovhd.OVHDMakeReadyID = (long)dataReader["OVHDMakeReadyID"];
-                                    ovhd.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    ovhd.FK_stepID = (int)dataReader["FK_stepID"];
-                                    if (dataReader["FK_OVHDCOCID"] != DBNull.Value)
-                                        ovhd.FK_OVHDCOCID = (int)dataReader["FK_OVHDCOCID"];
-                                    ovhd.IssuesOrComments = dataReader["IssuesOrComments"].ToString();
-                                    if (dataReader["StartDate"] != DBNull.Value)
-                                        ovhd.StartDate = Convert.ToDateTime(dataReader["StartDate"]);
-                                    if (dataReader["EndDate"] != DBNull.Value)
-                                        ovhd.EndDate = Convert.ToDateTime(dataReader["EndDate"]);
-                                    ovhd.WeeklyFTECount = dataReader["WeeklyFTECount"].ToString();
-
-                                }
-                            }
-
-                            if (string.IsNullOrEmpty(oVHDMKModel.WeeklyFTECount))
-                                cmd.Parameters["@WeeklyFTECount"].Value = ovhd.WeeklyFTECount;
-
-                            if (string.IsNullOrEmpty(oVHDMKModel.IssuesOrComments))
-                                cmd.Parameters["@IssuesOrComments"].Value = ovhd.IssuesOrComments;
-
-                            if (oVHDMKModel.FK_OVHDCOCID == null && ovhd.FK_OVHDCOCID == null)
-                                cmd.Parameters["@FK_OVHDCOCID"].Value = DBNull.Value;
-                            else if (oVHDMKModel.FK_OVHDCOCID == null)
-                                cmd.Parameters["@FK_OVHDCOCID"].Value = ovhd.FK_OVHDCOCID;
-
-                            if (oVHDMKModel.StartDate == null && ovhd.StartDate == null)
-                                cmd.Parameters["@StartDate"].Value = DBNull.Value;
-                            else if (oVHDMKModel.StartDate == null)
-                                cmd.Parameters["@StartDate"].Value = ovhd.StartDate;
-
-                            if (oVHDMKModel.EndDate == null && ovhd.EndDate == null)
-                                cmd.Parameters["@EndDate"].Value = DBNull.Value;
-                            else if (oVHDMKModel.EndDate == null)
-                                cmd.Parameters["@EndDate"].Value = ovhd.EndDate;
-
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return oVHDMKModel;

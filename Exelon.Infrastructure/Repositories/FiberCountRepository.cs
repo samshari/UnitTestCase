@@ -129,7 +129,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@FiberCountID", fIBERCOUNTModel.FiberCountID);
                             cmd.Parameters.AddWithValue("@FiberCountValue", fIBERCOUNTModel.FiberCountValue);
                             cmd.Parameters.AddWithValue("@Description", fIBERCOUNTModel.Description);
@@ -137,21 +137,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", fIBERCOUNTModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var mfiber = new FiberCountModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    mfiber.FiberCountID = (int)dataReader["FiberCountID"];
-                                    mfiber.FiberCountValue = (int)dataReader["FiberCountValue"];
-                                    mfiber.Description = dataReader["Description"].ToString();
-                                    
-                                }
-                            }
-                            if (string.IsNullOrEmpty(fIBERCOUNTModel.Description))
-                                cmd.Parameters["@Description"].Value = mfiber.Description;
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return fIBERCOUNTModel;

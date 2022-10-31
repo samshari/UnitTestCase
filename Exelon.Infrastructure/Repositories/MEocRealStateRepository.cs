@@ -201,7 +201,7 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Connection = connection;
-                            cmd.Parameters.AddWithValue("@procId", 6);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@EOCRealEstateID", mEOCREALSTATEModel.EOCRealEstateID);
                             cmd.Parameters.AddWithValue("@REEFSubmittal", string.IsNullOrEmpty(mEOCREALSTATEModel.REEFSubmittal) ? string.Empty : mEOCREALSTATEModel.REEFSubmittal);
                             cmd.Parameters.AddWithValue("@REEF", string.IsNullOrEmpty(mEOCREALSTATEModel.REEF) ? string.Empty : mEOCREALSTATEModel.REEF);
@@ -218,82 +218,7 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
                             cmd.Parameters.AddWithValue("@updatedBy", mEOCREALSTATEModel.UpdatedBy);
                             connection.Open();
-                            
-                                var meocreal = new MEOCREALSTATEModel();
-
-                                cmd.Parameters["@procId"].Value = 5;
-                                using (SqlDataReader dataReader = cmd.ExecuteReader())
-                                {
-                                    while (dataReader.Read())
-                                    {
-                                        
-                                        meocreal.EOCRealEstateID = (long)dataReader["EOCRealEstateID"];
-                                        meocreal.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-
-                                        if (dataReader["FK_EOCID"] != DBNull.Value)
-                                            meocreal.FK_EOCID = (int)dataReader["FK_EOCID"];
-
-                                        if (dataReader["EOCReleaseDate"] != DBNull.Value)
-                                            meocreal.EOCReleaseDate = Convert.ToDateTime(dataReader["EOCReleaseDate"]);
-
-                                        if (dataReader["EOCPoleForemanComplete"] != DBNull.Value)
-                                            meocreal.EOCPoleForemanComplete = Convert.ToDateTime(dataReader["EOCPoleForemanComplete"]);
-
-                                        if (dataReader["REEFSubmittal"] != DBNull.Value)
-                                            meocreal.REEFSubmittal = dataReader["REEFSubmittal"].ToString();
-
-                                        if (dataReader["REEF"] != DBNull.Value)
-                                            meocreal.REEF = dataReader["REEF"].ToString();
-
-                                        if (dataReader["FK_COCID"] != DBNull.Value)
-                                            meocreal.FK_COCID = (int)dataReader["FK_COCID"];
-
-                                        if (dataReader["FK_RealEstateSupportCOCID"] != DBNull.Value)
-                                            meocreal.FK_RealEstateSupportCOCID = (int)dataReader["FK_RealEstateSupportCOCID"];
-
-                                        if (dataReader["UGCnCInvestigation"] != DBNull.Value)
-                                            meocreal.UGCnCInvestigation = dataReader["UGCnCInvestigation"].ToString();
-
-                                        if (dataReader["MHDefects"] != DBNull.Value)
-                                            meocreal.MHDefects = dataReader["MHDefects"].ToString();
-
-                                        if (dataReader["InvestigationComments"] != DBNull.Value)
-                                            meocreal.InvestigationComments = dataReader["InvestigationComments"].ToString();
-
-                                        if (dataReader["MRs"] != DBNull.Value)
-                                            meocreal.MRs = dataReader["MRs"].ToString();
-                                        meocreal.FK_StepID = (int)dataReader["FK_StepID"];
-                                        
-                                    }
-                                }
-
-                                if (string.IsNullOrEmpty(mEOCREALSTATEModel.FK_LinkingID.ToString()))
-                                    cmd.Parameters["@FK_LinkingID"].Value = meocreal.FK_LinkingID;
-
-                                if (string.IsNullOrEmpty(mEOCREALSTATEModel.FK_StepID.ToString()))
-                                    cmd.Parameters["@FK_StepID"].Value = meocreal.FK_StepID;
-
-                                if (string.IsNullOrEmpty(mEOCREALSTATEModel.REEFSubmittal))
-                                    cmd.Parameters["@REEFSubmittal"].Value = meocreal.REEFSubmittal;
-
-                                if(string.IsNullOrEmpty(mEOCREALSTATEModel.REEF))
-                                    cmd.Parameters["@REEF"].Value = meocreal.REEF;
-                                
-                                cmd.Parameters["@EOCReleaseDate"].Value = checkNullWithValue(mEOCREALSTATEModel.EOCReleaseDate,meocreal.EOCReleaseDate);
-                                cmd.Parameters["@EOCPoleForemanComplete"].Value = checkNullWithValue(mEOCREALSTATEModel.EOCPoleForemanComplete,meocreal.EOCPoleForemanComplete);
-                                cmd.Parameters["@MHDefects"].Value =checkNullWithValue(mEOCREALSTATEModel.MHDefects,meocreal.MHDefects);
-
-                                if (string.IsNullOrEmpty(mEOCREALSTATEModel.InvestigationComments))
-                                    cmd.Parameters["@InvestigationComments"].Value = meocreal.InvestigationComments;
-
-                                if (string.IsNullOrEmpty(mEOCREALSTATEModel.MRs))
-                                    cmd.Parameters["@MRs"].Value = meocreal.MRs;
-                                cmd.Parameters["@FK_EOCID"].Value = checkNullWithValue(mEOCREALSTATEModel.FK_EOCID,meocreal.FK_EOCID);                                
-                                cmd.Parameters["@FK_COCID"].Value = checkNullWithValue(mEOCREALSTATEModel.FK_COCID,meocreal.FK_COCID);
-                                cmd.Parameters["@FK_RealEstateSupportCOCID"].Value = checkNullWithValue(mEOCREALSTATEModel.FK_RealEstateSupportCOCID,meocreal.FK_RealEstateSupportCOCID);
-                                cmd.Parameters["@procId"].Value = 2;
-                                cmd.ExecuteNonQuery();
-                            
+                            cmd.ExecuteNonQuery();
                             connection.Close();
                             result[mEOCREALSTATEModel] = "ok";
                             return result;

@@ -151,7 +151,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@HutExRnPPhase2ID", hutExRnPPhaseTwoModel.HutExRnPPhase2ID);
                             cmd.Parameters.AddWithValue("@HutExecutionID", hutExRnPPhaseTwoModel.HutExecutionID);
                             cmd.Parameters.AddWithValue("@RnPIFA", checkNull(hutExRnPPhaseTwoModel.RnPIFA));
@@ -160,24 +160,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", hutExRnPPhaseTwoModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var rnphasetwo = new HutExRnPPhaseTwoModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    rnphasetwo.HutExRnPPhase2ID = (long)dataReader["HutExRnPPhase2ID"];
-                                    rnphasetwo.HutExecutionID = (long)dataReader["HutExecutionID"];
-                                    if (dataReader["RnPIFA"] != DBNull.Value)
-                                        rnphasetwo.RnPIFA = Convert.ToDateTime(dataReader["RnPIFA"]);
-                                    if (dataReader["RnPIFC"] != DBNull.Value)
-                                        rnphasetwo.RnPIFC = Convert.ToDateTime(dataReader["RnPIFC"]);
-
-                                }
-                            }
-                            cmd.Parameters["@RnPIFA"].Value = checkNullWithValue(hutExRnPPhaseTwoModel.RnPIFA, rnphasetwo.RnPIFA);
-                            cmd.Parameters["@RnPIFC"].Value = checkNullWithValue(hutExRnPPhaseTwoModel.RnPIFC, rnphasetwo.RnPIFC);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return hutExRnPPhaseTwoModel;

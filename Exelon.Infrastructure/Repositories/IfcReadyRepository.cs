@@ -189,7 +189,7 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Connection = connection;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@IFCMakeReadyID", iFCREADYModel.IFCMakeReadyID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", iFCREADYModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@CurrentScheduledDate", checkNull(iFCREADYModel.CurrentScheduledDate));
@@ -204,35 +204,6 @@ namespace Exelon.Infrastructure.Repositories
                             var mifc = new IfcReadyModel();
 
                             connection.Open();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-
-                                    mifc.IFCMakeReadyID = (long)dataReader["IFCMakeReadyID"];
-                                    mifc.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    if (dataReader["CurrentScheduledDate"] != DBNull.Value)
-                                        mifc.CurrentScheduledDate = Convert.ToDateTime(dataReader["CurrentScheduledDate"]);
-                                    if (dataReader["OriginalScheduledDate"] != DBNull.Value)
-                                        mifc.OriginalScheduledDate = Convert.ToDateTime(dataReader["OriginalScheduledDate"]);
-                                    if (dataReader["MissedDatesAndReasons"] != DBNull.Value)
-                                        mifc.MissedDatesAndReasons = dataReader["MissedDatesAndReasons"].ToString();
-                                    if (dataReader["InitialIssueDate"] != DBNull.Value)
-                                        mifc.InitialIssueDate = Convert.ToDateTime(dataReader["InitialIssueDate"]);
-                                    if (dataReader["FinalIssueDate"] != DBNull.Value)
-                                        mifc.FinalIssueDate = Convert.ToDateTime(dataReader["FinalIssueDate"]);
-                                    if (dataReader["StepID"] != DBNull.Value)
-                                        mifc.StepID = (int)dataReader["StepID"];
-                                }
-                            }
-                            
-                            cmd.Parameters["@CurrentScheduledDate"].Value =checkNullWithValue(iFCREADYModel.CurrentScheduledDate,mifc.CurrentScheduledDate);
-                            cmd.Parameters["@MissedDatesAndReasons"].Value =checkNullWithValue(iFCREADYModel.MissedDatesAndReasons, mifc.MissedDatesAndReasons);
-                            cmd.Parameters["@OriginalScheduledDate"].Value = checkNullWithValue(iFCREADYModel.OriginalScheduledDate,mifc.OriginalScheduledDate);
-                            cmd.Parameters["@InitialIssueDate"].Value =checkNullWithValue(iFCREADYModel.InitialIssueDate,mifc.InitialIssueDate);
-                            cmd.Parameters["@FinalIssueDate"].Value = checkNullWithValue(iFCREADYModel.FinalIssueDate,mifc.FinalIssueDate);
-                            cmd.Parameters["@StepID"].Value =checkNullWithValue(iFCREADYModel.StepID,mifc.StepID);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return iFCREADYModel;

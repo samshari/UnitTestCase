@@ -196,7 +196,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@HutExCivilPhase3ID", hutExCivilPhaseThreeModel.HutExCivilPhase3ID);
                             cmd.Parameters.AddWithValue("@HutExecutionID", hutExCivilPhaseThreeModel.HutExecutionID);
                             cmd.Parameters.AddWithValue("@CivilAward", string.IsNullOrEmpty(hutExCivilPhaseThreeModel.CivilAward) ? string.Empty : hutExCivilPhaseThreeModel.CivilAward);
@@ -217,61 +217,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", hutExCivilPhaseThreeModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var civilphasethree = new HutExCivilPhaseThreeModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    civilphasethree.HutExCivilPhase3ID = (long)dataReader["HutExCivilPhase3ID"];
-                                    civilphasethree.HutExecutionID = (long)dataReader["HutExecutionID"];
-                                    civilphasethree.CivilAward = dataReader["CivilAward"].ToString();
-                                    civilphasethree.EnvRFP = dataReader["EnvRFP"].ToString();
-                                    civilphasethree.Survey = dataReader["Survey"].ToString();
-                                    civilphasethree.ComEdContractingLNL = dataReader["ComEdContractingLNL"].ToString();
-                                    civilphasethree.Construction_Notes = dataReader["Construction_Notes"].ToString();
-                                    civilphasethree.GroundingTestingCompleted = dataReader["GroundingTestingCompleted"].ToString();
-                                    civilphasethree.OutageRequiredforDelivery = dataReader["OutageRequiredforDelivery"].ToString();
-                                    if (dataReader["IFC_T7"] != DBNull.Value)
-                                        civilphasethree.IFC_T7 = Convert.ToDateTime(dataReader["IFC_T7"]);
-                                    if (dataReader["FoundationPoured_T5"] != DBNull.Value)
-                                        civilphasethree.FoundationPoured_T5 = Convert.ToDateTime(dataReader["FoundationPoured_T5"]);
-                                    if (dataReader["GroundingConduitInstallPedBoxes_T4"] != DBNull.Value)
-                                        civilphasethree.GroundingConduitInstallPedBoxes_T4 = Convert.ToDateTime(dataReader["GroundingConduitInstallPedBoxes_T4"]);
-                                    if (dataReader["FoundationReadyforHutOffload_T1"] != DBNull.Value)
-                                        civilphasethree.FoundationReadyforHutOffload_T1 = Convert.ToDateTime(dataReader["FoundationReadyforHutOffload_T1"]);
-                                    if (dataReader["HutOffload"] != DBNull.Value)
-                                        civilphasethree.HutOffload = Convert.ToDateTime(dataReader["HutOffload"]);
-                                    if (dataReader["CivilComplete_T0"] != DBNull.Value)
-                                        civilphasethree.CivilComplete_T0 = Convert.ToDateTime(dataReader["CivilComplete_T0"]);
-                                    if (dataReader["Fenceinstall"] != DBNull.Value)
-                                        civilphasethree.Fenceinstall = Convert.ToDateTime(dataReader["Fenceinstall"]);
-                                }
-                            }
-
-                            if (string.IsNullOrEmpty(hutExCivilPhaseThreeModel.CivilAward))
-                                cmd.Parameters["@CivilAward"].Value = civilphasethree.CivilAward;
-                            if (string.IsNullOrEmpty(hutExCivilPhaseThreeModel.EnvRFP))
-                                cmd.Parameters["@EnvRFP"].Value = civilphasethree.EnvRFP;
-                            if (string.IsNullOrEmpty(hutExCivilPhaseThreeModel.Survey))
-                                cmd.Parameters["@Survey"].Value = civilphasethree.Survey;
-                            if (string.IsNullOrEmpty(hutExCivilPhaseThreeModel.ComEdContractingLNL))
-                                cmd.Parameters["@ComEdContractingLNL"].Value = civilphasethree.ComEdContractingLNL;
-                            if (string.IsNullOrEmpty(hutExCivilPhaseThreeModel.Construction_Notes))
-                                cmd.Parameters["@Construction_Notes"].Value = civilphasethree.Construction_Notes;
-                            if (string.IsNullOrEmpty(hutExCivilPhaseThreeModel.GroundingTestingCompleted))
-                                cmd.Parameters["@GroundingTestingCompleted"].Value = civilphasethree.GroundingTestingCompleted;
-                            if (string.IsNullOrEmpty(hutExCivilPhaseThreeModel.OutageRequiredforDelivery))
-                                cmd.Parameters["@OutageRequiredforDelivery"].Value = civilphasethree.OutageRequiredforDelivery;
-
-                            cmd.Parameters["@IFC_T7"].Value = checkNullWithValue(hutExCivilPhaseThreeModel.IFC_T7, civilphasethree.IFC_T7);
-                            cmd.Parameters["@FoundationPoured_T5"].Value = checkNullWithValue(hutExCivilPhaseThreeModel.FoundationPoured_T5, civilphasethree.FoundationPoured_T5);
-                            cmd.Parameters["@GroundingConduitInstallPedBoxes_T4"].Value = checkNullWithValue(hutExCivilPhaseThreeModel.GroundingConduitInstallPedBoxes_T4, civilphasethree.GroundingConduitInstallPedBoxes_T4);
-                            cmd.Parameters["@FoundationReadyforHutOffload_T1"].Value = checkNullWithValue(hutExCivilPhaseThreeModel.FoundationReadyforHutOffload_T1, civilphasethree.FoundationReadyforHutOffload_T1);
-                            cmd.Parameters["@HutOffload"].Value = checkNullWithValue(hutExCivilPhaseThreeModel.HutOffload, civilphasethree.HutOffload);
-                            cmd.Parameters["@CivilComplete_T0"].Value = checkNullWithValue(hutExCivilPhaseThreeModel.CivilComplete_T0, civilphasethree.CivilComplete_T0);
-                            cmd.Parameters["@Fenceinstall"].Value = checkNullWithValue(hutExCivilPhaseThreeModel.Fenceinstall, civilphasethree.Fenceinstall);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return hutExCivilPhaseThreeModel;

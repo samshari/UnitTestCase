@@ -183,7 +183,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@IFAFiberID", ifaFiberModel.IFAFiberID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", ifaFiberModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@CurrentScheduledDate", checkNull(ifaFiberModel.CurrentScheduledDate));
@@ -196,35 +196,6 @@ namespace Exelon.Infrastructure.Repositories
 
                             cmd.Connection = connection;
                             connection.Open();
-
-                            var mfiber = new IfaFiberModel();
-
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    mfiber.IFAFiberID = (long)dataReader["IFAFiberID"];
-                                    mfiber.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    if (dataReader["CurrentScheduledDate"] != DBNull.Value)
-                                        mfiber.CurrentScheduledDate = Convert.ToDateTime(dataReader["CurrentScheduledDate"]);
-                                    mfiber.MissedDatesAndReasons = dataReader["MissedDatesAndReasons"].ToString();
-                                    if (dataReader["InitialIssueDate"] != DBNull.Value)
-                                        mfiber.InitialIssueDate = Convert.ToDateTime(dataReader["InitialIssueDate"]);
-                                    if (dataReader["FinalIssueDate"] != DBNull.Value)
-                                        mfiber.FinalIssueDate = Convert.ToDateTime(dataReader["FinalIssueDate"]);
-                                    if (dataReader["OriginalScheduledDate"] != DBNull.Value)
-                                        mfiber.OriginalScheduledDate = Convert.ToDateTime(dataReader["OriginalScheduledDate"]);
-                                    mfiber.StepID = (int)dataReader["StepID"];
-
-                                }
-                            }
-                            cmd.Parameters["@CurrentScheduledDate"].Value = checkNullWithValue(ifaFiberModel.CurrentScheduledDate,mfiber.CurrentScheduledDate);
-                            cmd.Parameters["@InitialIssueDate"].Value =checkNullWithValue(ifaFiberModel.InitialIssueDate,mfiber.InitialIssueDate);
-                            cmd.Parameters["@FinalIssueDate"].Value =checkNullWithValue(ifaFiberModel.FinalIssueDate,mfiber.FinalIssueDate);
-                            cmd.Parameters["@OriginalScheduledDate"].Value =checkNullWithValue(ifaFiberModel.OriginalScheduledDate, mfiber.OriginalScheduledDate);
-                            if (string.IsNullOrEmpty(ifaFiberModel.MissedDatesAndReasons))
-                                cmd.Parameters["@MissedDatesAndReasons"].Value = mfiber.MissedDatesAndReasons;
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return ifaFiberModel;

@@ -156,7 +156,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@PostCompletionID", postCompletionModel.PostCompletionID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", postCompletionModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@FK_StepID", postCompletionModel.FK_StepID);
@@ -169,43 +169,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", postCompletionModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-
-                            var post = new PostCompletionModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    post.PostCompletionID = (long)dataReader["PostCompletionID"];
-                                    post.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    post.FK_StepID = (int)dataReader["FK_StepID"];
-                                    post.AsBuiltsReceived = dataReader["AsBuiltsReceived"].ToString();
-                                    post.LocationsInspected = dataReader["LocationsInspected"].ToString();
-                                    post.LocationsReadyToInspect = dataReader["LocationsReadyToInspect"].ToString();
-                                    post.TEDUpdated = dataReader["TEDUpdated"].ToString();
-                                    post.PNIUpdatedIS = dataReader["PNIUpdatedIS"].ToString();
-                                    
-
-                                }
-                            }
-
-                            if(string.IsNullOrEmpty(postCompletionModel.AsBuiltsReceived))
-                                cmd.Parameters["@AsBuiltsReceived"].Value = post.AsBuiltsReceived;
-
-                            if (string.IsNullOrEmpty(postCompletionModel.LocationsInspected))
-                                cmd.Parameters["@LocationsInspected"].Value = post.LocationsInspected;
-
-                            if (string.IsNullOrEmpty(postCompletionModel.LocationsReadyToInspect))
-                                cmd.Parameters["@LocationsReadyToInspect"].Value = post.LocationsReadyToInspect;
-
-                            if (string.IsNullOrEmpty(postCompletionModel.TEDUpdated))
-                                cmd.Parameters["@TEDUpdated"].Value = post.TEDUpdated;
-
-                            if (string.IsNullOrEmpty(postCompletionModel.PNIUpdatedIS))
-                                cmd.Parameters["@PNIUpdatedIS"].Value = post.PNIUpdatedIS;
-
-
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return postCompletionModel;

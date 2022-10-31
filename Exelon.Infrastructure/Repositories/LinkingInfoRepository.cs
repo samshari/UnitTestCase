@@ -101,15 +101,11 @@ namespace Exelon.Infrastructure.Repositories
                                     linkInfo.FiberCount = dataReader["FiberCount"].ToString();
                                     linkInfo.Comments = dataReader["Comments"].ToString();
                                     linkInfo.ScopeComments = dataReader["ScopeComments"].ToString();
+                                    if (id != 0) linkInfo.StatusName = string.IsNullOrEmpty(dataReader["StatusName"].ToString()) ?  "NA": dataReader["StatusName"].ToString();
                                     linkInfo.ITN = dataReader["ITN"].ToString();
                                     if (dataReader["FK_ProjectStatusID"] != DBNull.Value)
                                         linkInfo.ProjectStatusId = (int)dataReader["FK_ProjectStatusID"];
                                     linkInfo.StepId = (int)dataReader["FK_StepID"];
-                                    linkInfo.CreatedBy = dataReader["CreatedBy"].ToString();
-                                    linkInfo.CreatedDate = Convert.ToDateTime(dataReader["CreatedDate"]).ToString(dateWithTime);
-                                    linkInfo.UpdatedBy = dataReader["UpdatedBy"].ToString();
-                                    linkInfo.UpdatedDate = Convert.ToDateTime(dataReader["UpdatedDate"]).ToString(dateWithTime);
-
                                     lstLinkInfo.Add(linkInfo);
 
                                 }
@@ -152,7 +148,7 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@ScopeComments", string.IsNullOrEmpty(linkingInfoModel.ScopeComments) ? string.Empty : linkingInfoModel.ScopeComments);
                             cmd.Parameters.AddWithValue("@ITN", string.IsNullOrEmpty(linkingInfoModel.ITN) ? string.Empty : linkingInfoModel.ITN);
                             cmd.Parameters.AddWithValue("@FK_ProjectStatusID", checkNull(linkingInfoModel.ProjectStatusId));
-                            cmd.Parameters.AddWithValue("@FiberCount", string.IsNullOrEmpty(linkingInfoModel.FiberCount) ? string.Empty : linkingInfoModel.FiberCount);
+                            cmd.Parameters.AddWithValue("@FiberCount", checkNull(linkingInfoModel.FiberCount));
                             cmd.Parameters.AddWithValue("@FK_StepID", linkingInfoModel.StepId);
                             cmd.Parameters.AddWithValue("@createdBy", linkingInfoModel.CreatedBy);
                             cmd.Parameters.AddWithValue("@updatedBy", linkingInfoModel.CreatedBy);
@@ -182,7 +178,7 @@ namespace Exelon.Infrastructure.Repositories
 
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procID", 4);
+                            cmd.Parameters.AddWithValue("@procID", 2);
                             cmd.Parameters.AddWithValue("@LinkingID", infoModel.LinkingId);
                             cmd.Parameters.AddWithValue("@PrimaryKey", string.IsNullOrEmpty(infoModel.PrimaryKey) ? string.Empty : infoModel.PrimaryKey);
                             cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(infoModel.Description) ? string.Empty : infoModel.Description);
@@ -205,85 +201,13 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", infoModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var linkInfo = new LinkingInfoModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-
-                                    linkInfo.LinkingId = (long)dataReader["LinkingID"];
-                                    linkInfo.PrimaryKey = dataReader["PrimaryKey"].ToString();
-                                    linkInfo.Description = dataReader["Description"].ToString();
-                                    linkInfo.Nickname = dataReader["Nickname"].ToString();
-                                    linkInfo.PDId = (int)dataReader["PDID"];
-                                    linkInfo.EngineeringYear = dataReader["EngineeringYear"].ToString();
-                                    linkInfo.ExecutionYear = dataReader["ExecutionYear"].ToString();
-                                    if (dataReader["FK_TechnologyID"] != DBNull.Value)
-                                        linkInfo.TechnologyId = (int)dataReader["FK_TechnologyID"];
-                                    if (dataReader["FK_RegionID"] != DBNull.Value)
-                                        linkInfo.RegionId = (int)dataReader["FK_RegionID"];
-                                    if (dataReader["FK_BarnID"] != DBNull.Value)
-                                        linkInfo.BarnId = (int)dataReader["FK_BarnID"];
-                                    linkInfo.WorkOrder = dataReader["WorkOrder"].ToString();
-                                    linkInfo.ProjectId = dataReader["ProjectID"].ToString();
-                                    linkInfo.FiberCount = dataReader["FiberCount"].ToString();
-                                    linkInfo.Comments = dataReader["Comments"].ToString();
-                                    linkInfo.ScopeComments = dataReader["ScopeComments"].ToString();
-                                    linkInfo.ITN = dataReader["ITN"].ToString();
-                                    if (dataReader["FK_ProjectStatusID"] != DBNull.Value)
-                                        linkInfo.ProjectStatusId = (int)dataReader["FK_ProjectStatusID"];
-                                    linkInfo.StepId = (int)dataReader["FK_StepID"];
-                                }
-                            }
-                            if (string.IsNullOrEmpty(infoModel.FiberCount))
-                                cmd.Parameters["@FiberCount"].Value = linkInfo.FiberCount;
-                            if (string.IsNullOrEmpty(infoModel.PrimaryKey))
-                                cmd.Parameters["@PrimaryKey"].Value = linkInfo.PrimaryKey;
-
-                            if (string.IsNullOrEmpty(infoModel.Description))
-                                cmd.Parameters["@Description"].Value = linkInfo.Description;
-
-                            if (string.IsNullOrEmpty(infoModel.Nickname))
-                                cmd.Parameters["@Nickname"].Value = linkInfo.Nickname;
-
-                            if (string.IsNullOrEmpty(infoModel.EngineeringYear))
-                                cmd.Parameters["@EngineeringYear"].Value = linkInfo.EngineeringYear;
-
-                            if (string.IsNullOrEmpty(infoModel.ExecutionYear))
-                                cmd.Parameters["@ExecutionYear"].Value = linkInfo.ExecutionYear;
-
-                            if (string.IsNullOrEmpty(infoModel.WorkOrder))
-                                cmd.Parameters["@WorkOrder"].Value = linkInfo.WorkOrder;
-
-                            if (string.IsNullOrEmpty(infoModel.Comments))
-                                cmd.Parameters["@Comments"].Value = linkInfo.Comments;
-
-                            if (string.IsNullOrEmpty(infoModel.ScopeComments))
-                                cmd.Parameters["@ScopeComments"].Value = linkInfo.ScopeComments;
-
-                            if (string.IsNullOrEmpty(infoModel.ITN))
-                                cmd.Parameters["@ITN"].Value = linkInfo.ITN;
-
-                            if (string.IsNullOrEmpty(infoModel.ProjectId))
-                                cmd.Parameters["@ProjectID"].Value = linkInfo.ProjectId;
-
-                            if (infoModel.BarnId == null && linkInfo.BarnId == null)
-                                cmd.Parameters["@FK_BarnID"].Value = DBNull.Value;
-                            else if (infoModel.BarnId == null)
-                                cmd.Parameters["@FK_BarnID"].Value = linkInfo.BarnId;
-
-                            cmd.Parameters["@FK_ProjectStatusID"].Value = checkNullWithValue(infoModel.ProjectStatusId, linkInfo.ProjectStatusId);
-                            cmd.Parameters["@FK_TechnologyID"].Value = checkNullWithValue(infoModel.TechnologyId, linkInfo.TechnologyId);
-                            cmd.Parameters["@FK_RegionID"].Value = checkNullWithValue(infoModel.RegionId, linkInfo.RegionId);
-                            cmd.Parameters["@FiberCount"].Value = checkNullWithValue(infoModel.FiberCount, linkInfo.FiberCount);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return infoModel;
                         }
                     }
                 }
-                catch (Exception) { return new LinkingInfoModel(); }
+                catch (Exception ex) { return new LinkingInfoModel(); }
             });
         }
 

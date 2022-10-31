@@ -146,7 +146,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@RouterUpgradesPhase3ID", hutExRouterUpgradePhaseThreeModel.RouterUpgradesPhase3ID);
                             cmd.Parameters.AddWithValue("@HutExecutionID", hutExRouterUpgradePhaseThreeModel.HutExecutionID);
                             cmd.Parameters.AddWithValue("@RouterUpgradeStartDate", checkNull(hutExRouterUpgradePhaseThreeModel.RouterUpgradeStartDate));
@@ -155,23 +155,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", hutExRouterUpgradePhaseThreeModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var hutrouter = new HutExRouterUpgradePhaseThreeModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    hutrouter.RouterUpgradesPhase3ID = (long)dataReader["RouterUpgradesPhase3ID"];
-                                    hutrouter.HutExecutionID = (long)dataReader["HutExecutionID"];
-                                    if (dataReader["RouterUpgradeStartDate"] != DBNull.Value)
-                                        hutrouter.RouterUpgradeStartDate = Convert.ToDateTime(dataReader["RouterUpgradeStartDate"]);
-                                    if (dataReader["RouterUpgradeEndDate"] != DBNull.Value)
-                                        hutrouter.RouterUpgradeEndDate = Convert.ToDateTime(dataReader["RouterUpgradeEndDate"]);   
-                                }
-                            }
-
-                            cmd.Parameters["@RouterUpgradeStartDate"].Value = checkNullWithValue(hutExRouterUpgradePhaseThreeModel.RouterUpgradeStartDate, hutrouter.RouterUpgradeStartDate);
-                            cmd.Parameters["@RouterUpgradeEndDate"].Value = checkNullWithValue(hutExRouterUpgradePhaseThreeModel.RouterUpgradeEndDate, hutrouter.RouterUpgradeEndDate);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return hutExRouterUpgradePhaseThreeModel;

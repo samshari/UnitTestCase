@@ -174,7 +174,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@HutExecutionID", hutExecutionModel.HutExecutionID);
                             cmd.Parameters.AddWithValue("@HutDeliveryYear", string.IsNullOrEmpty(hutExecutionModel.HutDeliveryYear) ? string.Empty : hutExecutionModel.HutDeliveryYear);
                             cmd.Parameters.AddWithValue("@Location", string.IsNullOrEmpty(hutExecutionModel.Location) ? string.Empty : hutExecutionModel.Location);
@@ -192,56 +192,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", hutExecutionModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-
-                            var hutexecute = new HutExecutionModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-
-                                    hutexecute.HutExecutionID = (long)dataReader["HutExecutionID"];
-                                    hutexecute.HutDeliveryYear = dataReader["HutDeliveryYear"].ToString();
-                                    hutexecute.Location = dataReader["Location"].ToString();
-                                    hutexecute.FK_PDID = (int)dataReader["FK_PDID"];
-                                    hutexecute.WorkOrder = dataReader["WorkOrder"].ToString();
-                                    hutexecute.PID = dataReader["PID"].ToString();
-                                    if (dataReader["FK_RegionID"] != DBNull.Value)
-                                        hutexecute.FK_RegionID = (int)dataReader["FK_RegionID"];
-                                    if (dataReader["FK_BarnID"] != DBNull.Value)
-                                        hutexecute.FK_BarnID = (int)dataReader["FK_BarnID"];
-                                    hutexecute.EOC = dataReader["EOC"].ToString();
-                                    if (dataReader["FK_HutSize"] != DBNull.Value)
-                                        hutexecute.FK_HutSize = (int)dataReader["FK_HutSize"];
-                                    hutexecute.ProductOrder = dataReader["ProductOrder"].ToString();
-                                    hutexecute.Cat_ID = dataReader["Cat_ID"].ToString();
-                                    hutexecute.Delivery_Address_On_PO = dataReader["Delivery_Address_On_PO"].ToString();
-                                }
-                            }
-
-                            if (string.IsNullOrEmpty(hutExecutionModel.HutDeliveryYear))
-                                cmd.Parameters["@HutDeliveryYear"].Value = hutexecute.HutDeliveryYear;
-
-                            if (string.IsNullOrEmpty(hutExecutionModel.Location))
-                                cmd.Parameters["@Location"].Value = hutexecute.Location;
-
-                            if (string.IsNullOrEmpty(hutExecutionModel.WorkOrder))
-                                cmd.Parameters["@WorkOrder"].Value = hutexecute.WorkOrder;
-
-                            if (string.IsNullOrEmpty(hutExecutionModel.PID))
-                                cmd.Parameters["@PID"].Value = hutexecute.PID;
-
-                            if (string.IsNullOrEmpty(hutExecutionModel.EOC))
-                                cmd.Parameters["@EOC"].Value = hutexecute.EOC;
-
-                            if (string.IsNullOrEmpty(hutExecutionModel.ProductOrder))
-                                cmd.Parameters["@ProductOrder"].Value = hutexecute.ProductOrder;
-
-                            if (string.IsNullOrEmpty(hutExecutionModel.Delivery_Address_On_PO))
-                                cmd.Parameters["@Delivery_Address_On_PO"].Value = hutexecute.Delivery_Address_On_PO;
-                            cmd.Parameters["@FK_BarnID"].Value =checkNullWithValue(hutExecutionModel.FK_BarnID, hutexecute.FK_BarnID);
-                            cmd.Parameters["@FK_RegionID"].Value =checkNullWithValue(hutExecutionModel.FK_RegionID,hutexecute.FK_RegionID);
-                            cmd.Parameters["@FK_HutSize"].Value =checkNullWithValue(hutExecutionModel.FK_HutSize,hutexecute.FK_HutSize);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return hutExecutionModel;

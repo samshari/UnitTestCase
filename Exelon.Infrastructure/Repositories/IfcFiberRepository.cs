@@ -204,7 +204,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", ifcFiberModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@IFCFiberID", ifcFiberModel.IFCFiberID);
 
@@ -240,74 +240,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", ifcFiberModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-
-                            var ifc = new IfcFiberModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    ifc.IFCFiberID = (long)dataReader["IFCFiberID"];
-                                    ifc.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-
-                                    if (dataReader["CurrentScheduledDate"] != DBNull.Value)
-                                        ifc.CurrentScheduledDate = Convert.ToDateTime(dataReader["CurrentScheduledDate"]);
-
-                                    if (dataReader["OriginalScheduledDate"] != DBNull.Value)
-                                        ifc.OriginalScheduledDate = Convert.ToDateTime(dataReader["OriginalScheduledDate"]);
-
-                                    if (dataReader["MissedDates"] != DBNull.Value)
-                                        ifc.MissedDates = Convert.ToDateTime(dataReader["MissedDates"]);
-
-                                    ifc.MissedReason = dataReader["MissedReason"].ToString();
-
-                                    if (dataReader["InitialIssueDate"] != DBNull.Value)
-                                        ifc.InitialIssueDate = Convert.ToDateTime(dataReader["InitialIssueDate"]);
-
-                                    if (dataReader["FinalIssueDate"] != DBNull.Value)
-                                        ifc.FinalIssueDate = Convert.ToDateTime(dataReader["FinalIssueDate"]);
-
-                                    ifc.StepID = (int)dataReader["StepID"];
-                                    
-                                    
-
-                                }
-                            }
-
-
-                            if (ifcFiberModel.CurrentScheduledDate == null && ifc.CurrentScheduledDate == null)
-                                cmd.Parameters["@CurrentScheduledDate"].Value = DBNull.Value;
-                            else if (ifcFiberModel.CurrentScheduledDate == null)
-                                cmd.Parameters["@CurrentScheduledDate"].Value = ifc.CurrentScheduledDate;
-
-
-                            if (ifcFiberModel.OriginalScheduledDate == null && ifc.OriginalScheduledDate == null)
-                                cmd.Parameters["@OriginalScheduledDate"].Value = DBNull.Value;
-                            else if (ifcFiberModel.OriginalScheduledDate == null)
-                                cmd.Parameters["@OriginalScheduledDate"].Value = ifc.OriginalScheduledDate;
-
-
-                            if (ifcFiberModel.InitialIssueDate == null && ifc.InitialIssueDate == null)
-                                cmd.Parameters["@InitialIssueDate"].Value = DBNull.Value;
-                            else if (ifcFiberModel.InitialIssueDate == null)
-                                cmd.Parameters["@InitialIssueDate"].Value = ifc.InitialIssueDate;
-
-                            if (ifcFiberModel.FinalIssueDate == null && ifc.FinalIssueDate == null)
-                                cmd.Parameters["@FinalIssueDate"].Value = DBNull.Value;
-                            else if (ifcFiberModel.FinalIssueDate == null)
-                                cmd.Parameters["@FinalIssueDate"].Value = ifc.FinalIssueDate;
-
-
-                            if (ifcFiberModel.MissedDates == null && ifc.MissedDates == null)
-                                cmd.Parameters["@MissedDates"].Value = DBNull.Value;
-                            else if (ifcFiberModel.MissedDates == null)
-                                cmd.Parameters["@MissedDates"].Value = ifc.MissedDates;
-
-                            if (string.IsNullOrEmpty(ifcFiberModel.MissedReason))
-                                cmd.Parameters["@MissedReason"].Value = ifc.MissedReason;
-
-
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return ifcFiberModel;

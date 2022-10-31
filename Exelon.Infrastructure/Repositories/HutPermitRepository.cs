@@ -230,7 +230,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 4);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@HutPermittingID", hUTPERMITTINGModel.HutPermittingID);
                             cmd.Parameters.AddWithValue("@InstallYear", string.IsNullOrEmpty(hUTPERMITTINGModel.InstallYear) ? string.Empty : hUTPERMITTINGModel.InstallYear);
                             cmd.Parameters.AddWithValue("@Substation", string.IsNullOrEmpty(hUTPERMITTINGModel.Substation) ? string.Empty : hUTPERMITTINGModel.Substation);
@@ -262,107 +262,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", hUTPERMITTINGModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var hut = new HUTPERMITTINGModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-
-                                    hut.HutPermittingID = (long)dataReader["HutPermittingID"];
-                                    hut.InstallYear = dataReader["InstallYear"].ToString();
-                                    hut.Substation = dataReader["Substation"].ToString();
-                                    hut.Location_Municipality = dataReader["Location_Municipality"].ToString();
-                                    hut.Location_County = dataReader["Location_County"].ToString();
-                                    hut.OH_RequiredCountyStormwater = dataReader["OH_RequiredCountyStormwater"].ToString();
-                                    hut.OH_ArmyCorpsPermitRequired = dataReader["OH_ArmyCorpsPermitRequired"].ToString();
-                                    hut.OH_TROWPermitRequired = dataReader["OH_TROWPermitRequired"].ToString();
-                                    hut.OH_SiteDevelopmentPermitRequired = dataReader["OH_SiteDevelopmentPermitRequired"].ToString();
-                                    hut.OH_HwyOrIDOTPermit = dataReader["OH_HwyOrIDOTPermit"].ToString();
-                                    hut.OH_BuildingOrOtherPermitRequired = dataReader["OH_BuildingOrOtherPermitRequired"].ToString();
-                                    hut.Comments = dataReader["Comments"].ToString();
-                                    hut.PermitExpiration = dataReader["PermitExpiration"].ToString();
-                                    hut.Notes = dataReader["Notes"].ToString();
-                                    hut.Status = dataReader["Status"].ToString();
-                                    if (dataReader["FK_ArmyCorpsPermitRequired"] != DBNull.Value)
-                                        hut.FK_ArmyCorpsPermitRequired = (int)dataReader["FK_ArmyCorpsPermitRequired"];
-                                    if (dataReader["FK_BuildingOrOtherPermitRequired"] != DBNull.Value)
-                                        hut.FK_BuildingOrOtherPermitRequired = (int)dataReader["FK_BuildingOrOtherPermitRequired"];
-                                    if (dataReader["FK_HwyOrIDOTPermit"] != DBNull.Value)
-                                        hut.FK_HwyOrIDOTPermit = (int)dataReader["FK_HwyOrIDOTPermit"];
-                                    if (dataReader["FK_RequiredCountyStormwater"] != DBNull.Value)
-                                        hut.FK_RequiredCountyStormwater = (int)dataReader["FK_RequiredCountyStormwater"];
-                                    if (dataReader["FK_SiteDevelopmentPermitRequired"] != DBNull.Value)
-                                        hut.FK_SiteDevelopmentPermitRequired = (int)dataReader["FK_SiteDevelopmentPermitRequired"];
-                                    if (dataReader["FK_SizeID"] != DBNull.Value)
-                                        hut.FK_SizeID = (int)dataReader["FK_SizeID"];
-                                    if (dataReader["FK_TROWPermitRequired"] != DBNull.Value)
-                                        hut.FK_TROWPermitRequired = (int)dataReader["FK_TROWPermitRequired"];
-                                    hut.FK_EOCID = (int)dataReader["FK_EOCID"];
-                                    if (dataReader["CivilIFADate"] != DBNull.Value)
-                                        hut.CivilIFADate = Convert.ToDateTime(dataReader["CivilIFADate"]);
-                                    if (dataReader["CivilIFCDate"] != DBNull.Value)
-                                        hut.CivilIFCDate = Convert.ToDateTime(dataReader["CivilIFCDate"]);
-                                    if (dataReader["PermitReadyDate"] != DBNull.Value)
-                                        hut.PermitReadyDate = Convert.ToDateTime(dataReader["PermitReadyDate"]);
-                                    if (dataReader["PermitSubmissionDate"] != DBNull.Value)
-                                        hut.PermitSubmissionDate = Convert.ToDateTime(dataReader["PermitSubmissionDate"]);
-                                }
-                            }
-                            cmd.Parameters["@procId"].Value = 2;
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.InstallYear))
-                                cmd.Parameters["@InstallYear"].Value = hut.InstallYear;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.Substation))
-                                cmd.Parameters["@Substation"].Value = hut.Substation;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.Location_Municipality))
-                                cmd.Parameters["@Location_Municipality"].Value = hut.Location_Municipality;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.Location_County))
-                                cmd.Parameters["@Location_County"].Value = hut.Location_County;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.OH_RequiredCountyStormwater))
-                                cmd.Parameters["@OH_RequiredCountyStormwater"].Value = hut.OH_RequiredCountyStormwater;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.OH_BuildingOrOtherPermitRequired))
-                                cmd.Parameters["@OH_BuildingOrOtherPermitRequired"].Value = hut.OH_BuildingOrOtherPermitRequired;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.OH_ArmyCorpsPermitRequired))
-                                cmd.Parameters["@OH_ArmyCorpsPermitRequired"].Value = hut.OH_ArmyCorpsPermitRequired;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.OH_HwyOrIDOTPermit))
-                                cmd.Parameters["@OH_HwyOrIDOTPermit"].Value = hut.OH_HwyOrIDOTPermit;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.OH_SiteDevelopmentPermitRequired))
-                                cmd.Parameters["@OH_SiteDevelopmentPermitRequired"].Value = hut.OH_SiteDevelopmentPermitRequired;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.OH_TROWPermitRequired))
-                                cmd.Parameters["@OH_TROWPermitRequired"].Value = hut.OH_TROWPermitRequired;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.Comments))
-                                cmd.Parameters["@Comments"].Value = hut.Comments;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.PermitExpiration))
-                                cmd.Parameters["@PermitExpiration"].Value = hut.PermitExpiration;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.Status))
-                                cmd.Parameters["@Status"].Value = hut.Status;
-
-                            if (string.IsNullOrEmpty(hUTPERMITTINGModel.Notes))
-                                cmd.Parameters["@Notes"].Value = hut.Notes;
-
-                            cmd.Parameters["@FK_SizeID"].Value = checkNullWithValue(hUTPERMITTINGModel.FK_SizeID, hut.FK_SizeID);
-                            cmd.Parameters["@FK_EOCID"].Value = checkNullWithValue(hUTPERMITTINGModel.FK_EOCID, hut.FK_EOCID);
-                            cmd.Parameters["@FK_ArmyCorpsPermitRequired"].Value =checkNullWithValue(hUTPERMITTINGModel.FK_ArmyCorpsPermitRequired,hut.FK_ArmyCorpsPermitRequired);
-                            cmd.Parameters["@FK_BuildingOrOtherPermitRequired"].Value =checkNullWithValue(hUTPERMITTINGModel.FK_BuildingOrOtherPermitRequired,hut.FK_BuildingOrOtherPermitRequired);
-                            cmd.Parameters["@FK_HwyOrIDOTPermit"].Value = checkNullWithValue(hUTPERMITTINGModel.FK_HwyOrIDOTPermit,hut.FK_HwyOrIDOTPermit);
-                            cmd.Parameters["@FK_RequiredCountyStormwater"].Value =checkNullWithValue(hUTPERMITTINGModel.FK_RequiredCountyStormwater,hut.FK_RequiredCountyStormwater);
-                            cmd.Parameters["@FK_SiteDevelopmentPermitRequired"].Value =checkNullWithValue(hUTPERMITTINGModel.FK_SiteDevelopmentPermitRequired,hut.FK_SiteDevelopmentPermitRequired);
-                            cmd.Parameters["@FK_TROWPermitRequired"].Value =checkNullWithValue(hUTPERMITTINGModel.FK_TROWPermitRequired,hut.FK_TROWPermitRequired);cmd.Parameters["@FK_SizeID"].Value =checkNullWithValue(hUTPERMITTINGModel.FK_SizeID,hut.FK_SizeID);
-                            cmd.Parameters["@CivilIFADate"].Value =checkNullWithValue(hUTPERMITTINGModel.CivilIFADate,hut.CivilIFADate);
-                            cmd.Parameters["@CivilIFCDate"].Value =checkNullWithValue(hUTPERMITTINGModel.CivilIFCDate, hut.CivilIFCDate);
-                            cmd.Parameters["@PermitReadyDate"].Value = checkNullWithValue(hUTPERMITTINGModel.PermitReadyDate,hut.PermitReadyDate);
-                            cmd.Parameters["@PermitSubmissionDate"].Value =checkNullWithValue(hUTPERMITTINGModel.PermitSubmissionDate,hut.PermitSubmissionDate);
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return hUTPERMITTINGModel;

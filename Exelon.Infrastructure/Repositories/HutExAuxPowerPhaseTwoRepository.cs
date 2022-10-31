@@ -164,7 +164,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@AuxPowerPhase2ID", hutExAuxPowerPhaseTwoModel.AuxPowerPhase2ID);
                             cmd.Parameters.AddWithValue("@HutExecutionID", hutExAuxPowerPhaseTwoModel.HutExecutionID);
                             cmd.Parameters.AddWithValue("@SecurityInfrastructure", string.IsNullOrEmpty(hutExAuxPowerPhaseTwoModel.SecurityInfrastructure) ? string.Empty : hutExAuxPowerPhaseTwoModel.SecurityInfrastructure);
@@ -177,42 +177,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", hutExAuxPowerPhaseTwoModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-
-                            var hutphasetwo = new HutExAuxPowerPhaseTwoModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    hutphasetwo.AuxPowerPhase2ID = (long)dataReader["AuxPowerPhase2ID"];
-                                    hutphasetwo.HutExecutionID = (long)dataReader["HutExecutionID"];
-                                    hutphasetwo.SecurityInfrastructure = dataReader["SecurityInfrastructure"].ToString();
-                                    hutphasetwo.SecurityNotesNextSteps = dataReader["SecurityNotesNextSteps"].ToString();
-                                    if (dataReader["DistElectricalIFAs"] != DBNull.Value)
-                                        hutphasetwo.DistElectricalIFAs = Convert.ToDateTime(dataReader["DistElectricalIFAs"]);
-                                    if (dataReader["DistElectricalIFCs"] != DBNull.Value)
-                                        hutphasetwo.DistElectricalIFCs = Convert.ToDateTime(dataReader["DistElectricalIFCs"]);
-                                    if (dataReader["AboveGradeElectricalIFAs"] != DBNull.Value)
-                                        hutphasetwo.AboveGradeElectricalIFAs = Convert.ToDateTime(dataReader["AboveGradeElectricalIFAs"]);
-                                    hutphasetwo.PermitStatus = dataReader["PermitStatus"].ToString();
-                                    
-
-                                }
-                            }
-                            if (string.IsNullOrEmpty(hutExAuxPowerPhaseTwoModel.SecurityInfrastructure))
-                                cmd.Parameters["@SecurityInfrastructure"].Value = hutphasetwo.SecurityInfrastructure;
-
-                            if (string.IsNullOrEmpty(hutExAuxPowerPhaseTwoModel.SecurityNotesNextSteps))
-                                cmd.Parameters["@SecurityNotesNextSteps"].Value = hutphasetwo.SecurityNotesNextSteps;
-
-                            if (string.IsNullOrEmpty(hutExAuxPowerPhaseTwoModel.PermitStatus))
-                                cmd.Parameters["@PermitStatus"].Value = hutphasetwo.PermitStatus;
-
-                            cmd.Parameters["@DistElectricalIFAs"].Value = checkNullWithValue(hutExAuxPowerPhaseTwoModel.DistElectricalIFAs, hutphasetwo.DistElectricalIFAs);
-                            cmd.Parameters["@DistElectricalIFCs"].Value = checkNullWithValue(hutExAuxPowerPhaseTwoModel.DistElectricalIFCs, hutphasetwo.DistElectricalIFCs);
-                            cmd.Parameters["@AboveGradeElectricalIFAs"].Value = checkNullWithValue(hutExAuxPowerPhaseTwoModel.AboveGradeElectricalIFAs, hutphasetwo.AboveGradeElectricalIFAs);
-
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return hutExAuxPowerPhaseTwoModel;

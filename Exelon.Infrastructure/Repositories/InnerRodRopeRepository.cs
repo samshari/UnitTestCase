@@ -4,8 +4,6 @@ using Exelon.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Globalization;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Exelon.Infrastructure.Repositories
@@ -56,6 +54,7 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@FK_StepID", 1);
                             cmd.Parameters.AddWithValue("@InnerductStartDate", DBNull.Value);
                             cmd.Parameters.AddWithValue("@InnerductEndDate", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@Comments", string.Empty);
                             cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);
                             cmd.Parameters.AddWithValue("@UpdatedBy", string.Empty);
                             cmd.Connection = connection;
@@ -83,6 +82,7 @@ namespace Exelon.Infrastructure.Repositories
                                         inner.StrInnerductStartDate = Convert.ToDateTime(dataReader["InnerductStartDate"]).ToString(onlyDate);
                                     if (dataReader["InnerductEndDate"] != DBNull.Value)
                                         inner.StrInnerductEndDate = Convert.ToDateTime(dataReader["InnerductEndDate"]).ToString(onlyDate);
+                                    inner.Comments = dataReader["Comments"].ToString();
                                     inner.IsActive = Convert.ToBoolean(dataReader["IsActive"]);
                                     inner.CreatedBy = dataReader["CreatedBy"].ToString();
                                     inner.CreatedDate = Convert.ToDateTime(dataReader["CreatedDate"]).ToString(dateWithTime);
@@ -102,7 +102,7 @@ namespace Exelon.Infrastructure.Repositories
         }
 
 
-        public async Task<Dictionary<InnerRodRopeModel,string>> CreateRODROPE(InnerRodRopeModel iNNERODROPEModel)
+        public async Task<Dictionary<InnerRodRopeModel, string>> CreateRODROPE(InnerRodRopeModel iNNERODROPEModel)
         {
             return await Task.Run(() =>
             {
@@ -119,17 +119,18 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@RodAndRopeID", 0);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", iNNERODROPEModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@FK_StepID", iNNERODROPEModel.FK_StepID);
-                            cmd.Parameters.AddWithValue("@InnerductStartDate",checkNull(iNNERODROPEModel.InnerductStartDate));
-                            cmd.Parameters.AddWithValue("@InnerductEndDate",checkNull(iNNERODROPEModel.InnerductEndDate));
+                            cmd.Parameters.AddWithValue("@InnerductStartDate", checkNull(iNNERODROPEModel.InnerductStartDate));
+                            cmd.Parameters.AddWithValue("@InnerductEndDate", checkNull(iNNERODROPEModel.InnerductEndDate));
+                            cmd.Parameters.AddWithValue("@Comments", string.IsNullOrEmpty(iNNERODROPEModel.Comments) ? string.Empty : iNNERODROPEModel.Comments);
                             cmd.Parameters.AddWithValue("@CreatedBy", iNNERODROPEModel.CreatedBy);
                             cmd.Parameters.AddWithValue("@UpdatedBy", iNNERODROPEModel.CreatedBy);
                             cmd.Connection = connection;
                             connection.Open();
                             int check = (int)cmd.ExecuteScalar();
-                            if(check == 1)
+                            if (check == 1)
                             {
                                 cmd.Parameters["@procId"].Value = 1;
-                                
+
                             }
                             else
                             {
@@ -161,36 +162,17 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@RodAndRopeID", iNNERODROPEModel.RodAndRopeID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", DBNull.Value);
                             cmd.Parameters.AddWithValue("@FK_StepID", DBNull.Value);
                             cmd.Parameters.AddWithValue("@InnerductStartDate", checkNull(iNNERODROPEModel.InnerductStartDate));
                             cmd.Parameters.AddWithValue("@InnerductEndDate", checkNull(iNNERODROPEModel.InnerductEndDate));
+                            cmd.Parameters.AddWithValue("@Comments", string.IsNullOrEmpty(iNNERODROPEModel.Comments) ? string.Empty : iNNERODROPEModel.Comments);
                             cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);
                             cmd.Parameters.AddWithValue("@UpdatedBy", iNNERODROPEModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var inner = new InnerRodRopeModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-
-                                    inner.RodAndRopeID  = (long)dataReader["RodAndRopeID"];
-                                    inner.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    inner.FK_StepID = (int)dataReader["FK_StepID"];
-                                    if (dataReader["InnerductStartDate"] != DBNull.Value)
-                                         inner.InnerductStartDate = Convert.ToDateTime(dataReader["InnerductStartDate"]);
-                                    if (dataReader["InnerductEndDate"] != DBNull.Value)
-                                        inner.InnerductEndDate = Convert.ToDateTime(dataReader["InnerductEndDate"]);
-
-                                }
-                            }
-                            cmd.Parameters["@InnerductStartDate"].Value =checkNullWithValue(iNNERODROPEModel.InnerductStartDate,inner.InnerductStartDate);
-                            cmd.Parameters["@InnerductEndDate"].Value = checkNullWithValue(iNNERODROPEModel.InnerductEndDate,inner.InnerductEndDate);
-
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return iNNERODROPEModel;
@@ -221,6 +203,7 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@FK_StepID", 1);
                             cmd.Parameters.AddWithValue("@InnerductStartDate", DBNull.Value);
                             cmd.Parameters.AddWithValue("@InnerductEndDate", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@Comments", string.Empty);
                             cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);
                             cmd.Parameters.AddWithValue("@UpdatedBy", string.Empty);
                             cmd.Connection = connection;

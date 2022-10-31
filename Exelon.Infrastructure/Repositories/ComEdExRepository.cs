@@ -152,7 +152,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@ComEdID", cOMEDEXModel.ComEdID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", cOMEDEXModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@FK_StepID", cOMEDEXModel.FK_StepID);
@@ -161,23 +161,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", cOMEDEXModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-
-                            var com = new COMEDEXModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    com.ComEdID = (long)dataReader["ComEdID"];
-                                    com.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    com.FK_StepID = (int)dataReader["FK_StepID"];
-                                    if (dataReader["FK_LNLID"] != DBNull.Value)
-                                        com.FK_LNLID = (int)dataReader["FK_LNLID"];
-                                    
-                                }
-                            }
-                            cmd.Parameters["@FK_LNLID"].Value =checkNullWithValue(cOMEDEXModel.FK_LNLID,com.FK_LNLID);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return cOMEDEXModel;

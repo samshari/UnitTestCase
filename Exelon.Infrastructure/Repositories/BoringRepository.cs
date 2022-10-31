@@ -170,7 +170,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@BoringID", bORINGModel.BoringID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", bORINGModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@FK_stepID", bORINGModel.FK_stepID);
@@ -183,39 +183,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", bORINGModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-
-
-                            var bore = new BORINGModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    bore.BoringID = (long)dataReader["BoringID"];
-                                    bore.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    bore.FK_stepID = (int)dataReader["FK_stepID"];
-                                    if (dataReader["FK_BoringCOCID"] != DBNull.Value)
-                                        bore.FK_BoringCOCID = (int)dataReader["FK_BoringCOCID"];
-                                    bore.IssuesOrComments = dataReader["IssuesOrComments"].ToString();
-                                    if (dataReader["StartDate"] != DBNull.Value)
-                                        bore.StartDate = Convert.ToDateTime(dataReader["StartDate"]);
-                                    if (dataReader["EndDate"] != DBNull.Value)
-                                        bore.EndDate = Convert.ToDateTime(dataReader["EndDate"]);
-                                    bore.WeeklyFTECount = dataReader["WeeklyFTECount"].ToString();
-                                    bore.WeeklyFTECount = dataReader["WeeklyFTECount"].ToString();
-
-                                }
-                            }
-
-                            if (string.IsNullOrEmpty(bORINGModel.WeeklyFTECount))
-                                cmd.Parameters["@WeeklyFTECount"].Value = bore.WeeklyFTECount;
-
-                            if (string.IsNullOrEmpty(bORINGModel.IssuesOrComments))
-                                cmd.Parameters["@IssuesOrComments"].Value = bore.IssuesOrComments;
-                            cmd.Parameters["@FK_BoringCOCID"].Value =checkNullWithValue(bORINGModel.FK_BoringCOCID, bore.FK_BoringCOCID);
-                            cmd.Parameters["@StartDate"].Value =checkNullWithValue(bORINGModel.StartDate,bore.StartDate);
-                            cmd.Parameters["@EndDate"].Value =checkNullWithValue(bORINGModel.EndDate,bore.EndDate);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return bORINGModel;

@@ -163,7 +163,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@PreContructionID", pRECONSTRUCTIONModel.PreContructionID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", pRECONSTRUCTIONModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@FK_StepID", pRECONSTRUCTIONModel.FK_StepID);
@@ -175,33 +175,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", pRECONSTRUCTIONModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var preconst = new PRECONSTRUCTIONModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    preconst.PreContructionID = (long)dataReader["PreContructionID"];
-                                    preconst.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    if (dataReader["FK_EnvironmentalCOCID"] != DBNull.Value)
-                                        preconst.FK_EnvironmentalCOCID = (int)dataReader["FK_EnvironmentalCOCID"];
-                                    if (dataReader["FK_VegRequired"] != DBNull.Value)
-                                        preconst.FK_VegRequired = (int)dataReader["FK_VegRequired"];
-                                    if (dataReader["FK_StackingRequired"] != DBNull.Value)
-                                        preconst.FK_StackingRequired = (int)dataReader["FK_StackingRequired"];
-                                    if (dataReader["FK_MattingRequired"] != DBNull.Value)
-                                        preconst.FK_MattingRequired = (int)dataReader["FK_MattingRequired"];
-                                    
-
-                                }
-                            }
-
-                            cmd.Parameters["@FK_VegRequired"].Value =checkNullWithValue(pRECONSTRUCTIONModel.FK_VegRequired,preconst.FK_VegRequired);
-                            cmd.Parameters["@FK_EnvironmentalCOCID"].Value =checkNullWithValue(pRECONSTRUCTIONModel.FK_EnvironmentalCOCID,preconst.FK_EnvironmentalCOCID);
-                            cmd.Parameters["@FK_StackingRequired"].Value =checkNullWithValue(pRECONSTRUCTIONModel.FK_StackingRequired,preconst.FK_StackingRequired);
-                            cmd.Parameters["@FK_MattingRequired"].Value =checkNullWithValue(pRECONSTRUCTIONModel.FK_MattingRequired,preconst.FK_MattingRequired);
-
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return pRECONSTRUCTIONModel;

@@ -5,7 +5,7 @@ using Exelon.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 #endregion
 
 namespace Exelon.Infrastructure.Repositories
@@ -18,21 +18,6 @@ namespace Exelon.Infrastructure.Repositories
         public DeviceRepository(IAppSettings appSettings)
         {
             _connectionString = appSettings.GetConnectionString();
-        }
-        private object checkNull(object value)
-        {
-            if (value == null)
-                return DBNull.Value;
-
-            return value;
-        }
-        private object checkNullWithValue(object Value, object changeValue)
-        {
-            if (Value == null && changeValue == null)
-                return DBNull.Value;
-            else if (Value == null)
-                return changeValue;
-            return Value;
         }
         public async Task<List<DeviceModel>> GetDevice(int id = 0)
         {

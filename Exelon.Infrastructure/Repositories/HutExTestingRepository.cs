@@ -153,7 +153,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@HutTestingLNLID", hutExTestingModel.HutTestingLNLID);
                             cmd.Parameters.AddWithValue("@HutExecutionID", hutExTestingModel.HutExecutionID);
                             cmd.Parameters.AddWithValue("@FiberRingCompleted", checkNull(hutExTestingModel.FiberRingCompleted));
@@ -163,27 +163,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", hutExTestingModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var huttest = new HutExTestingModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    huttest.HutTestingLNLID = (long)dataReader["HutTestingLNLID"];
-                                    huttest.HutExecutionID = (long)dataReader["HutExecutionID"];
-                                    if (dataReader["FiberRingCompleted"] != DBNull.Value)
-                                        huttest.FiberRingCompleted = Convert.ToDateTime(dataReader["FiberRingCompleted"]);
-                                    if (dataReader["HutInService"] != DBNull.Value)
-                                        huttest.HutInService = Convert.ToDateTime(dataReader["HutInService"]);
-                                    huttest.SecurityEquipmentInstalleCard = dataReader["SecurityEquipmentInstalleCard"].ToString();
-
-                                }
-                            }
-                            cmd.Parameters["@FiberRingCompleted"].Value = checkNullWithValue(hutExTestingModel.FiberRingCompleted, huttest.FiberRingCompleted);
-                            cmd.Parameters["@HutInService"].Value = checkNullWithValue(hutExTestingModel.HutInService, huttest.HutInService);
-                            if (string.IsNullOrEmpty(hutExTestingModel.SecurityEquipmentInstalleCard))
-                                cmd.Parameters["@SecurityEquipmentInstalleCard"].Value = huttest.SecurityEquipmentInstalleCard;
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return hutExTestingModel;

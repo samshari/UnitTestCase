@@ -23,6 +23,7 @@ namespace Exelon.Domain
         public string ScopeComments { get; set; }
         public string ITN { get; set; }
         public Nullable<int> ProjectStatusId { get; set; }
+        public string StatusName { get; set; }
         public int StepId { get; set; }
         public string CreatedBy { get; set; }
         public string CreatedDate { get; set; }

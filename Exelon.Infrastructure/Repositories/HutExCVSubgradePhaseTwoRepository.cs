@@ -188,7 +188,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@HutExCVSubgradePhase2_ID", hutExCVSubgradePhaseTwoModel.HutExCVSubgradePhase2_ID);
                             cmd.Parameters.AddWithValue("@HutsExecutionID", hutExCVSubgradePhaseTwoModel.HutsExecutionID);
                             cmd.Parameters.AddWithValue("@CiviIFAs_T15", checkNull(hutExCVSubgradePhaseTwoModel.CiviIFAs_T15));
@@ -205,54 +205,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", hutExCVSubgradePhaseTwoModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-
-                            var hutphasetwo = new HutExCVSubgradePhaseTwoModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    hutphasetwo.HutExCVSubgradePhase2_ID = (long)dataReader["HutExCVSubgradePhase2_ID"];
-                                    hutphasetwo.HutsExecutionID = (long)dataReader["HutsExecutionID"];
-                                    if (dataReader["CiviIFAs_T15"] != DBNull.Value)
-                                        hutphasetwo.CiviIFAs_T15 = Convert.ToDateTime(dataReader["CiviIFAs_T15"]);
-                                    if (dataReader["CivilIFCs_T12"] != DBNull.Value)
-                                        hutphasetwo.CivilIFCs_T12 = Convert.ToDateTime(dataReader["CivilIFCs_T12"]);
-                                    if (dataReader["PermitReadyDate"] != DBNull.Value)
-                                        hutphasetwo.PermitReadyDate = Convert.ToDateTime(dataReader["PermitReadyDate"]);
-                                    if (dataReader["RFPSubmittedOn"] != DBNull.Value)
-                                        hutphasetwo.RFPSubmittedOn = Convert.ToDateTime(dataReader["RFPSubmittedOn"]);
-                                    if (dataReader["PreConstructionWalkdown"] != DBNull.Value)
-                                        hutphasetwo.PreConstructionWalkdown = Convert.ToDateTime(dataReader["PreConstructionWalkdown"]);
-                                    if (dataReader["FK_HASPRequired"] != DBNull.Value)
-                                        hutphasetwo.FK_HASPRequired = (int)dataReader["FK_HASPRequired"];
-                                    hutphasetwo.CreateMR = dataReader["CreateMR"].ToString();
-                                    hutphasetwo.HRESubmitte = dataReader["HRESubmitte"].ToString();
-                                    hutphasetwo.PermitsOutstanding_T8 = dataReader["PermitsOutstanding_T8"].ToString();
-                                    hutphasetwo.HASPReqdOther = dataReader["HASPReqdOther"].ToString();
-                                    
-
-                                }
-                            }
-
-
-                            cmd.Parameters["@CiviIFAs_T15"].Value = checkNullWithValue(hutExCVSubgradePhaseTwoModel.CiviIFAs_T15, hutphasetwo.CiviIFAs_T15);
-                            cmd.Parameters["@CivilIFCs_T12"].Value = checkNullWithValue(hutExCVSubgradePhaseTwoModel.CivilIFCs_T12, hutphasetwo.CivilIFCs_T12);
-                            cmd.Parameters["@PermitReadyDate"].Value = checkNullWithValue(hutExCVSubgradePhaseTwoModel.PermitReadyDate, hutphasetwo.PermitReadyDate);
-                            cmd.Parameters["@RFPSubmittedOn"].Value = checkNullWithValue(hutExCVSubgradePhaseTwoModel.RFPSubmittedOn, hutphasetwo.RFPSubmittedOn);
-                            cmd.Parameters["@PreConstructionWalkdown"].Value = checkNullWithValue(hutExCVSubgradePhaseTwoModel.PreConstructionWalkdown, hutphasetwo.PreConstructionWalkdown);
-                            cmd.Parameters["@FK_HASPRequired"].Value = checkNullWithValue(hutExCVSubgradePhaseTwoModel.FK_HASPRequired, hutphasetwo.FK_HASPRequired);
-
-                            if (string.IsNullOrEmpty(hutExCVSubgradePhaseTwoModel.CreateMR))
-                                cmd.Parameters["@CreateMR"].Value = hutphasetwo.CreateMR;
-                            if (string.IsNullOrEmpty(hutExCVSubgradePhaseTwoModel.HRESubmitte))
-                                cmd.Parameters["@HRESubmitte"].Value = hutphasetwo.HRESubmitte;
-                            if (string.IsNullOrEmpty(hutExCVSubgradePhaseTwoModel.PermitsOutstanding_T8))
-                                cmd.Parameters["@PermitsOutstanding_T8"].Value = hutphasetwo.PermitsOutstanding_T8;
-                            if (string.IsNullOrEmpty(hutExCVSubgradePhaseTwoModel.HASPReqdOther))
-                                cmd.Parameters["@HASPReqdOther"].Value = hutphasetwo.HASPReqdOther;
-
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return hutExCVSubgradePhaseTwoModel;

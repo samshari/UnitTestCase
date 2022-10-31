@@ -200,7 +200,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@HutExAuxPowerPhase3ID", hutExPowPhaseThreeModel.HutExAuxPowerPhase3ID);
                             cmd.Parameters.AddWithValue("@HutExecutionID", hutExPowPhaseThreeModel.HutExecutionID);
                             cmd.Parameters.AddWithValue("@AuxPowerCivilStart", checkNull(hutExPowPhaseThreeModel.AuxPowerCivilStart));
@@ -217,56 +217,7 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);
                             cmd.Parameters.AddWithValue("@UpdatedBy", string.Empty);
                             cmd.Connection = connection;
-
                             connection.Open();
-                            var hutphase = new HutExPowPhaseThreeModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    hutphase.HutExAuxPowerPhase3ID = (long)dataReader["HutExAuxPowerPhase3ID"];
-                                    hutphase.HutExecutionID = (long)dataReader["HutExecutionID"];
-                                    if (dataReader["AuxPowerCivilStart"] != DBNull.Value)
-                                        hutphase.AuxPowerCivilStart = Convert.ToDateTime(dataReader["AuxPowerCivilStart"]);
-                                    if (dataReader["AuxPowerCivilComplete"] != DBNull.Value)
-                                        hutphase.AuxPowerCivilComplete = Convert.ToDateTime(dataReader["AuxPowerCivilComplete"]);
-                                    if (dataReader["AuxPowerElectricalStart"] != DBNull.Value)
-                                        hutphase.AuxPowerElectricalStart = Convert.ToDateTime(dataReader["AuxPowerElectricalStart"]);
-                                    if (dataReader["AuxPowerElectricalComplete"] != DBNull.Value)
-                                        hutphase.AuxPowerElectricalComplete = Convert.ToDateTime(dataReader["AuxPowerElectricalComplete"]);
-                                    hutphase.AuxPowerTestedByTG = dataReader["AuxPowerTestedByTG"].ToString();
-                                    if (dataReader["OutageCutoverDate"] != DBNull.Value)
-                                        hutphase.OutageCutoverDate = Convert.ToDateTime(dataReader["OutageCutoverDate"]);
-                                    hutphase.DistOpsNotifiedOfWork = dataReader["DistOpsNotifiedOfWork"].ToString();
-                                    hutphase.LNLSubmitted = dataReader["LNLSubmitted"].ToString();
-                                    hutphase.ComEdContracting = dataReader["ComEdContracting"].ToString();
-                                    if (dataReader["FiberHutToControlBuildingStart"] != DBNull.Value)
-                                        hutphase.FiberHutToControlBuildingStart = Convert.ToDateTime(dataReader["FiberHutToControlBuildingStart"]);
-                                    if (dataReader["FiberHutToControlBuildingFinish"] != DBNull.Value)
-                                        hutphase.FiberHutToControlBuildingFinish = Convert.ToDateTime(dataReader["FiberHutToControlBuildingFinish"]);
-                                }
-                            }
-                            if (string.IsNullOrEmpty(hutExPowPhaseThreeModel.AuxPowerTestedByTG))
-                                cmd.Parameters["@AuxPowerTestedByTG"].Value = hutphase.AuxPowerTestedByTG;
-
-                            if (string.IsNullOrEmpty(hutExPowPhaseThreeModel.DistOpsNotifiedOfWork))
-                                cmd.Parameters["@DistOpsNotifiedOfWork"].Value = hutphase.DistOpsNotifiedOfWork;
-
-                            if (string.IsNullOrEmpty(hutExPowPhaseThreeModel.ComEdContracting))
-                                cmd.Parameters["@ComEdContracting"].Value = hutphase.ComEdContracting;
-
-                            if (string.IsNullOrEmpty(hutExPowPhaseThreeModel.LNLSubmitted))
-                                cmd.Parameters["@LNLSubmitted"].Value = hutphase.LNLSubmitted;
-
-                            cmd.Parameters["@AuxPowerCivilStart"].Value = checkNullWithValue(hutExPowPhaseThreeModel.AuxPowerCivilStart,hutphase.AuxPowerCivilStart);
-                            cmd.Parameters["@AuxPowerCivilComplete"].Value = checkNullWithValue(hutExPowPhaseThreeModel.AuxPowerCivilComplete,hutphase.AuxPowerCivilComplete);
-                            cmd.Parameters["@AuxPowerCivilComplete"].Value = checkNullWithValue(hutExPowPhaseThreeModel.AuxPowerElectricalStart, hutphase.AuxPowerElectricalStart);
-                            cmd.Parameters["@AuxPowerCivilComplete"].Value = checkNullWithValue(hutExPowPhaseThreeModel.AuxPowerElectricalComplete, hutphase.AuxPowerElectricalComplete);
-                            cmd.Parameters["@AuxPowerCivilComplete"].Value = checkNullWithValue(hutExPowPhaseThreeModel.OutageCutoverDate, hutphase.OutageCutoverDate);
-                            cmd.Parameters["@AuxPowerCivilComplete"].Value = checkNullWithValue(hutExPowPhaseThreeModel.FiberHutToControlBuildingStart, hutphase.FiberHutToControlBuildingStart);
-                            cmd.Parameters["@AuxPowerCivilComplete"].Value = checkNullWithValue(hutExPowPhaseThreeModel.FiberHutToControlBuildingFinish, hutphase.FiberHutToControlBuildingFinish);
-                            
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return hutExPowPhaseThreeModel;

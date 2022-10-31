@@ -153,7 +153,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@FiberPhase3ID", hutExFiberPhaseThreeModel.FiberPhase3ID);
                             cmd.Parameters.AddWithValue("@HutExecutionID", hutExFiberPhaseThreeModel.HutExecutionID);
                             cmd.Parameters.AddWithValue("@FiberInstallationDate", checkNull(hutExFiberPhaseThreeModel.FiberInstallationDate));
@@ -162,24 +162,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", hutExFiberPhaseThreeModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var hutfiber = new HutExFiberPhaseThreeModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    hutfiber.FiberPhase3ID = (long)dataReader["FiberPhase3ID"];
-                                    hutfiber.HutExecutionID = (long)dataReader["HutExecutionID"];
-                                    if (dataReader["FiberInstallationDate"] != DBNull.Value)
-                                        hutfiber.FiberInstallationDate = Convert.ToDateTime(dataReader["FiberInstallationDate"]);
-                                    if (dataReader["FiberRingCompleted"] != DBNull.Value)
-                                        hutfiber.FiberRingCompleted = Convert.ToDateTime(dataReader["FiberRingCompleted"]);
-
-                                }
-                            }
-                            cmd.Parameters["@FiberInstallationDate"].Value = checkNullWithValue(hutExFiberPhaseThreeModel.FiberInstallationDate, hutfiber.FiberInstallationDate);
-                            cmd.Parameters["@FiberRingCompleted"].Value = checkNullWithValue(hutExFiberPhaseThreeModel.FiberRingCompleted, hutfiber.FiberRingCompleted);
-                            
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return hutExFiberPhaseThreeModel;

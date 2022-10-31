@@ -3,6 +3,7 @@ using Exelon.Application.IServices;
 using Exelon.Domain;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +60,8 @@ namespace ExelonPOC.API.Controllers
         public async Task<ActionResult> CreateLinkInfo([FromBody] LinkingInfoModel linkingInfoModel)
         {
             linkingInfoModel.CreatedBy = "1";
+            string s = JsonConvert.SerializeObject(linkingInfoModel);
+            linkingInfoModel = System.Text.Json.JsonSerializer.Deserialize<LinkingInfoModel>(s);
             var result = await _unitOfWorkService.linkInfoService.CreateLinkInfo(linkingInfoModel);
             if (result.LinkingId == 0)
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
@@ -71,6 +74,8 @@ namespace ExelonPOC.API.Controllers
         {
             linkingInfoModel.LinkingId = id;
             linkingInfoModel.UpdatedBy = "1";
+            string s = JsonConvert.SerializeObject(linkingInfoModel);
+            linkingInfoModel = System.Text.Json.JsonSerializer.Deserialize<LinkingInfoModel>(s);
             var result = await _unitOfWorkService.linkInfoService.UpdateLinkInfo(linkingInfoModel);
             if (result.LinkingId == 0)
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });

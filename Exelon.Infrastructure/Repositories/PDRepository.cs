@@ -119,7 +119,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@PDID", pDModel.PDID);
                             cmd.Parameters.AddWithValue("@Name", pDModel.Name);
                             cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(pDModel.Description) ? string.Empty : pDModel.Description);
@@ -127,36 +127,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", pDModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            
-                            var mpd = new PdModel();
-
-
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-
-                                    mpd.PDID = (int)dataReader["PDID"];
-                                    mpd.Name = dataReader["Name"].ToString();
-                                    mpd.Description = dataReader["Description"].ToString();
-
-                                }
-                            }
-
-
-                            if (string.IsNullOrEmpty(pDModel.Name))
-                                cmd.Parameters["@Name"].Value = mpd.Name;
-
-
-                            if (string.IsNullOrEmpty(pDModel.Description))
-                                cmd.Parameters["@Description"].Value = mpd.Description;
-
-
-                            if (string.IsNullOrEmpty(pDModel.IsActive.ToString()))
-                                cmd.Parameters["@IsActive"].Value = mpd.IsActive;
-
-
-                            cmd.Parameters["@procId"].Value = 2;
 
                             cmd.ExecuteNonQuery();
                             connection.Close();

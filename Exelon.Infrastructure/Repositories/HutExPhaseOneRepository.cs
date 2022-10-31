@@ -159,7 +159,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@HutExPhaseOneID", exPhaseOneModel.HutExPhaseOneID);
                             cmd.Parameters.AddWithValue("@FK_HutExecutionID", exPhaseOneModel.FK_HutExecutionID);
                             cmd.Parameters.AddWithValue("@FK_LandAcquisitionRequired", checkNull(exPhaseOneModel.FK_LandAcquisitionRequired));
@@ -173,45 +173,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", exPhaseOneModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-
-                            var hutexphase = new HutExPhaseOneModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    hutexphase.HutExPhaseOneID = (long)dataReader["HutExPhaseOneID"];
-                                    hutexphase.FK_HutExecutionID = (long)dataReader["FK_HutExecutionID"];
-                                    if (dataReader["FK_LandAcquisitionRequired"] != DBNull.Value)
-                                        hutexphase.FK_LandAcquisitionRequired = (int)dataReader["FK_LandAcquisitionRequired"];
-                                    hutexphase.LandAcquisitionOther = dataReader["LandAcquisitionOther"].ToString();
-                                    hutexphase.LocationTwo = dataReader["LocationTwo"].ToString();
-                                    hutexphase.PhaseOneFeasibility_T35 = dataReader["PhaseOneFeasibility_T35"].ToString();
-                                    if (dataReader["FK_IsLandAcquisitionRequired"] != DBNull.Value)
-                                        hutexphase.FK_IsLandAcquisitionRequired = (int)dataReader["FK_IsLandAcquisitionRequired"];
-                                    hutexphase.LandAcquisitionRequiredOth = dataReader["LandAcquisitionRequiredOth"].ToString();
-                                    if (dataReader["FK_SiteLayoutApprovalStatus"] != DBNull.Value)
-                                        hutexphase.FK_SiteLayoutApprovalStatus = (int)dataReader["FK_SiteLayoutApprovalStatus"];
-
-                                }
-                            }
-
-                            if (string.IsNullOrEmpty(exPhaseOneModel.LandAcquisitionOther))
-                                cmd.Parameters["@LandAcquisitionOther"].Value = hutexphase.LandAcquisitionOther;
-
-                            if (string.IsNullOrEmpty(exPhaseOneModel.LocationTwo))
-                                cmd.Parameters["@LocationTwo"].Value = hutexphase.LocationTwo;
-
-                            if (string.IsNullOrEmpty(exPhaseOneModel.PhaseOneFeasibility_T35))
-                                cmd.Parameters["@PhaseOneFeasibility_T35"].Value = hutexphase.PhaseOneFeasibility_T35;
-
-                            if (string.IsNullOrEmpty(exPhaseOneModel.LandAcquisitionRequiredOth))
-                                cmd.Parameters["@LandAcquisitionRequiredOth"].Value = hutexphase.LandAcquisitionRequiredOth;
-   
-                            cmd.Parameters["@FK_IsLandAcquisitionRequired"].Value =checkNullWithValue(exPhaseOneModel.FK_IsLandAcquisitionRequired, hutexphase.FK_IsLandAcquisitionRequired);
-                            cmd.Parameters["@FK_LandAcquisitionRequired"].Value =checkNullWithValue(exPhaseOneModel.FK_LandAcquisitionRequired,hutexphase.FK_LandAcquisitionRequired);
-                            cmd.Parameters["@FK_SiteLayoutApprovalStatus"].Value =checkNullWithValue(exPhaseOneModel.FK_SiteLayoutApprovalStatus,hutexphase.FK_SiteLayoutApprovalStatus);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return exPhaseOneModel;

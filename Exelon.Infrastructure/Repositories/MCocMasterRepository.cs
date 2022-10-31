@@ -36,7 +36,7 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@COCID", id);
                             cmd.Parameters.AddWithValue("@FK_COCTypeID", 0);
-                            cmd.Parameters.AddWithValue("@COCName", string.Empty);
+                            cmd.Parameters.AddWithValue("@Name", string.Empty);
                             cmd.Parameters.AddWithValue("@CreatedBy", 1);
                             cmd.Parameters.AddWithValue("@updatedBy", 1);
                             cmd.Connection = connection;
@@ -55,7 +55,7 @@ namespace Exelon.Infrastructure.Repositories
                                     var coc = new MCOCMASTERModel();
                                     coc.COCID = (int)dataReader["COCID"];
                                     coc.FK_COCTypeID = (int)dataReader["FK_COCTypeID"];
-                                    coc.COCName = dataReader["COCName"].ToString();
+                                    coc.Name = dataReader["COCName"].ToString();
                                     coc.IsActive = Convert.ToBoolean(dataReader["IsActive"]);
                                     coc.CreatedBy = dataReader["CreatedBy"].ToString();
                                     coc.CreatedDate = Convert.ToDateTime(dataReader["CreatedDate"]).ToString(dateWithTime);
@@ -75,7 +75,7 @@ namespace Exelon.Infrastructure.Repositories
             });
         }
 
-        public  async Task<Dictionary<MCOCMASTERModel, string>> CreateCOC(MCOCMASTERModel mCOCMASTERModel)
+        public async Task<Dictionary<MCOCMASTERModel, string>> CreateCOC(MCOCMASTERModel mCOCMASTERModel)
         {
             return await Task.Run(() =>
             {
@@ -91,13 +91,13 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 6);
                             cmd.Parameters.AddWithValue("@COCID", mCOCMASTERModel.COCID);
                             cmd.Parameters.AddWithValue("@FK_COCTypeID", mCOCMASTERModel.FK_COCTypeID);
-                            cmd.Parameters.AddWithValue("@COCName", mCOCMASTERModel.COCName);
+                            cmd.Parameters.AddWithValue("@Name", mCOCMASTERModel.Name);
                             cmd.Parameters.AddWithValue("@CreatedBy", mCOCMASTERModel.CreatedBy);
                             cmd.Parameters.AddWithValue("@UpdatedBy", mCOCMASTERModel.CreatedBy);
                             cmd.Connection = connection;
                             connection.Open();
                             int check = (int)cmd.ExecuteScalar();
-                            if(check == 1)
+                            if (check == 1)
                             {
                                 cmd.Parameters["@procId"].Value = 1;
                             }
@@ -107,7 +107,7 @@ namespace Exelon.Infrastructure.Repositories
                                 result[mCOCMASTERModel] = "Already Exists";
                                 return result;
                             }
-                            mCOCMASTERModel.COCID=(int)cmd.ExecuteScalar();
+                            mCOCMASTERModel.COCID = (int)cmd.ExecuteScalar();
                             connection.Close();
                             result[mCOCMASTERModel] = "ok";
                             return result;
@@ -131,30 +131,14 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@COCID", mCOCMASTERModel.COCID);
                             cmd.Parameters.AddWithValue("@FK_COCTypeID", mCOCMASTERModel.FK_COCTypeID);
-                            cmd.Parameters.AddWithValue("@COCName", mCOCMASTERModel.COCName);
+                            cmd.Parameters.AddWithValue("@Name", mCOCMASTERModel.Name);
                             cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);
                             cmd.Parameters.AddWithValue("@UpdatedBy", mCOCMASTERModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var coc = new MCOCMASTERModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    coc.COCID = (int)dataReader["COCID"];
-                                    coc.FK_COCTypeID = (int)dataReader["FK_COCTypeID"];
-                                    coc.COCName = dataReader["COCName"].ToString();
-                                    
-                                }
-                            }
-                            if (string.IsNullOrEmpty(mCOCMASTERModel.COCName))
-                                cmd.Parameters["@COCName"].Value = coc.COCName;
-
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return mCOCMASTERModel;

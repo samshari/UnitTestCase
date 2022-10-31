@@ -168,7 +168,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@PolesRepacementID", pPREPLACEMENTModel.PolesRepacementID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", pPREPLACEMENTModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@TotalNoOfPolesInRoute", pPREPLACEMENTModel.TotalNoOfPolesInRoute);
@@ -187,95 +187,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", pPREPLACEMENTModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-
-                            var pprep = new PPREPLACEMENTModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    pprep.PolesRepacementID = (long)dataReader["PolesRepacementID"];
-                                    pprep.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    pprep.TotalNoOfPolesInRoute = (int)dataReader["TotalNoOfPolesInRoute"];
-                                    pprep.TotalPolesNeedingReplaced = (int)dataReader["TotalPolesNeedingReplaced"];
-                                    pprep.ReplacedNoOfOsmos = (int)dataReader["ReplacedNoOfOsmos"];
-                                    pprep.ReplacedReliability = (int)dataReader["ReplacedReliability"];
-                                    pprep.ReplacedClearance = (int)dataReader["ReplacedClearance"];
-                                    pprep.ReplacedLoading = (int)dataReader["ReplacedLoading"];
-                                    pprep.NewOrMidspanPoles = (int)dataReader["NewOrMidspanPoles"];
-                                    pprep.TotalRelocatedPoles = (int)dataReader["TotalRelocatedPoles"];
-                                    pprep.NewAnchor = (int)dataReader["NewAnchor"];
-                                    pprep.OtherWorkOnPole = (int)dataReader["OtherWorkOnPole"];
-                                    pprep.PoleReplacementPercentage = dataReader.GetDecimal(dataReader.GetOrdinal("PoleReplacementPercentage"));
-                                    pprep.StepID = (int)dataReader["StepID"];
-                                    
-                                }
-                            }
-                            cmd.Parameters["@procId"].Value = 2;
-                            if (string.IsNullOrEmpty(pPREPLACEMENTModel.TotalNoOfPolesInRoute.ToString()) && string.IsNullOrEmpty(pprep.TotalNoOfPolesInRoute.ToString()))
-                                cmd.Parameters["@TotalNoOfPolesInRoute"].Value = DBNull.Value;
-                            else if (string.IsNullOrEmpty(pPREPLACEMENTModel.TotalNoOfPolesInRoute.ToString()))
-                                cmd.Parameters["@TotalNoOfPolesInRoute"].Value = pprep.TotalNoOfPolesInRoute;
-                            else
-                                cmd.Parameters["@TotalNoOfPolesInRoute"].Value = pPREPLACEMENTModel.TotalNoOfPolesInRoute;
-
-                            if (string.IsNullOrEmpty(pPREPLACEMENTModel.TotalPolesNeedingReplaced.ToString()) && string.IsNullOrEmpty(pprep.TotalPolesNeedingReplaced.ToString()))
-                                cmd.Parameters["@TotalPolesNeedingReplaced"].Value = DBNull.Value;
-                            else if (string.IsNullOrEmpty(pPREPLACEMENTModel.TotalPolesNeedingReplaced.ToString()))
-                                cmd.Parameters["@TotalPolesNeedingReplaced"].Value = pprep.TotalPolesNeedingReplaced;
-                            else
-                                cmd.Parameters["@TotalPolesNeedingReplaced"].Value = pPREPLACEMENTModel.TotalPolesNeedingReplaced;
-
-                            if (string.IsNullOrEmpty(pPREPLACEMENTModel.ReplacedClearance.ToString()) && string.IsNullOrEmpty(pprep.ReplacedClearance.ToString()))
-                                cmd.Parameters["@ReplacedClearance"].Value = DBNull.Value;
-                            else if (string.IsNullOrEmpty(pPREPLACEMENTModel.ReplacedClearance.ToString()))
-                                cmd.Parameters["@ReplacedClearance"].Value = pprep.ReplacedClearance;
-                            else
-                                cmd.Parameters["@ReplacedClearance"].Value = pPREPLACEMENTModel.ReplacedClearance;
-
-                            if (string.IsNullOrEmpty(pPREPLACEMENTModel.ReplacedLoading.ToString()) && string.IsNullOrEmpty(pprep.ReplacedLoading.ToString()))
-                                cmd.Parameters["@ReplacedLoading"].Value = DBNull.Value;
-                            else if (string.IsNullOrEmpty(pPREPLACEMENTModel.ReplacedLoading.ToString()))
-                                cmd.Parameters["@ReplacedLoading"].Value = pprep.ReplacedLoading;
-                            else
-                                cmd.Parameters["@ReplacedLoading"].Value = pPREPLACEMENTModel.ReplacedLoading;
-
-                            if (string.IsNullOrEmpty(pPREPLACEMENTModel.NewOrMidspanPoles.ToString()) && string.IsNullOrEmpty(pprep.NewOrMidspanPoles.ToString()))
-                                cmd.Parameters["@NewOrMidspanPoles"].Value = DBNull.Value;
-                            else if (string.IsNullOrEmpty(pPREPLACEMENTModel.NewOrMidspanPoles.ToString()))
-                                cmd.Parameters["@NewOrMidspanPoles"].Value = pprep.NewOrMidspanPoles;
-                            else
-                                cmd.Parameters["@NewOrMidspanPoles"].Value = pPREPLACEMENTModel.NewOrMidspanPoles;
-
-                            if (string.IsNullOrEmpty(pPREPLACEMENTModel.TotalRelocatedPoles.ToString()) && string.IsNullOrEmpty(pprep.TotalRelocatedPoles.ToString()))
-                                cmd.Parameters["@TotalRelocatedPoles"].Value = DBNull.Value;
-                            else if (string.IsNullOrEmpty(pPREPLACEMENTModel.TotalRelocatedPoles.ToString()))
-                                cmd.Parameters["@TotalRelocatedPoles"].Value = pprep.TotalRelocatedPoles;
-                            else
-                                cmd.Parameters["@TotalRelocatedPoles"].Value = pPREPLACEMENTModel.TotalRelocatedPoles;
-
-                            if (string.IsNullOrEmpty(pPREPLACEMENTModel.NewAnchor.ToString()) && string.IsNullOrEmpty(pprep.NewAnchor.ToString()))
-                                cmd.Parameters["@NewAnchor"].Value = DBNull.Value;
-                            else if (string.IsNullOrEmpty(pPREPLACEMENTModel.NewAnchor.ToString()))
-                                cmd.Parameters["@NewAnchor"].Value = pprep.NewAnchor;
-                            else
-                                cmd.Parameters["@NewAnchor"].Value = pPREPLACEMENTModel.NewAnchor;
-
-                            if (string.IsNullOrEmpty(pPREPLACEMENTModel.OtherWorkOnPole.ToString()) && string.IsNullOrEmpty(pprep.OtherWorkOnPole.ToString()))
-                                cmd.Parameters["@OtherWorkOnPole"].Value = DBNull.Value;
-                            else if (string.IsNullOrEmpty(pPREPLACEMENTModel.OtherWorkOnPole.ToString()))
-                                cmd.Parameters["@OtherWorkOnPole"].Value = pprep.OtherWorkOnPole;
-                            else
-                                cmd.Parameters["@OtherWorkOnPole"].Value = pPREPLACEMENTModel.OtherWorkOnPole;
-
-                            if (string.IsNullOrEmpty(pPREPLACEMENTModel.PoleReplacementPercentage.ToString()) && string.IsNullOrEmpty(pprep.PoleReplacementPercentage.ToString()))
-                                cmd.Parameters["@PoleReplacementPercentage"].Value = DBNull.Value;
-                            else if (string.IsNullOrEmpty(pPREPLACEMENTModel.PoleReplacementPercentage.ToString()))
-                                cmd.Parameters["@PoleReplacementPercentage"].Value = pprep.PoleReplacementPercentage;
-                            else
-                                cmd.Parameters["@PoleReplacementPercentage"].Value = pPREPLACEMENTModel.PoleReplacementPercentage;
-
-
                             cmd.ExecuteNonQuery();
                             connection.Close();
 

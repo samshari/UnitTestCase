@@ -151,7 +151,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@EnggInvestigationID", eNGINVESTModel.EnggInvestigationID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", DBNull.Value);
                             cmd.Parameters.AddWithValue("@FK_StepID", DBNull.Value);
@@ -161,26 +161,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", eNGINVESTModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var eng = new ENGINVESTModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    eng.EnggInvestigationID = (long)dataReader["EnggInvestigationID"];
-                                    eng.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    eng.FK_StepID = (int)dataReader["FK_StepID"];
-                                    if (dataReader["FK_InnerductCOC"] != DBNull.Value)
-                                        eng.FK_InnerductCOC = (int)dataReader["FK_InnerductCOC"];
-                                    eng.Comments = dataReader["Comments"].ToString();
-                                    
-                                }
-                            }
-
-                            if (string.IsNullOrEmpty(eNGINVESTModel.Comments))
-                                cmd.Parameters["@Comments"].Value = eng.Comments;
-                            cmd.Parameters["@FK_InnerductCOC"].Value =checkNullWithValue(eNGINVESTModel.FK_InnerductCOC,eng.FK_InnerductCOC);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return eNGINVESTModel;

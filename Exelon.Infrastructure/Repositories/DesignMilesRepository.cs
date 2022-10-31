@@ -111,7 +111,7 @@ namespace Exelon.Infrastructure.Repositories
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
                     {
-                        
+
                         using (SqlCommand cmd = new SqlCommand())
                         {
                             cmd.CommandText = _storedProcedure;
@@ -120,9 +120,9 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@DesignMilesID", dESIGNMILESModel.DesignMilesID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", dESIGNMILESModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@FK_StepID", dESIGNMILESModel.FK_StepID);
-                            cmd.Parameters.AddWithValue("@OHMiles",checkNull(dESIGNMILESModel.OHMiles));
-                            cmd.Parameters.AddWithValue("@UGMiles",checkNull(dESIGNMILESModel.UGMiles));
-                            cmd.Parameters.AddWithValue("@TotalMiles",checkNull(dESIGNMILESModel.TotalMiles));
+                            cmd.Parameters.AddWithValue("@OHMiles", checkNull(dESIGNMILESModel.OHMiles));
+                            cmd.Parameters.AddWithValue("@UGMiles", checkNull(dESIGNMILESModel.UGMiles));
+                            cmd.Parameters.AddWithValue("@TotalMiles", checkNull(dESIGNMILESModel.TotalMiles));
                             cmd.Parameters.AddWithValue("@CreatedBy", dESIGNMILESModel.CreatedBy);
                             cmd.Parameters.AddWithValue("@updatedBy", dESIGNMILESModel.CreatedBy);
                             cmd.Connection = connection;
@@ -159,7 +159,7 @@ namespace Exelon.Infrastructure.Repositories
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
                     {
-                        
+
                         using (SqlCommand cmd = new SqlCommand())
                         {
                             cmd.CommandText = _storedProcedure;
@@ -182,7 +182,7 @@ namespace Exelon.Infrastructure.Repositories
                             {
                                 while (dataReader.Read())
                                 {
-                                    
+
                                     mdesign.DesignMilesID = (long)dataReader["DesignMilesID"];
                                     mdesign.FK_LinkingID = (long)dataReader["FK_LinkingID"];
                                     mdesign.FK_StepID = (int)dataReader["FK_StepID"];
@@ -192,13 +192,13 @@ namespace Exelon.Infrastructure.Repositories
                                         mdesign.OHMiles = dataReader.GetDecimal(dataReader.GetOrdinal("OHMiles"));
                                     if (dataReader["TotalMiles"] != DBNull.Value)
                                         mdesign.TotalMiles = dataReader.GetDecimal(dataReader.GetOrdinal("TotalMiles"));
-                                    
+
                                 }
                             }
 
-                            cmd.Parameters["@OHMiles"].Value =checkNullWithValue(dESIGNMILESModel.OHMiles,mdesign.OHMiles);
-                            cmd.Parameters["@UGMiles"].Value =checkNullWithValue(dESIGNMILESModel.UGMiles,mdesign.UGMiles);
-                            cmd.Parameters["@TotalMiles"].Value =checkNullWithValue(dESIGNMILESModel.TotalMiles,mdesign.TotalMiles);
+                            cmd.Parameters["@OHMiles"].Value = checkNullWithValue(dESIGNMILESModel.OHMiles, mdesign.OHMiles);
+                            cmd.Parameters["@UGMiles"].Value = checkNullWithValue(dESIGNMILESModel.UGMiles, mdesign.UGMiles);
+                            cmd.Parameters["@TotalMiles"].Value = checkNullWithValue(dESIGNMILESModel.TotalMiles, mdesign.TotalMiles);
                             cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
@@ -219,7 +219,7 @@ namespace Exelon.Infrastructure.Repositories
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
                     {
-                        
+
                         using (SqlCommand cmd = new SqlCommand())
                         {
                             cmd.CommandText = _storedProcedure;

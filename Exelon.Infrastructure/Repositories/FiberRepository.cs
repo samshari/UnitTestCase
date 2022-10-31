@@ -178,7 +178,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@FiberID", fIBERModel.FiberID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", fIBERModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@FK_stepID", fIBERModel.FK_stepID);
@@ -192,42 +192,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", fIBERModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-
-
-                            var fiber = new FIBERModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    fiber.FiberID = (long)dataReader["FiberID"];
-                                    fiber.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    fiber.FK_stepID = (int)dataReader["FK_stepID"];
-                                    if (dataReader["FK_FiberCOCID"] != DBNull.Value)
-                                        fiber.FK_FiberCOCID = (int)dataReader["FK_FiberCOCID"];
-                                    fiber.IssuesOrComments = dataReader["IssuesOrComments"].ToString();
-                                    if (dataReader["StartDate"] != DBNull.Value)
-                                        fiber.StartDate = Convert.ToDateTime(dataReader["StartDate"]);
-                                    if (dataReader["EndDate"] != DBNull.Value)
-                                        fiber.EndDate = Convert.ToDateTime(dataReader["EndDate"]);
-                                    if (dataReader["OTDRCompletionDate"] != DBNull.Value)
-                                        fiber.OTDRCompletionDate = Convert.ToDateTime(dataReader["OTDRCompletionDate"]);
-                                    fiber.WeeklyFTECount = dataReader["WeeklyFTECount"].ToString();
-                                    
-                                }
-                            }
-
-                            if (string.IsNullOrEmpty(fIBERModel.WeeklyFTECount))
-                                cmd.Parameters["@WeeklyFTECount"].Value = fiber.WeeklyFTECount;
-
-                            if (string.IsNullOrEmpty(fIBERModel.IssuesOrComments))
-                                cmd.Parameters["@IssuesOrComments"].Value = fiber.IssuesOrComments;
-
-                            cmd.Parameters["@FK_FiberCOCID"].Value =checkNullWithValue(fIBERModel.FK_FiberCOCID,fiber.FK_FiberCOCID);
-                            cmd.Parameters["@OTDRCompletionDate"].Value =checkNullWithValue(fIBERModel.OTDRCompletionDate,fiber.OTDRCompletionDate);
-                            cmd.Parameters["@StartDate"].Value =checkNullWithValue(fIBERModel.StartDate,fiber.StartDate);
-                            cmd.Parameters["@EndDate"].Value =checkNullWithValue(fIBERModel.EndDate,fiber.EndDate);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return fIBERModel;

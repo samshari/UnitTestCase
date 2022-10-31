@@ -186,36 +186,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", cIVILModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var civil = new CIVILModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-
-                                    civil.CivilID = (long)dataReader["CivilID"];
-                                    civil.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    civil.FK_stepID = (int)dataReader["FK_stepID"];
-                                    if (dataReader["FK_CivilCOCID"] != DBNull.Value)
-                                        civil.FK_CivilCOCID = (int)dataReader["FK_CivilCOCID"];
-                                    civil.IssuesOrComments = dataReader["IssuesOrComments"].ToString();
-                                    if (dataReader["StartDate"] != DBNull.Value)
-                                        civil.StartDate = Convert.ToDateTime(dataReader["StartDate"]);
-                                    if (dataReader["EndDate"] != DBNull.Value)
-                                        civil.EndDate = Convert.ToDateTime(dataReader["EndDate"]);
-                                    civil.WeeklyFTECount = dataReader["WeeklyFTECount"].ToString();
-
-                                }
-                            }
-
-                            if (string.IsNullOrEmpty(cIVILModel.WeeklyFTECount))
-                                cmd.Parameters["@WeeklyFTECount"].Value = civil.WeeklyFTECount;
-
-                            if (string.IsNullOrEmpty(cIVILModel.IssuesOrComments))
-                                cmd.Parameters["@IssuesOrComments"].Value = civil.IssuesOrComments;
-                            cmd.Parameters["@FK_CivilCOCID"].Value =checkNullWithValue(cIVILModel.FK_CivilCOCID,civil.FK_CivilCOCID);
-                            cmd.Parameters["@StartDate"].Value =checkNullWithValue(cIVILModel.StartDate,civil.StartDate);
-                            cmd.Parameters["@EndDate"].Value =checkNullWithValue(cIVILModel.EndDate,civil.EndDate);
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return cIVILModel;
@@ -239,7 +209,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 3);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@CivilID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
                             cmd.Parameters.AddWithValue("@FK_stepID", 0);

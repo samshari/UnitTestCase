@@ -153,7 +153,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@RnPPhase3ID", hutExRnPPhaseThreeModel.RnPPhase3ID);
                             cmd.Parameters.AddWithValue("@HutExecutionID", hutExRnPPhaseThreeModel.HutExecutionID);
                             cmd.Parameters.AddWithValue("@RelayExecutionStartDate", checkNull(hutExRnPPhaseThreeModel.RelayExecutionStartDate));
@@ -163,27 +163,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", hutExRnPPhaseThreeModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            var hutrnp = new HutExRnPPhaseThreeModel();
-                            using (SqlDataReader dataReader = cmd.ExecuteReader())
-                            {
-                                while (dataReader.Read())
-                                {
-                                    
-                                    hutrnp.RnPPhase3ID = (long)dataReader["RnPPhase3ID"];
-                                    hutrnp.HutExecutionID = (long)dataReader["HutExecutionID"];
-                                    if (dataReader["RelayExecutionStartDate"] != DBNull.Value)
-                                        hutrnp.RelayExecutionStartDate = Convert.ToDateTime(dataReader["RelayExecutionStartDate"]);
-                                    hutrnp.Outage = dataReader["Outage"].ToString();
-                                    if (dataReader["CompletionDate"] != DBNull.Value)
-                                        hutrnp.CompletionDate = Convert.ToDateTime(dataReader["CompletionDate"]);
-
-                                }
-                            }
-                            cmd.Parameters["@RelayExecutionStartDate"].Value = checkNullWithValue(hutExRnPPhaseThreeModel.RelayExecutionStartDate, hutrnp.RelayExecutionStartDate);
-                            cmd.Parameters["@CompletionDate"].Value = checkNullWithValue(hutExRnPPhaseThreeModel.CompletionDate, hutrnp.CompletionDate);
-                            if (string.IsNullOrEmpty(hutExRnPPhaseThreeModel.Outage))
-                                cmd.Parameters["@Outage"].Value = hutrnp.Outage;
-                            cmd.Parameters["@procId"].Value = 2;
                             cmd.ExecuteNonQuery();
                             connection.Close();
                             return hutExRnPPhaseThreeModel;
