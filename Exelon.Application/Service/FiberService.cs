@@ -34,5 +34,14 @@ namespace Exelon.Application.Service
         {
             return await _fIBERRepository.DeleteFIBER(id);
         }
+
+        public async Task<ExecutionCompletedFiberMile> GetCompletedFiberMileById(int id)
+        {
+            return await _fIBERRepository.GetCompletedFiberMileById(id);
+        }
+        public async Task<ExecutionCompletedFiberMile> SaveUpdateCompletedFiberMile(ExecutionCompletedFiberMile model)
+        {
+            return await _fIBERRepository.SaveUpdateCompletedFiberMile(model);
+        }
     }
 }

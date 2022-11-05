@@ -32,6 +32,13 @@ namespace Exelon.Application.Service
         {
             return await _deviceRepository.DeleteDevice(id);
         }
-
+        public async Task<ExecutionDeviceModel> GetExecutionDevice(int id)
+        {
+            return await _deviceRepository.GetExecutionDevice(id);
+        }
+        public async Task<ExecutionDeviceModel> SaveUpdateExecutionDevice(ExecutionDeviceModel model)
+        {
+            return await _deviceRepository.SaveUpdateExecutionDevice(model);
+        }
     }
 }

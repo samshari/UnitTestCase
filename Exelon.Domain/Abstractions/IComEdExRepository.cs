@@ -7,9 +7,11 @@ namespace Exelon.Domain.Abstractions
 {
     public interface ICOMEDEXRepository
     {
-        public Task<List<COMEDEXModel>> GetCOMED(int id = 0);
-        public Task<Dictionary<COMEDEXModel, string>> CreateCOMED(COMEDEXModel cOMEDEXModel);
-        public Task<COMEDEXModel> UpdateCOMED(COMEDEXModel cOMEDEXModel);
-        public Task<int> DeleteCOMED(int id);
+        Task<List<COMEDEXModel>> GetComEd(int id = 0);
+        Task<Dictionary<COMEDEXModel, string>> CreateComEd(COMEDEXModel model);
+        Task<COMEDEXModel> UpdateComEd(COMEDEXModel model);
+        Task<int> DeleteComEd(int id);
+        Task<List<COMEDEXModel>> GetLnL();
+        Task<int> GetComEdIdByLinkingId(long linkingId);
     }
 }

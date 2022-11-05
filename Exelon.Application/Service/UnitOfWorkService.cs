@@ -56,6 +56,8 @@ namespace Exelon.Application.Service
         private readonly IOVHDMKService _oVHDMKService;
         private readonly IPostCompletionService _postCompletionService;
         private readonly IExLinkingInfoService _exlinkingInfoService;
+        private readonly IPDDetailsService pDDetails;
+        private readonly ICompletedPoleMileService poleMileService;
         #endregion
 
         #region Engineering Declaration 
@@ -141,7 +143,9 @@ namespace Exelon.Application.Service
             IHUTPERMITService hUTPERMITService,
 
             //Hut
-            IHUTService hUTService
+            IHUTService hUTService,
+            // PD Details
+            IPDDetailsService pdDetailsService
             )
         {
 
@@ -231,7 +235,9 @@ namespace Exelon.Application.Service
             _hUTService = hUTService;
             #endregion
 
-
+            #region PD Details Initialization 
+            pDDetails = pdDetailsService ;
+            #endregion
         }
 
 
@@ -578,7 +584,10 @@ namespace Exelon.Application.Service
                 return _postCompletionService;
             }
         }
-
+        public ICompletedPoleMileService completedPoleMileService
+        {
+            get { return poleMileService; }
+        }
         public IExLinkingInfoService exLinkingInfoService
         {
             get
@@ -790,6 +799,17 @@ namespace Exelon.Application.Service
                 return _hUTService;
             }
         }
+        #endregion
+
+        #region ExecutionLinks 
+        public IPDDetailsService pDDetailsService
+        {
+            get
+            {
+                return pDDetails;
+            }
+        }
+
         #endregion
     }
 }

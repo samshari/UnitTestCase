@@ -37,6 +37,7 @@ import OVHDReducer from "./components/ExecutionLinks/Ovhd/OvhdReducer";
 import OvhdCOCReducer from "./components/ExecutionLinks/Ovhd/OvhdCocReduer";
 import IfcDatesReducer from './components/ExecutionLinks/IfcDates/IfcDatesReducer'
 import exlinkInformationReducer from "./components/ExecutionLinks/Linkinformation/LinkInformationReducer";
+import ComEdReducer from "./components/ExecutionLinks/ComEdExternal/ComEdReducer";
 
 import TabsReducer from "./utils/Tabs/TabsReducer";
 
@@ -83,6 +84,7 @@ const rootReducer= combineReducers({
     OVHDReducer:OVHDReducer,
     OvhdCOCReducer:OvhdCOCReducer,
     IfcDatesReducer:IfcDatesReducer,
+    ComEdReducer:ComEdReducer
     exlinkInformationReducer:exlinkInformationReducer
 })
 

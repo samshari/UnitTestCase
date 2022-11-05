@@ -35,7 +35,7 @@ namespace Exelon.Infrastructure.Repositories
                 return changeValue;
             return Value;
         }
-        public async Task<List<COMEDEXModel>> GetCOMED(int id = 0)
+        public async Task<List<COMEDEXModel>> GetComEd(int id = 0)
         {
             return await Task.Run(() =>
             {
@@ -61,38 +61,30 @@ namespace Exelon.Infrastructure.Repositories
                             else
                                 cmd.Parameters.AddWithValue("@procId", 5);
 
-                            
-
                             using (SqlDataReader dataReader = cmd.ExecuteReader())
                             {
                                 while (dataReader.Read())
                                 {
                                     var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
                                     var com = new COMEDEXModel();
-                                    com.ComEdID = (long)dataReader["ComEdID"];
-                                    com.FK_LinkingID = (long)dataReader["ExecutionLinkingID"];
+                                    com.ComEdId = (long)dataReader["ComEdID"];
+                                    com.LinkingId = (long)dataReader["ExecutionLinkingID"];
                                     if (dataReader["FK_LNLID"] != DBNull.Value)
-                                        com.FK_LNLID = (int)dataReader["FK_LNLID"];
+                                        com.LNLId = (int)dataReader["FK_LNLID"];
+                                    com.Name = dataReader["Name"].ToString();
                                     com.IsActive = Convert.ToBoolean(dataReader["IsActive"]);
-                                    com.CreatedBy = dataReader["CreatedBy"].ToString();
-                                    com.CreatedDate = Convert.ToDateTime(dataReader["CreatedDate"]).ToString(dateWithTime);
-                                    com.UpdatedBy = dataReader["UpdatedBy"].ToString();
-                                    com.UpdatedDate = Convert.ToDateTime(dataReader["UpdatedDate"]).ToString(dateWithTime);
                                     result.Add(com);
                                 }
                             }
                             connection.Close();
-
-
                         }
                     }
                     return result;
                 }
-                catch (Exception ex) { return new List<COMEDEXModel>(); }
+                catch (Exception ex) { throw ex; }
             });
         }
-
-        public async Task<Dictionary<COMEDEXModel, string>> CreateCOMED(COMEDEXModel cOMEDEXModel)
+        public async Task<Dictionary<COMEDEXModel, string>> CreateComEd(COMEDEXModel model)
         {
             return await Task.Run(() =>
             {
@@ -106,11 +98,11 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@procId", 6);
-                            cmd.Parameters.AddWithValue("@ComEdID", cOMEDEXModel.ComEdID);
-                            cmd.Parameters.AddWithValue("@FK_LinkingID", cOMEDEXModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_LNLID",checkNull(cOMEDEXModel.FK_LNLID));
-                            cmd.Parameters.AddWithValue("@createdBy", cOMEDEXModel.CreatedBy);
-                            cmd.Parameters.AddWithValue("@updatedBy", cOMEDEXModel.CreatedBy);
+                            cmd.Parameters.AddWithValue("@ComEdID", model.ComEdId);
+                            cmd.Parameters.AddWithValue("@FK_LinkingID", model.LinkingId);
+                            cmd.Parameters.AddWithValue("@FK_LNLID", checkNull(model.LNLId));
+                            cmd.Parameters.AddWithValue("@createdBy", model.CreatedBy);
+                            cmd.Parameters.AddWithValue("@updatedBy", model.CreatedBy);
                             cmd.Connection = connection;
                             connection.Open();
                             int check = (int)cmd.ExecuteScalar();
@@ -121,23 +113,23 @@ namespace Exelon.Infrastructure.Repositories
                             else
                             {
                                 connection.Close();
-                                result[cOMEDEXModel] = "Linking Id Already Exists";
+                                result[model] = "Linking Id Already Exists";
                                 return result;
                             }
-                            cOMEDEXModel.ComEdID = (long)cmd.ExecuteScalar();
-                            result[cOMEDEXModel] = "ok";
+                            model.ComEdId = (long)cmd.ExecuteScalar();
+                            result[model] = "ok";
                             connection.Close();
                             return result;
-
-
                         }
                     }
                 }
-                catch (Exception ex) { return new Dictionary<COMEDEXModel, string>(); }
+                catch (Exception ex)
+                {
+                    return new Dictionary<COMEDEXModel, string>();
+                }
             });
         }
-
-        public async Task<COMEDEXModel> UpdateCOMED(COMEDEXModel cOMEDEXModel)
+        public async Task<COMEDEXModel> UpdateComEd(COMEDEXModel model)
         {
             return await Task.Run(() =>
             {
@@ -150,16 +142,16 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@procId", 2);
-                            cmd.Parameters.AddWithValue("@ComEdID", cOMEDEXModel.ComEdID);
-                            cmd.Parameters.AddWithValue("@FK_LinkingID", cOMEDEXModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_LNLID", checkNull(cOMEDEXModel.FK_LNLID));
+                            cmd.Parameters.AddWithValue("@ComEdID", model.ComEdId);
+                            cmd.Parameters.AddWithValue("@FK_LinkingID", model.LinkingId);
+                            cmd.Parameters.AddWithValue("@FK_LNLID", checkNull(model.LNLId));
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
-                            cmd.Parameters.AddWithValue("@updatedBy", cOMEDEXModel.UpdatedBy);
+                            cmd.Parameters.AddWithValue("@updatedBy", model.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
                             cmd.ExecuteNonQuery();
                             connection.Close();
-                            return cOMEDEXModel;
+                            return model;
 
                         }
                     }
@@ -167,9 +159,7 @@ namespace Exelon.Infrastructure.Repositories
                 catch (Exception ex) { return new COMEDEXModel(); }
             });
         }
-
-
-        public async Task<int> DeleteCOMED(int id)
+        public async Task<int> DeleteComEd(int id)
         {
             return await Task.Run(() =>
             {
@@ -192,11 +182,101 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.ExecuteScalar();
                             connection.Close();
                             return 1;
-                            
+
                         }
                     }
                 }
                 catch (Exception ex) { return 0; }
+            });
+        }
+        public async Task<List<COMEDEXModel>> GetLnL()
+        {
+            return await Task.Run(() =>
+            {
+                var result = new List<COMEDEXModel>();
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = _storedProcedure;
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.CommandText = _storedProcedure;
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@procId", 7);
+                            cmd.Parameters.AddWithValue("@ComEdID", 0);
+                            cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
+                            cmd.Parameters.AddWithValue("@FK_LNLID", 0);
+                            cmd.Parameters.AddWithValue("@createdBy", string.Empty);
+                            cmd.Parameters.AddWithValue("@updatedBy", string.Empty);
+                            cmd.Connection = connection;
+                            connection.Open();
+                            using (SqlDataReader dataReader = cmd.ExecuteReader())
+                            {
+                                while (dataReader.Read())
+                                {
+                                    var com = new COMEDEXModel();
+                                    if (dataReader["ID"] != DBNull.Value)
+                                        com.Id = (int)dataReader["ID"];
+                                    com.Name = dataReader["Name"].ToString();
+                                    result.Add(com);
+                                }
+                            }
+                            connection.Close();
+                        }
+                    }
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                    //  return new List<COMEDEXModel>();
+                }
+            });
+        }
+        public async Task<int> GetComEdIdByLinkingId(long linkingId)
+        {
+            return await Task.Run(() =>
+            {
+                int result = 0;
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = _storedProcedure;
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.CommandText = _storedProcedure;
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@procId", 8);
+                            cmd.Parameters.AddWithValue("@ComEdID", 0);
+                            cmd.Parameters.AddWithValue("@FK_LinkingID", linkingId);
+                            cmd.Parameters.AddWithValue("@FK_LNLID", 0);
+                            cmd.Parameters.AddWithValue("@createdBy", string.Empty);
+                            cmd.Parameters.AddWithValue("@updatedBy", string.Empty);
+                            cmd.Connection = connection;
+                            connection.Open();
+                            using (SqlDataReader dataReader = cmd.ExecuteReader())
+                            {
+                                while (dataReader.Read())
+                                {
+                                    var com = new COMEDEXModel();
+                                    com.ComEdId = (long)dataReader["ComEdID"] != 0 ? (long)dataReader["ComEdID"] : 0;
+                                    result = (int)com.ComEdId;
+                                }
+                            }
+                            connection.Close();
+                        }
+                    }
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                    //  return new List<COMEDEXModel>();
+                }
             });
         }
     }

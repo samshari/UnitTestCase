@@ -23,4 +23,17 @@ namespace Exelon.Domain
 		public string UpdatedBy { get; set; }
 		public string UpdatedDate { get; set; }
 	}
+
+	/// <summary>
+	/// Author: Roopam
+	/// </summary>
+	public class ExecutionCompletedFiberMile
+	{
+		public Int64 CompletedFiberMileId { get; set; }
+		public Int64 ExecutionLinkingId { get; set; }
+		public int FiberMilesInstalled { get; set; }
+		public int FiberMilesCompleted { get; set; }
+		public string CreatedBy { get; set; }
+		public string UpdatedBy { get; set; }
+	}
 }

@@ -11,5 +11,12 @@ namespace Exelon.Domain.Abstractions
         public Task<Dictionary<FIBERModel, string>> CreateFIBER(FIBERModel fIBERModel);
         public Task<FIBERModel> UpdateFIBER(FIBERModel fIBERModel);
         public Task<int> DeleteFIBER(int id);
+
+        /// <summary>
+        /// Completed Fiber Miles
+        /// </summary>
+        /// <returns></returns>
+        Task<ExecutionCompletedFiberMile> GetCompletedFiberMileById(int id);
+        Task<ExecutionCompletedFiberMile> SaveUpdateCompletedFiberMile(ExecutionCompletedFiberMile model);
     }
 }

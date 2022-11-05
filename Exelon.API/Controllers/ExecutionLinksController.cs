@@ -4,6 +4,7 @@ using Exelon.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -368,23 +369,22 @@ namespace Exelon.API.Controllers
 
         #endregion
 
-        #region Complete Ed External
+        #region ComEd/External
 
         [HttpGet]
-        public async Task<ActionResult> GetCOMED()
+        public async Task<ActionResult> GetComEd()
         {
-            var result = await _unitOfWorkService.cOMEDEXService.GetCOMED();
+            var result = await _unitOfWorkService.cOMEDEXService.GetComEd();
             if (result.Count == 0)
                 return NotFoundResult();
             else
                 return Ok(result);
         }
 
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetCOMED(int id)
+        [HttpGet("{comEdId}")]
+        public async Task<ActionResult> GetComEd(int comEdId)
         {
-            var result = await _unitOfWorkService.cOMEDEXService.GetCOMED(id);
+            var result = await _unitOfWorkService.cOMEDEXService.GetComEd(comEdId);
             if (result.Count == 0)
                 return NotFoundResult();
             else
@@ -392,42 +392,59 @@ namespace Exelon.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCOMED([FromBody] COMEDEXModel cOMEDEXModel)
+        public async Task<ActionResult> CreateComEd([FromBody] COMEDEXModel model)
         {
-            cOMEDEXModel.CreatedBy = "1";
-            var result = await _unitOfWorkService.cOMEDEXService.CreateCOMED(cOMEDEXModel);
+            model.CreatedBy = "1";
+            var result = await _unitOfWorkService.cOMEDEXService.CreateComEd(model);
             KeyValuePair<COMEDEXModel, string> i = result.First();
             if (i.Value == "ok")
-                return Ok(new { ID = i.Key.ComEdID });
+                return Ok(new { ID = i.Key.ComEdId });
             else if (i.Value == "")
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
                 return BadRequest(new { status = 400, message = i.Value });
         }
 
-
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCOMED(int id, [FromBody] COMEDEXModel cOMEDEXModel)
+        public async Task<ActionResult> UpdateComEd(int id, [FromBody] COMEDEXModel model)
         {
-            cOMEDEXModel.UpdatedBy = "1";
-            cOMEDEXModel.ComEdID = id;
-            var result = await _unitOfWorkService.cOMEDEXService.UpdateCOMED(cOMEDEXModel);
-            if (result.ComEdID == 0)
+            model.UpdatedBy = "1";
+            model.ComEdId = id;
+            var result = await _unitOfWorkService.cOMEDEXService.UpdateComEd(model);
+            if (result.ComEdId == 0)
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
                 return Ok(new { status = 200 });
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteCOMED(int id)
+        public async Task<ActionResult> DeleteComEd(int id)
         {
-            var result = await _unitOfWorkService.cOMEDEXService.DeleteCOMED(id);
+            var result = await _unitOfWorkService.cOMEDEXService.DeleteComEd(id);
             if (result == 0)
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
                 return Ok(new { status = 200 });
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetLnLForDropdown()
+        {
+            var result = await _unitOfWorkService.cOMEDEXService.GetLnL();
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+        [HttpGet("{linkingId}")]
+        public async Task<ActionResult> GetComEdIdByLinkingId(int linkingId)
+        {
+            var comEdId = await _unitOfWorkService.cOMEDEXService.GetComEdIdByLinkingId(linkingId);
+            if (comEdId == 0)
+                return NotFoundResult();
+            else
+                return Ok(comEdId);
+        }
         #endregion
 
         #region Boring
@@ -754,6 +771,182 @@ namespace Exelon.API.Controllers
 
         #endregion
 
+        #region [Execution Devices]
+        #region [Get Execution Device]
+        /// <summary>
+        /// Get Execution Device
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetExecutionDevice(int id)
+        {
+            var result = await _unitOfWorkService.deviceServices.GetExecutionDevice(id);
+            if (result.ExecutionDeviceId == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+        #endregion
 
+        #region [Save Execution Device]
+        /// <summary>
+        /// Save Execution Device
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> SaveExecutionDevice([FromBody] ExecutionDeviceModel model)
+        {
+            model.CreatedBy = "1";
+            model.UpdatedBy = "1";
+            var result = await _unitOfWorkService.deviceServices.SaveUpdateExecutionDevice(model);
+            if (result.ExecutionDeviceId > 0)
+                return Ok(new { ID = result.ExecutionDeviceId });
+            else if (result.ExecutionDeviceId == 0)
+                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = "Oops Something Went Wrong!" });
+            else
+                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = result.ExecutionDeviceId });
+        }
+        #endregion
+
+        #region [Update Execution Device]
+        /// <summary>
+        /// Update Execution Device
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateExecutionDevice([FromBody] ExecutionDeviceModel model)
+        {
+            model.UpdatedBy = "1";
+            var result = await _unitOfWorkService.deviceServices.SaveUpdateExecutionDevice(model);
+            if (result.ExecutionDeviceId == 0)
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return Ok(new { status = 200 });
+        }
+        #endregion 
+        #endregion
+
+        #region [Completed Fiber Mile]
+
+        #region [Get Completed Fiber Mile]
+        /// <summary>
+        /// Get Completed Fiber Mile
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetCompletedFiberMile(int id)
+        {
+            var result = await _unitOfWorkService.fIBERService.GetCompletedFiberMileById(id);
+            if (result.CompletedFiberMileId == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+        #endregion
+
+        #region [Save Completed Fiber Mile]
+        /// <summary>
+        /// Save Completed Fiber Mile
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> SaveCompletedFiberMile([FromBody] ExecutionCompletedFiberMile model)
+        {
+            model.CreatedBy = "1";
+            model.UpdatedBy = "1";
+            var result = await _unitOfWorkService.fIBERService.SaveUpdateCompletedFiberMile(model);
+            if (result.CompletedFiberMileId > 0)
+                return Ok(new { ID = result.CompletedFiberMileId });
+            else if (result.CompletedFiberMileId == 0)
+                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = "Oops Something Went Wrong!" });
+            else
+                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = result.CompletedFiberMileId });
+        }
+        #endregion
+
+        #region [Update Completed Fiber Mile]
+        /// <summary>
+        /// Update Completed Fiber Mile
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateCompletedFiberMile([FromBody] ExecutionCompletedFiberMile model)
+        {
+            model.CreatedBy = "1";
+            model.UpdatedBy = "1";
+            var result = await _unitOfWorkService.fIBERService.SaveUpdateCompletedFiberMile(model);
+            if (result.CompletedFiberMileId == 0)
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return Ok(new { status = 200 });
+        }
+        #endregion 
+        #endregion
+
+        #region [Completed Pole Mile]
+
+        #region [Get Completed Pole Mile]
+        /// <summary>
+        /// Get Completed Pole Mile
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetCompletedPoleMile(int id)
+        {
+            var result = await _unitOfWorkService.completedPoleMileService.GetCompletedPoleMileById(id);
+            if (result.CompletedPoleMileId == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+        #endregion
+
+        #region [Save Completed Pole Mile]
+        /// <summary>
+        /// Save Completed Pole Mile
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult> SaveCompletedPoleMile([FromBody] CompletedPoleAndMile model)
+        {
+            model.CreatedBy = "1";
+            model.UpdatedBy = "1";
+            var result = await _unitOfWorkService.completedPoleMileService.SaveUpdateCompletedPoleMile(model);
+            if (result.CompletedPoleMileId > 0)
+                return Ok(new { ID = result.CompletedPoleMileId });
+            else if (result.CompletedPoleMileId == 0)
+                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = "Oops Something Went Wrong!" });
+            else
+                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = result.CompletedPoleMileId });
+        }
+        #endregion
+
+        #region [Update Completed Fiber Mile]
+        /// <summary>
+        /// Update Completed Fiber Mile
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateCompletedPoleMile([FromBody] CompletedPoleAndMile model)
+        {
+            model.CreatedBy = "1";
+            model.UpdatedBy = "1";
+            var result = await _unitOfWorkService.completedPoleMileService.SaveUpdateCompletedPoleMile(model);
+            if (result.CompletedPoleMileId == 0)
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return Ok(new { status = 200 });
+        }
+        #endregion 
+        #endregion
     }
 }
