@@ -1,7 +1,9 @@
 import React from "react";
 import Card from "../../utils/Card";
+import { useSelector } from "react-redux";
 
 const Civil = (props) => {
+  const datatest = useSelector((state) => state.hideExecutionLinksFormReducer?.data);
   const data = [
     { type:"dropdown",placeholder: "Civil COC" },
     { type: "date", placeholder: "Civil Start" },

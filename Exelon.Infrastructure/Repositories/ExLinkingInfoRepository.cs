@@ -107,10 +107,17 @@ namespace Exelon.Infrastructure.Repositories
 
         }
 
-        public async Task<ExLinkingInfoModel> CreateExLinkInfo(ExLinkingInfoModel linkingInfoModel)
+        public async Task<Dictionary<ExLinkingInfoModel, string>> CreateExLinkInfo(ExLinkingInfoModel linkingInfoModel)
         {
             return await Task.Run(() =>
             {
+                var result = new Dictionary<ExLinkingInfoModel, string>();
+                if (string.IsNullOrEmpty(linkingInfoModel.ProjectId))
+                {
+                    result[linkingInfoModel] = "ProjectId is Empty!";
+                    return result;
+                }
+
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -119,7 +126,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procID", 1);
+                            cmd.Parameters.AddWithValue("@procID", 8);
                             cmd.Parameters.AddWithValue("@ExecutionLinkingID", 0);
                             cmd.Parameters.AddWithValue("@PrimaryKey", string.IsNullOrEmpty(linkingInfoModel.PrimaryKey) ? string.Empty : linkingInfoModel.PrimaryKey);
                             cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(linkingInfoModel.Description) ? string.Empty : linkingInfoModel.Description);
@@ -141,61 +148,86 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", linkingInfoModel.CreatedBy);
                             cmd.Connection = connection;
                             connection.Open();
+                            int check = (int)cmd.ExecuteScalar();
+                            if (check == 1)
+                            {
+                                cmd.Parameters["@procId"].Value = 1;
+                            }
+                            else
+                            {
+                                connection.Close();
+                                result[linkingInfoModel] = "Primary key Already Exists!";
+                                return result;
+                            }
                             linkingInfoModel.ExecutionLinkingID = (long)cmd.ExecuteScalar();
                             connection.Close();
-                            return linkingInfoModel;
+                            result[linkingInfoModel] = "ok";
+                            return result;
 
                         }
                     }
                 }
-                catch (Exception ex) { throw ex; }
+                catch (Exception ex) { return new Dictionary<ExLinkingInfoModel, string>(); }
             });
-        }
 
-        public async Task<ExLinkingInfoModel> UpdateExLinkInfo(ExLinkingInfoModel infoModel)
-        {
-            return await Task.Run(() =>
+        }
+          public async Task<Dictionary<ExLinkingInfoModel, string>> UpdateExLinkInfo(ExLinkingInfoModel infoModel)
             {
-                try
+                return await Task.Run(() =>
                 {
-                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    var result = new Dictionary<ExLinkingInfoModel, string>();
+                    try
                     {
-                        using (SqlCommand cmd = new SqlCommand())
+                        using (SqlConnection connection = new SqlConnection(this._connectionString))
                         {
+                            using (SqlCommand cmd = new SqlCommand())
+                            {
 
-                            cmd.CommandText = _storedProcedure;
-                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procID", 2);
-                            cmd.Parameters.AddWithValue("@ExecutionLinkingID", infoModel.ExecutionLinkingID);
-                            cmd.Parameters.AddWithValue("@PrimaryKey", string.IsNullOrEmpty(infoModel.PrimaryKey) ? string.Empty : infoModel.PrimaryKey);
-                            cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(infoModel.Description) ? string.Empty : infoModel.Description);
-                            cmd.Parameters.AddWithValue("@Nickname", string.IsNullOrEmpty(infoModel.Nickname) ? string.Empty : infoModel.Nickname);
-                            cmd.Parameters.AddWithValue("@PDID", infoModel.PDId);
-                            cmd.Parameters.AddWithValue("@EngineeringYear", string.IsNullOrEmpty(infoModel.EngineeringYear) ? string.Empty : infoModel.EngineeringYear);
-                            cmd.Parameters.AddWithValue("@ExecutionYear", string.IsNullOrEmpty(infoModel.ExecutionYear) ? string.Empty : infoModel.ExecutionYear);
-                            cmd.Parameters.AddWithValue("@FK_RegionID", checkNull(infoModel.RegionId));
-                            cmd.Parameters.AddWithValue("@FK_TechnologyID", checkNull(infoModel.TechnologyId));
-                            cmd.Parameters.AddWithValue("@FK_BarnID", checkNull(infoModel.BarnId));
-                            cmd.Parameters.AddWithValue("@WorkOrder", string.IsNullOrEmpty(infoModel.WorkOrder) ? string.Empty : infoModel.WorkOrder);
-                            cmd.Parameters.AddWithValue("@ProjectID", string.IsNullOrEmpty(infoModel.ProjectId) ? string.Empty : infoModel.ProjectId);
-                            cmd.Parameters.AddWithValue("@Comments", string.IsNullOrEmpty(infoModel.Comments) ? string.Empty : infoModel.Comments);
-                            cmd.Parameters.AddWithValue("@ScopeComments", string.IsNullOrEmpty(infoModel.ScopeComments) ? string.Empty : infoModel.ScopeComments);
-                            cmd.Parameters.AddWithValue("@ITN", string.IsNullOrEmpty(infoModel.ITN) ? string.Empty : infoModel.ITN);
-                            cmd.Parameters.AddWithValue("@FK_ProjectStatusID", checkNull(infoModel.ProjectStatusId));
-                            cmd.Parameters.AddWithValue("@FiberCount", string.IsNullOrEmpty(infoModel.FiberCount) ? string.Empty : infoModel.FiberCount);
-                            cmd.Parameters.AddWithValue("@createdBy", string.Empty);
-                            cmd.Parameters.AddWithValue("@updatedBy", infoModel.UpdatedBy);
-                            cmd.Connection = connection;
-                            connection.Open();
-                            cmd.ExecuteNonQuery();
-                            connection.Close();
-                            return infoModel;
+                                cmd.CommandText = _storedProcedure;
+                                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                                cmd.Parameters.AddWithValue("@procID", 9);
+                                cmd.Parameters.AddWithValue("@ExecutionLinkingID", infoModel.ExecutionLinkingID);
+                                cmd.Parameters.AddWithValue("@PrimaryKey", string.IsNullOrEmpty(infoModel.PrimaryKey) ? string.Empty : infoModel.PrimaryKey);
+                                cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(infoModel.Description) ? string.Empty : infoModel.Description);
+                                cmd.Parameters.AddWithValue("@Nickname", string.IsNullOrEmpty(infoModel.Nickname) ? string.Empty : infoModel.Nickname);
+                                cmd.Parameters.AddWithValue("@PDID", infoModel.PDId);
+                                cmd.Parameters.AddWithValue("@EngineeringYear", string.IsNullOrEmpty(infoModel.EngineeringYear) ? string.Empty : infoModel.EngineeringYear);
+                                cmd.Parameters.AddWithValue("@ExecutionYear", string.IsNullOrEmpty(infoModel.ExecutionYear) ? string.Empty : infoModel.ExecutionYear);
+                                cmd.Parameters.AddWithValue("@FK_RegionID", checkNull(infoModel.RegionId));
+                                cmd.Parameters.AddWithValue("@FK_TechnologyID", checkNull(infoModel.TechnologyId));
+                                cmd.Parameters.AddWithValue("@FK_BarnID", checkNull(infoModel.BarnId));
+                                cmd.Parameters.AddWithValue("@WorkOrder", string.IsNullOrEmpty(infoModel.WorkOrder) ? string.Empty : infoModel.WorkOrder);
+                                cmd.Parameters.AddWithValue("@ProjectID", string.IsNullOrEmpty(infoModel.ProjectId) ? string.Empty : infoModel.ProjectId);
+                                cmd.Parameters.AddWithValue("@Comments", string.IsNullOrEmpty(infoModel.Comments) ? string.Empty : infoModel.Comments);
+                                cmd.Parameters.AddWithValue("@ScopeComments", string.IsNullOrEmpty(infoModel.ScopeComments) ? string.Empty : infoModel.ScopeComments);
+                                cmd.Parameters.AddWithValue("@ITN", string.IsNullOrEmpty(infoModel.ITN) ? string.Empty : infoModel.ITN);
+                                cmd.Parameters.AddWithValue("@FK_ProjectStatusID", checkNull(infoModel.ProjectStatusId));
+                                cmd.Parameters.AddWithValue("@FiberCount", string.IsNullOrEmpty(infoModel.FiberCount) ? string.Empty : infoModel.FiberCount);
+                                cmd.Parameters.AddWithValue("@createdBy", string.Empty);
+                                cmd.Parameters.AddWithValue("@updatedBy", infoModel.UpdatedBy);
+                                cmd.Connection = connection;
+                                connection.Open();
+                                int check = (int)cmd.ExecuteScalar();
+                                if (check == 1)
+                                {
+                                    cmd.Parameters["@procId"].Value = 2;
+                                }
+                                else
+                                {
+                                    connection.Close();
+                                    result[infoModel] = "Project ID Already Exists!";
+                                    return result;
+                                }
+                                cmd.ExecuteNonQuery();
+                                connection.Close();
+                                result[infoModel] = "ok";
+                                return result;
+                            }
                         }
                     }
-                }
-                catch (Exception ex) { return new ExLinkingInfoModel(); }
-            });
-        }
+                    catch (Exception ex) { throw ex; }
+                });
+            }
 
         public async Task<int> DeleteExLinkInfo(int id)
         {
@@ -281,7 +313,7 @@ namespace Exelon.Infrastructure.Repositories
                                 while (dataReader.Read())
                                 {
                                     var linkInfo = new ExLinkingInfoModel();
-                                    linkInfo.PrimaryKey = dataReader["PrimaryKey"].ToString();
+                                    linkInfo.ProjectId = dataReader["ProjectID"].ToString();
                                     lstLinkInfo.Add(linkInfo);
                                 }
                             }
@@ -295,7 +327,7 @@ namespace Exelon.Infrastructure.Repositories
         }
         public async Task<Int64> GetLinkInfoIdByProjectId(string id)
         {
-            var linkInfo = new LinkingInfoModel();
+            var linkInfo = new ExLinkingInfoModel();
             return await Task.Run(() =>
             {
                 try
@@ -332,12 +364,12 @@ namespace Exelon.Infrastructure.Repositories
                             {
                                 while (dataReader.Read())
                                 {
-                                    linkInfo.LinkingId = (long)dataReader["LinkingID"];
+                                    linkInfo.ExecutionLinkingID = (long)dataReader["ExecutionLinkingID"];
                                 }
                             }
                         }
                     }
-                    return linkInfo.LinkingId;
+                    return linkInfo.ExecutionLinkingID;
                 }
                 catch (Exception ex) { throw ex; }
             });

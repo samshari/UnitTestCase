@@ -6,16 +6,16 @@ import { getApi,updateApi,createApi } from "../../../redux/components/ExecutionL
 import {getInnerApi} from '../../../redux/components/ExecutionLinks/Engginvestigation/InnerDuctCOCAction'
 
 
-let id =3;
-let fK_InnerductCOC =0;
-let innerName = '';
-
 const EnggInvestigation = (props) => {
+  let id =3;
+  let fK_InnerductCOC =0;
+  let innerName = '';
   const [apiData,setapiData]=useState([]);  
   const [loading,setLoading]=useState(true) 
   const [loading1,setLoading1]=useState(true);
   const [ID,setID]= useState(0);
 
+  const datatest = useSelector((state) => state.hideExecutionLinksFormReducer?.data);
   const data2 = useSelector((state)=>{
     return state
   })
@@ -39,17 +39,24 @@ const EnggInvestigation = (props) => {
     })
   }
 
+
 useEffect(()=>{
+  
+  if(datatest?.executionLinkingID!==undefined){
   dispatch(getApi()).then((res)=>{
     res?.status !== 404 && res.map((data)=>{
-      if(data.fK_LinkingID === id){
+      if(data.fK_LinkingID === datatest?.executionLinkingID){
         setID(data.enggInvestigationID);
         setapiData(data);
       }
       return data;
     })
     setLoading(false)
-  })
+  })}
+  else{
+    setLoading(false);
+    setapiData([]);
+  }
   dispatch(getInnerApi()).then((res)=>setLoading1(false))
 },[dispatch])
 

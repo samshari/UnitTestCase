@@ -70,7 +70,7 @@ useEffect( ()=>{
     setLoading(false);
   }):setLoading(false)
     setapiData([])}
-},[dispatch,datatest?.linkingId,ID,isDataUpdated]);
+},[dispatch,datatest?.linkingId,ID>0,isDataUpdated]);
 
 
   const data = [

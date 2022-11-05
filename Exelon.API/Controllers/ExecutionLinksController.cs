@@ -56,10 +56,13 @@ namespace Exelon.API.Controllers
         {
             linkingInfoModel.CreatedBy = "1";
             var result = await _unitOfWorkService.exLinkingInfoService.CreateExLinkInfo(linkingInfoModel);
-            if (result.ExecutionLinkingID == 0)
+            KeyValuePair<ExLinkingInfoModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { ID = linkingInfoModel.ExecutionLinkingID });
+            else if (i.Value == "")
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
-                return Ok(new { ID = result.ExecutionLinkingID });
+                return BadRequest(new { status = 400, message = i.Value });
         }
 
         [HttpPut("{id}")]
@@ -68,10 +71,13 @@ namespace Exelon.API.Controllers
             linkingInfoModel.ExecutionLinkingID = id;
             linkingInfoModel.UpdatedBy = "1";
             var result = await _unitOfWorkService.exLinkingInfoService.UpdateExLinkInfo(linkingInfoModel);
-            if (result.ExecutionLinkingID == 0)
+            KeyValuePair<ExLinkingInfoModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { status = 200 });
+            else if (i.Value == "")
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
-                return Ok(new { status = 200 });
+                return BadRequest(new { status = 400, message = i.Value });
         }
 
         [HttpDelete("{id}")]
@@ -101,7 +107,7 @@ namespace Exelon.API.Controllers
             if (linkInfoId == 0)
                 return NotFoundResult();
 
-            var result = await _unitOfWorkService.linkInfoService.GetLinkInfo((int)linkInfoId);
+            var result = await _unitOfWorkService.exLinkingInfoService.GetExLinkInfo((int)linkInfoId);
             return Ok(result);
         }
         #endregion

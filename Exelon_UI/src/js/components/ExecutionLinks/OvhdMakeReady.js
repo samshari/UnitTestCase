@@ -5,11 +5,12 @@ import { useDispatch , useSelector} from "react-redux";
 import {getApi,updateApi,createApi} from "../../../redux/components/ExecutionLinks/Ovhd/OvhdAction"
 import {getOvhdApi} from '../../../redux/components/ExecutionLinks/Ovhd/OvhdCocAction'
 
-let id =3;
-let fK_OVHDCOCID=0;
-let ovhdName='';
 
 const OvhdMakeReady = (props) => {
+  const datatest = useSelector((state) => state.hideExecutionLinksFormReducer?.data);
+  let id =3;
+  let fK_OVHDCOCID=0;
+  let ovhdName='';
   const [apiData,setapiData]=useState([]);  
   const [loading,setLoading]=useState(true);
   const [loading1,setLoading1]=useState(true); 
@@ -38,16 +39,16 @@ const OvhdMakeReady = (props) => {
   }
 
 useEffect(()=>{
-  dispatch(getApi()).then((res)=>{
+  if(datatest?.executionLinkingID!==undefined){dispatch(getApi()).then((res)=>{
     res?.status !== 404 && res.map((data)=>{
-      if(data.fK_LinkingID === id){
+      if(data.fK_LinkingID === datatest?.executionLinkingID){
         setID(data.ovhdMakeReadyID);
         setapiData(data);
       }
       return data;
     })
     setLoading(false)
-  })
+  })}
   dispatch(getOvhdApi()).then((res)=>{
     setLoading1(false);
   })

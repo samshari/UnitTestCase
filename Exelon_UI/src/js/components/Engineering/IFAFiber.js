@@ -18,6 +18,7 @@ const IFAFiber = (props) => {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [isDataUpdated,setDataUpdated]=useState(false);
+  const [availableID,setavailableID]=useState(false);
 
   const [message, setMessage] = useState("");
   const handleToClose = (event, reason) => {
@@ -44,9 +45,8 @@ const IFAFiber = (props) => {
       })
   }
 
-  const datatest=useSelector((state)=>state.engineeringFormReducer?.data)
-  const datatest1=useSelector((state)=>state.engineeringFormReducer?.linkId)
-
+  const datatest=useSelector((state)=>state.engineeringFormReducer?.data);
+  const datatest1=useSelector((state)=>state.engineeringFormReducer?.linkId);
 
   const createData=(data,dropData,multiDrop)=>{
     createApi(data,datatest1,stepID).then((res)=>{
@@ -60,20 +60,26 @@ const IFAFiber = (props) => {
       }
     })
   }
-
 useEffect(()=>{
-  datatest?.linkingId!==undefined ? dispatch(getApi()).then((res)=>{
+  setID(0);
+  console.log('mainid',ID);
+  console.log('mainidlink',datatest.linkingId);
+  if(datatest?.linkingId!==undefined) { dispatch(getApi()).then((res)=>{
     res?.status!==404 && res.map((data)=>{
       if(data.fK_LinkingID === datatest.linkingId){
+        console.log('mainiddata',data);
         setID(data.ifaFiberID);
         setapiData(data);
       }
       return data;
     })
     setLoading(false)
-  }):setLoading(false)
+  })}else{
+    setID(0);
+    setLoading(false)
     setapiData([])
-},[dispatch,datatest?.linkingId,ID,isDataUpdated])
+  }
+},[dispatch,datatest?.linkingId,ID>0,isDataUpdated])
 
 const selectedPD = useSelector((state) => state.headerReducer.selectedPD);
 selectedPD===[] && dispatch(disableTabs(false));

@@ -1,7 +1,9 @@
 import React from "react";
 import Card from "../../utils/Card";
+import { useSelector } from "react-redux";
 
 const ComEdExternal = (props) => {
+  const datatest = useSelector((state) => state.hideExecutionLinksFormReducer?.data);
   const data = [
     { placeholder: "LNL/Labor for OH make ready" }
   ];

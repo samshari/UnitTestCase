@@ -6,6 +6,7 @@ import { getApi,updateApi,createApi } from "../../../redux/components/ExecutionL
 
 let id =3;
 const Innerduct = (props) => {
+  const datatest = useSelector((state) => state.hideExecutionLinksFormReducer?.data);
   const [apiData,setapiData]=useState([]);  
   const [loading,setLoading]=useState(true); 
   const [ID,setID]= useState(0);
@@ -35,16 +36,16 @@ const Innerduct = (props) => {
   }
 
 useEffect(()=>{
-  dispatch(getApi()).then((res)=>{
+  if(datatest?.executionLinkingID!==undefined){dispatch(getApi()).then((res)=>{
     res?.status !== 404 && res.map((data)=>{
-      if(data.fK_LinkingID === id){
+      if(data.fK_LinkingID === datatest?.executionLinkingID){
         setID(data.rodAndRopeID);
         setapiData(data);
       }
       return data;
     })
     setLoading(false)
-  })
+  })}
 },[dispatch])
   const data = [
     { type:"date",placeholder: "Innerduct Start", defaultValue: apiData?.rodAndRopeID>0? apiData.strInnerductStartDate:'' },

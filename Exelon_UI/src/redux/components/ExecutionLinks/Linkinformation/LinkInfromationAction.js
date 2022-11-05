@@ -30,6 +30,24 @@ const getApiSuccess = (value) => {
 };
 
 export function updateExLinkApi(id, data, dropData, fiberCount, apiData) {
+    console.log('res',JSON.stringify({
+        'primaryKey': "",
+        'nickname': "",
+        'engineeringYear': data[0].value,
+        'executionYear': data[1].value,
+        'technologyId': dropData[2]?.value ? dropData[2].value :null,
+        'regionId': dropData[3]?.value ? dropData[3].value : null,
+        'barnId': dropData[4]?.value ? dropData[4].value : null,
+        'workOrder': data[5].value,
+        'projectId': data[6].value,
+        'comments': data[8].value,
+        'itn': data[9].value,
+        'projectStatusId': dropData[10]?.value ? dropData[10]?.value : null,
+        'description': "",
+        'scopeComments': data[11].value,
+        'fiberCount': fiberCount
+
+    }))
     return new Promise((resolve, reject) => {
 
         fetch(`http://localhost:63006/api/executionlinks/UpdateExLinkInfo/${id}`,
@@ -40,14 +58,14 @@ export function updateExLinkApi(id, data, dropData, fiberCount, apiData) {
                     'nickname': "",
                     'engineeringYear': data[0].value,
                     'executionYear': data[1].value,
-                    'technologyId': dropData[2].value ? dropData[2].value : null,
-                    'regionId': dropData[3].value ? dropData[3].value : null,
-                    'barnId': dropData[4].value ? dropData[4].value : null,
+                    'technologyId': dropData[2]?.value ? dropData[2].value :null,
+                    'regionId': dropData[3]?.value ? dropData[3].value : null,
+                    'barnId': dropData[4]?.value ? dropData[4].value : null,
                     'workOrder': data[5].value,
-                    'projectID': data[6].value,
+                    'projectId': data[6].value,
                     'comments': data[8].value,
                     'itn': data[9].value,
-                    'projectStatusId': dropData[10].value ? dropData[10].value : null,
+                    'projectStatusId': dropData[10]?.value ? dropData[10]?.value : null,
                     'description': "",
                     'scopeComments': data[11].value,
                     'fiberCount': fiberCount

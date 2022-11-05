@@ -425,7 +425,6 @@ const Engineering = (props) => {
                   <p>{props.key}</p>
                 </div>
               )}
-              disableCloseOnSelect
               value={selectedPD}
             />
           </div>
@@ -457,8 +456,7 @@ const Engineering = (props) => {
                   setIndexData(res);
                   dispatch(getLinkData([]));
                   setLinkingId(0)})
-
-                
+   
               }}
               clearOnBlur
               style={{
@@ -472,7 +470,6 @@ const Engineering = (props) => {
                   <p>{props.key}</p>
                 </div>
               )}
-              disableCloseOnSelect
               value={globalPrimaryKey}
             />
             {selectedPrimaryKey && (

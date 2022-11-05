@@ -7,6 +7,7 @@ import { getApi,createApi,updateApi } from "../../../redux/components/ExecutionL
 let id =3;
 
 const PostCompletion = (props) => {
+  const datatest = useSelector((state) => state.hideExecutionLinksFormReducer?.data);
   const [apiData,setapiData]=useState([]);  
   const [loading,setLoading]=useState(true) 
   const [ID,setID]= useState(0);
@@ -31,16 +32,16 @@ const PostCompletion = (props) => {
   }
 
 useEffect(()=>{
-  dispatch(getApi()).then((res)=>{
+  if(datatest?.executionLinkingID!==undefined){dispatch(getApi()).then((res)=>{
     res?.status!==400 && res.map((data)=>{
-      if(data.fK_LinkingID === id){
+      if(data.fK_LinkingID === datatest?.executionLinkingID){
         setID(data.postCompletionID);
         setapiData(data);
       }
       return data;
     })
     setLoading(false)
-  })
+  })}
 },[dispatch])
 
 

@@ -1,7 +1,9 @@
 import React from "react";
 import Card from "../../utils/Card";
+import { useSelector } from "react-redux";
 
 const PreConstruction = (props) => {
+  const datatest = useSelector((state) => state.hideExecutionLinksFormReducer?.data);
   const data = [
     { placeholder: "Environmental COC" },
     {

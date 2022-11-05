@@ -8,30 +8,38 @@ import {getRegionApi} from '../../../redux/components/Engineering/LinkInformatio
 import {getProjectStatusApi} from '../../../redux/components/Engineering/LinkInformation/ProjectStatusAction'
 import {getTechApi} from '../../../redux/components/Engineering/LinkInformation/TechAction'
 import {getFiberApi} from '../../../redux/components/Engineering/LinkInformation/FiberAction'
+import { selectProjectID } from "../../../redux/views/Header/HeaderAction";
+import { getExLabelData, getExLinkID } from "../../../redux/components/ExecutionLinks/ExecutionLinksAction";
 
-let fK_TechnologyID = 0;
-let fK_RegionID =0;
-let fK_BarnID=0;
-let fK_ProjectStatusID=0;
-let techName = '';
-let regionName = '';
-let barnName = '';
-let projectName ='';
-let id =3;
+
 
 const LinkInformation = (props) => {
-  const pdID =useSelector((state)=> state.engineeringFormReducer.id);
-  
+  let fK_TechnologyID = 0;
+  let fK_RegionID =0;
+  let fK_BarnID=0;
+  let fK_ProjectStatusID=0;
+  let techName = '';
+  let regionName = '';
+  let barnName = '';
+  let projectName ='';
+  let id =3;
+
+  const pdID =useSelector((state)=> state.engineeringFormReducer.id); 
   const [apiData,setApiData]=useState([]); 
+  const [ID,setID]=useState(0);
   const [loading,setLoading]=useState(true);
   const [loading1,setLoading1]=useState(true);
   const [loading2,setLoading2]=useState(true);
   const [loading3,setLoading3]=useState(true);
   const [loading4,setLoading4]=useState(true);
   const [loading5,setLoading5]=useState(true);
+  const [isDataUpdated,setDataUpdated]=useState(false);
   const dispatch= useDispatch();
 
+  const datatest = useSelector((state) => state.hideExecutionLinksFormReducer?.data);
+
   const updateData=(data,dropData)=>{
+    console.log('updatedata',dropData);
     let fiberCount='';
     data[7]?.value?.map((val)=>{
       item5.map((value)=>{
@@ -41,7 +49,8 @@ const LinkInformation = (props) => {
       })
       fiberCount+=',';
     })
-    updateExLinkApi(id,data,dropData,fiberCount,apiData).then((res)=>{
+    updateExLinkApi(ID,data,dropData,fiberCount,apiData).then((res)=>{
+      setDataUpdated(!isDataUpdated);
       if(res.status === 200)
         alert(`Data Updated SuccessFully!`);
       else 
@@ -60,8 +69,10 @@ const LinkInformation = (props) => {
       fiberCount+= ',';
     })
     createExLinkApi(data,dropData,fiberCount,pdID).then(res=>{
-      if(res.id>0)
+      if(res.id>0){
+        dispatch(getExLinkID(res.id));
         alert(`Data Created SuccessFully!`);
+      }
       else 
         alert(res.message);
     });
@@ -72,16 +83,29 @@ const LinkInformation = (props) => {
   })
 
   useEffect(() => {
-    dispatch(getExLinkApi(id)).then((res)=> {
-      res?.status !==404 && setApiData(res[0]);
+
+    if(datatest?.executionLinkingID!==undefined) { 
+      dispatch(getExLinkApi(datatest?.executionLinkingID)).then((res)=> {
+      if(res?.status !== 404) {
+        setID(res[0]?.executionLinkingID);
+        setApiData(res[0]);
+        dispatch(selectProjectID(res[0].projectId));
+        dispatch(getExLabelData(res));
+      }
       setLoading(false);
-    });
+    })}
+    else
+    { 
+      setLoading(false);
+      setApiData([])
+
+  }
     dispatch(getBarnApi()).then((res)=>setLoading1(false));
     dispatch(getRegionApi()).then((res)=>setLoading2(false));
     dispatch(getTechApi()).then((res)=>setLoading3(false));
     dispatch(getProjectStatusApi()).then((res)=>setLoading4(false));
     dispatch(getFiberApi()).then((res)=>setLoading5(false));
-  }, [dispatch]);
+  }, [dispatch,datatest,isDataUpdated]);
 
 
 let item5 = data2?.FiberReducer?.data;

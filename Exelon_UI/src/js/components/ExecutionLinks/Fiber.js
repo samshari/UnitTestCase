@@ -5,10 +5,12 @@ import { useDispatch,useSelector } from "react-redux";
 import { getApi,updateApi,createApi } from "../../../redux/components/ExecutionLinks/Fiber/FiberAction";
 import {getOvhdApi} from '../../../redux/components/ExecutionLinks/Ovhd/OvhdCocAction';
 
-let id =3;
-let fK_FiberCOCID = 0;
-let fiberCocName='';
+
 const Fiber = (props) => {
+  let id =3;
+  let fK_FiberCOCID = 0;
+  let fiberCocName='';
+  const datatest = useSelector((state) => state.hideExecutionLinksFormReducer?.data);
   const [apiData,setapiData]=useState([]);  
   const [loading,setLoading]=useState(true) 
   const [loading1,setLoading1]=useState(true) 
@@ -38,9 +40,9 @@ const Fiber = (props) => {
   }
 
 useEffect(()=>{
-  dispatch(getApi()).then((res)=>{
+  if(datatest?.executionLinkingID!==undefined) { dispatch(getApi()).then((res)=>{
     res.map((data)=>{
-      if(data.fK_LinkingID === id){
+      if(data.fK_LinkingID === datatest?.executionLinkingID){
         setID(data.fiberID);
         setapiData(data);
       }
@@ -48,6 +50,8 @@ useEffect(()=>{
     })
     setLoading(false)
   })
+}
+
   dispatch(getOvhdApi()).then((res)=>{
     setLoading1(false);
   })

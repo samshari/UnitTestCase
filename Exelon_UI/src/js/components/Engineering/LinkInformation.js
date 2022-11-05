@@ -90,7 +90,6 @@ const LinkInformation = (props) => {
     createApi(data, dropData, fiberCount, stepID, pdID).then(res => {
       dispatch(getLinkingID(res.id));
       if (res.id > 0) {
-      {
           dispatch(getPDApi());
           dispatch(getPrimaryKey(0)).then((res)=> { res?.status!==404 && dispatch(getAllprimaryKeys(res.map((item)=>{
             return item.primaryKey;
@@ -99,10 +98,9 @@ const LinkInformation = (props) => {
             dispatch(getallPrimaryKey(res));
           })
           dispatch(disableTabs(false));
-          setOpen(true)
+          setOpen(true);
           setMessage(`Data Created SuccessFully!`);
-      }
-        dispatch(createLinkData(res.id))
+           dispatch(createLinkData(res.id))
       }
       else
       {
