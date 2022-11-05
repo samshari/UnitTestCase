@@ -227,6 +227,12 @@ namespace Exelon.API
 
             services.AddTransient<IMPhaseService,MPhaseService>();
             services.AddTransient<IMPhaseRepository, MPhaseRepository>();
+
+            services.AddTransient<IPDDetailsService, PDDetailsService>();
+            services.AddTransient<IPDRepositories, PDDetailsRepositories>();
+
+            services.AddTransient<ICompletedPoleMileService,CompletedPoleMileService>();
+            services.AddTransient<ICompletedPoleAndMile, CompletedPoleAndMileRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

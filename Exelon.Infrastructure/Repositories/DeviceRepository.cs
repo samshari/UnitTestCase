@@ -197,5 +197,101 @@ namespace Exelon.Infrastructure.Repositories
                 catch (Exception) { return 0; }
             });
         }
+
+        #region [Execution Device]
+        #region [Get Execution Device]
+        /// <summary>
+        /// Get Execution Device
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ExecutionDeviceModel> GetExecutionDevice(int id)
+        {
+            return await Task.Run(() =>
+            {
+                var result = new ExecutionDeviceModel();
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        connection.Open();
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = "sp_ExecutionDeviceActions";
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@procId", 3);
+                            cmd.Parameters.AddWithValue("@executionDeviceId", id);
+                            cmd.Parameters.AddWithValue("@executionLinkingId", 0);
+                            cmd.Parameters.AddWithValue("@installedDevices", 0);
+                            cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);
+                            cmd.Parameters.AddWithValue("@UpdatedBy", string.Empty);
+                            cmd.Connection = connection;
+
+                            using (SqlDataReader dataReader = cmd.ExecuteReader())
+                            {
+                                while (dataReader.Read())
+                                {
+                                    var model = new ExecutionDeviceModel();
+                                    model.ExecutionDeviceId = (long)dataReader["ExecutionDeviceID"];
+                                    model.ExecutionLinkidId = (long)dataReader["ExecutionLinkidID"];
+                                    model.InstalledDevice = (int)dataReader["InstalledDevice"];
+                                    model.CreatedBy = dataReader["CreatedBy"].ToString();
+                                    model.UpdatedBy = dataReader["UpdatedBy"].ToString();
+                                    result = model;
+                                }
+                            }
+                        }
+                        connection.Close();
+                    }
+                    return result;
+                }
+                catch (Exception) {return new ExecutionDeviceModel();}
+            });
+        }
+        #endregion
+
+        #region [Save Update Execution Device]
+        /// <summary>
+        /// Save Update Execution Device
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<ExecutionDeviceModel> SaveUpdateExecutionDevice(ExecutionDeviceModel model)
+        {
+            return await Task.Run(() =>
+            {
+                var result = new ExecutionDeviceModel();
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = "sp_ExecutionDeviceActions";
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            if (model.ExecutionDeviceId == 0)
+                                cmd.Parameters.AddWithValue("@procId", 1);
+                            else if (model.ExecutionDeviceId > 0)
+                                cmd.Parameters.AddWithValue("@procId", 2);
+                            cmd.Parameters.AddWithValue("@executionDeviceId", model.ExecutionDeviceId);
+                            cmd.Parameters.AddWithValue("@executionLinkingId", model.ExecutionLinkidId);
+                            cmd.Parameters.AddWithValue("@installedDevices", model.InstalledDevice);
+                            cmd.Parameters.AddWithValue("@CreatedBy", model.CreatedBy);
+                            cmd.Parameters.AddWithValue("@UpdatedBy", model.CreatedBy);
+                            cmd.Connection = connection;
+                            connection.Open();
+                          result.ExecutionDeviceId=  (Int64)cmd.ExecuteScalar();
+                            connection.Close();
+                            return result;
+                        }
+                    }
+                }
+                catch (Exception ex) {
+                    throw ex;//return new ExecutionDeviceModel();
+                }
+            });
+        }
+        #endregion
+        #endregion
     }
 }

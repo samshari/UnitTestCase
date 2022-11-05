@@ -35,6 +35,7 @@ import EnggInvestReducer from "./components/ExecutionLinks/Engginvestigation/Eng
 import InnerDuctReducer from "./components/ExecutionLinks/InnerDuct/InnerDuctReducer";
 import OVHDReducer from "./components/ExecutionLinks/Ovhd/OvhdReducer";
 import OvhdCOCReducer from "./components/ExecutionLinks/Ovhd/OvhdCocReduer";
+import ComEdReducer from "./components/ExecutionLinks/ComEdExternal/ComEdReducer";
 
 import TabsReducer from "./utils/Tabs/TabsReducer";
 
@@ -79,7 +80,8 @@ const rootReducer= combineReducers({
     EnggInvestReducer:EnggInvestReducer,
     InnerDuctReducer:InnerDuctReducer,
     OVHDReducer:OVHDReducer,
-    OvhdCOCReducer:OvhdCOCReducer
+    OvhdCOCReducer:OvhdCOCReducer,
+    ComEdReducer:ComEdReducer
 })
 
 export default rootReducer;
