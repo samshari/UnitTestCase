@@ -31,10 +31,10 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,apiData) {
-    return new Promise((resolve, reject) => {  
+export function updateApi(id,data,linkID) {
+    return id ===0 ?createApi(data,linkID,1) : new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/engineering/updateifafiber/${id}`,
+       fetch(`http://localhost:63006/api/engineering/updateifafiber/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({

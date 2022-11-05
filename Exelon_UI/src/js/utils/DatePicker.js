@@ -11,8 +11,9 @@ export default function BasicDatePicker(props) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
+        disabled={props.disable}
         label={props.placeholder}
-        value={props.value}
+        value={props.value?props.value:null}
         onChange={
           props.onChange
         }

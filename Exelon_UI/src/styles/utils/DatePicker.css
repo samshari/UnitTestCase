@@ -15,6 +15,28 @@
     width: 12.45rem !important;
 }
 
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
+
+  color: #909394 !important;
+
+}
+
+
+
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+
+  border-color: #909394 !important;
+
+}
+
+
+
+
+.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+
+  border-color: #909394 !important;
+
+}
 /* datepicker calender divs */
 
 .css-169iwlq-MuiCalendarPicker-root{

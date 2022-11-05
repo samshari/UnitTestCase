@@ -1,14 +1,19 @@
-import { HIDE_ENGINEERING_FORM, SHOW_UPDATE_BUTTON, GET_PD_ID, GET_PRIMARY_KEY, GET_LINK_INFO_PRIMARY_KEY, GET_LINK_DATA, CREATE_LINK_DATA } from "./EngineeringAction";
+import { HIDE_ENGINEERING_FORM,GET_LINKID_SUCCESS,GET_LINK_ID ,GET_ALLPK_KEY,GET_ALLPRIMARY_KEY ,SHOW_UPDATE_BUTTON, GET_PD_ID, GET_LABEL_KEY, GET_PRIMARY_KEY, GET_LINK_INFO_PRIMARY_KEY, GET_LINK_DATA, CREATE_LINK_DATA } from "./EngineeringAction";
 
 const initialState = {
   id: null,
   hideForm: false,
   showUpdateButton: false,
   clearSelectedTableRow: false,
-  primaryKey: null,
+  primaryKey: [],
   linkInfoByPrimaryKey: null,
   data: [],
-  linkId:0
+  linkId: 0,
+  labelData: [],
+  allPk: [],
+  linkingID:0,
+  allPrimaryKey:[],
+  globalLinkID:0
 };
 
 function engineeringFormReducer(state = initialState, action) {
@@ -48,6 +53,31 @@ function engineeringFormReducer(state = initialState, action) {
       return (state = {
         ...state,
         linkId: action.data
+      })
+    case GET_LABEL_KEY:
+      return (state = {
+        ...state,
+        labelData: action.data
+      })
+    case GET_ALLPK_KEY:
+      return (state = {
+        ...state,
+        allPk: action.data
+      })
+      case GET_LINK_ID:
+      return (state = {
+        ...state,
+        linkingID: action.data
+      })
+      case GET_ALLPRIMARY_KEY:
+      return (state = {
+        ...state,
+        allPrimaryKey: action.data
+      })
+      case GET_LINKID_SUCCESS:
+      return (state = {
+        ...state,
+        globalLinkID: action.data
       })
     default:
       return state;

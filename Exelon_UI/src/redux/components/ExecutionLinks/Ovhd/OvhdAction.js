@@ -75,14 +75,13 @@ export function updateApi(id,data,dropData,apiData) {
     };
 
 
-    export function createApi(data,dropData,linkID,stepID) {
+    export function createApi(data,dropData,linkID) {
         return new Promise((resolve, reject) => {  
             fetch(`http://localhost:63006/api/executionlinks/CreateOVHD`,
             {
               method:'POST',
               body: JSON.stringify({
                 'FK_LinkingID':linkID,
-                'StepId':stepID,
                 'fK_OVHDCOCID':dropData[0],
                 'startDate': data[1].value,
                 'endDate': data[2].value,

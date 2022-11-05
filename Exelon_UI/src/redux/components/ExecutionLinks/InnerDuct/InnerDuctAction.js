@@ -66,14 +66,13 @@ export function updateApi(id,data,dropData,apiData) {
     };
 
 
-    export function createApi(data,dropData,linkID,stepID) {
+    export function createApi(data,dropData,linkID) {
         return new Promise((resolve, reject) => {  
             fetch(`http://localhost:63006/api/executionlinks/CreateRODROPE`,
             {
               method:'POST',
               body: JSON.stringify({
                 'FK_LinkingID':linkID,
-                'StepId':stepID,
                 'innerductStartDate':data[0].value,
                 'innerductEndDate':data[1].value,
                 'comments':data[2].value

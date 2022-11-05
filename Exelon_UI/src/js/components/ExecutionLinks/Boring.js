@@ -3,7 +3,7 @@ import Card from "../../utils/Card";
 
 const Boring = (props) => {
   const data = [
-    { placeholder: "Boring COC" },
+    { type:"dropdown",placeholder: "Boring COC" },
     { type: "date", placeholder: "Boring Start" },
     { type: "date", placeholder: "Boring Finish" },
     { type: "textarea", placeholder: "Boring Issues/Comments" },

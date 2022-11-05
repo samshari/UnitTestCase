@@ -7,32 +7,48 @@ import {getReactApi} from '../../../redux/components/Engineering/Owners/ReactLRE
 import {getUcomApi} from '../../../redux/components/Engineering/Owners/UcomSPOCAction'
 import {getPMApi} from '../../../redux/components/Engineering/Owners/PMAction'
 import {Circles} from 'react-loader-spinner'
+import CustomSnackBar from "../../utils/Snackbar";
 
-let fK_ReactsLRE_ID = 0;
-let fK_UCOMMSPOC_ID =0;
-let fK_ProjectManagerID=0;
-let lreName = '';
-let ucomName = '';
-let pmName = '';
-let id =1;
-let stepID=1;
 const Owners = (props) => {
-  
+  let fK_ReactsLRE_ID = 0;
+  let fK_UCOMMSPOC_ID =0;
+  let fK_ProjectManagerID=0;
+  let lreName = '';
+  let ucomName = '';
+  let pmName = '';
+  let id =1;
+  let stepID=1; 
   const [apiData,setapiData]=useState([]); 
-  const [loading,setLoading]=useState(true)  
-  const [loading1,setLoading1]=useState(true)  
-  const [loading2,setLoading2]=useState(true)  
-  const [loading3,setLoading3]=useState(true)  
+  const [loading,setLoading]=useState(true);
+  const [loading1,setLoading1]=useState(true);  
+  const [loading2,setLoading2]=useState(true); 
+  const [loading3,setLoading3]=useState(true);  
   const [ID,setID]=useState(0);
+  const [open, setOpen] = React.useState(false);
+  const [isDataUpdated,setDataUpdated]=useState(false);
+  const [message, setMessage] = useState("");
+  const handleToClose = (event, reason) => {
+    if ("clickaway" == reason) return;
+    setOpen(false);
+  };
   
 
   const dispatch = useDispatch();
   const updateData=(data,dropData)=>{
-    updateApi(ID,data,dropData,apiData).then((res)=>{
-      if(res.status === 200)
-        alert(`Data Updated SuccessFully!`);
-      else 
-        alert(res.message);
+    updateApi(ID,data,dropData,datatest.linkingId).then((res)=>{
+      if(res.status === 200){
+        setOpen(true);
+        setMessage(`Data Updated SuccessFully!`);
+        setDataUpdated(!isDataUpdated);
+      }
+      else if(res.id>0){
+        setID(res.id);
+        setOpen(true);
+        setMessage(`Data Created SuccessFully!`);
+      }
+      else{
+        setOpen(true);
+        setMessage(res.message);}
       })
   }
   const datatest=useSelector((state)=>state.engineeringFormReducer?.data)
@@ -40,10 +56,14 @@ const Owners = (props) => {
   
   const createData=(data,dropData)=>{
     createApi(data,dropData,datatest1,stepID).then(res=>{
-      if(res.id>0)
-        alert(`Data Created SuccessFully!`);
-      else 
-        alert(res.message);
+      if(res.id>0){
+        setOpen(true);
+        setMessage(`Data Created SuccessFully!`);
+      }
+      else{
+        setOpen(true);
+        setMessage(res.message);
+      }
     });
   }
 
@@ -55,8 +75,8 @@ const data2 = useSelector((state)=>{
 
 
 useEffect( ()=>{
-  {datatest!==undefined ? dispatch(getApi()).then((res)=> {
-    res.map((data)=>{
+  {datatest?.linkingId!==undefined ? dispatch(getApi()).then((res)=> {
+    res?.status!==404 && res.map((data)=>{
       if(data.fK_LinkingID === datatest.linkingId){
         setID(data.ownerID);
         setapiData(data);
@@ -70,12 +90,12 @@ useEffect( ()=>{
   dispatch(getReactApi()).then((res)=> setLoading1(false))
   dispatch(getUcomApi()).then((res)=> setLoading2(false))
   dispatch(getPMApi()).then((res)=> setLoading3(false))
-},[dispatch])
+},[dispatch,datatest?.linkingId,ID,isDataUpdated])
 
 
 let item1 = data2?.ReactLREReducer?.data;
 
-item1?.map((value)=>{
+item1?.status !==404 && item1?.map((value)=>{
   let id = 0; 
   if(data2?.OwnerReducer?.data ){
     data2?.OwnerReducer?.data.filter((res)=>{
@@ -91,7 +111,7 @@ item1?.map((value)=>{
 
 let item2 = data2?.UcomSPOCReducer?.data;
 
-item2?.map((value)=>{
+item2?.status !==404 && item2?.map((value)=>{
   let id = 0; 
   if(data2?.OwnerReducer?.data){
     data2?.OwnerReducer?.data.filter((res)=>{
@@ -107,7 +127,7 @@ item2?.map((value)=>{
 
 let item3 = data2?.PMReducer?.data;
 
-item3?.map((value)=>{
+item3?.status !==404 && item3?.map((value)=>{
   
   let id = 0; 
   if(data2?.OwnerReducer?.data){
@@ -124,24 +144,27 @@ item3?.map((value)=>{
 })
 
   const data = [
-    { type:"dropdown", placeholder: "REACTS LRE", dropDownValues: data2?.ReactLREReducer?.data === null ? []:data2?.ReactLREReducer?.data,defaultDrop: fK_ReactsLRE_ID, defaultValue: lreName },
-    { type:"dropdown",placeholder: "UCOMM SPOC",dropDownValues: data2?.UcomSPOCReducer?.data === null ? []:data2?.UcomSPOCReducer?.data,defaultDrop: fK_UCOMMSPOC_ID,defaultValue: ucomName },
-    { type:"dropdown",placeholder: "PM", dropDownValues : data2?.PMReducer?.data === null ? []:data2?.PMReducer?.data,defaultDrop: fK_ProjectManagerID, defaultValue: pmName },
+    { type:"dropdown", placeholder: "REACTS LRE", dropDownValues: data2?.ReactLREReducer?.data === null || data2?.ReactLREReducer?.data?.status ===404 ? []:data2?.ReactLREReducer?.data,defaultDrop: fK_ReactsLRE_ID, defaultValue: apiData?.ownerID>0? lreName:'' },
+    { type:"dropdown",placeholder: "UCOMM SPOC",dropDownValues: data2?.UcomSPOCReducer?.data === null || data2?.ReactLREReducer?.data?.status ===404? []:data2?.UcomSPOCReducer?.data,defaultDrop: fK_UCOMMSPOC_ID,defaultValue:apiData?.ownerID>0? ucomName:'' },
+    { type:"dropdown",placeholder: "PM", dropDownValues : data2?.PMReducer?.data === null || data2?.ReactLREReducer?.data?.status ===404? []:data2?.PMReducer?.data,defaultDrop: fK_ProjectManagerID, defaultValue: apiData?.ownerID>0?pmName:'' },
   ];
 
   return (
     <>
       {/* <h1>RealEstate</h1> */}
-      {!loading && !loading1 && !loading2 && !loading3 ? <Card
+      {!loading && !loading1 && !loading2 && !loading3 && <Card
         data={data}
         disable={props.disableFields}
         cardTitle="Owners"
         tabColor={props.tabColor}
         onClick = {updateData}
         onSubmit = {createData}
-      />: <div className="loader">
-      <Circles type="Circles" color="#4d841d" height={60} width={60} />
-      </div>}
+      />}
+      <CustomSnackBar
+        open={open}
+        onClose={() => handleToClose()}
+        message={message}
+      />
     </>
   );
 };

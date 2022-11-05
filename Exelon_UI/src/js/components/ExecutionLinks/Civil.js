@@ -3,7 +3,7 @@ import Card from "../../utils/Card";
 
 const Civil = (props) => {
   const data = [
-    { placeholder: "Civil COC" },
+    { type:"dropdown",placeholder: "Civil COC" },
     { type: "date", placeholder: "Civil Start" },
     { type: "date", placeholder: "Civil Finish" },
     { type: "textarea", placeholder: "Civil Issues/Comments" },

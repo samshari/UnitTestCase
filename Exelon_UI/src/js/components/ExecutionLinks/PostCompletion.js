@@ -4,8 +4,7 @@ import { useEffect,useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { getApi,createApi,updateApi } from "../../../redux/components/ExecutionLinks/PostCreation/PostCreationAction";
 
-let id =1;
-let stepID = 1;
+let id =3;
 
 const PostCompletion = (props) => {
   const [apiData,setapiData]=useState([]);  
@@ -23,7 +22,7 @@ const PostCompletion = (props) => {
   }
 
   const createData=(data)=>{
-    createApi(data,id,stepID).then((res)=>{
+    createApi(data,id).then((res)=>{
       if(res.id>0)
         alert(`Data Created SuccessFully!`);
       else 
@@ -33,7 +32,7 @@ const PostCompletion = (props) => {
 
 useEffect(()=>{
   dispatch(getApi()).then((res)=>{
-    res.map((data)=>{
+    res?.status!==400 && res.map((data)=>{
       if(data.fK_LinkingID === id){
         setID(data.postCompletionID);
         setapiData(data);
@@ -45,13 +44,13 @@ useEffect(()=>{
 },[dispatch])
 
 
-  const data = [
-    { type: "textarea", placeholder: "As-Builts Received",defaultValue: apiData.asBuiltsReceived },
-    { type: "textarea", placeholder: "Locations Ready To Inspect", defaultValue: apiData.locationsReadyToInspect },
-    { type: "textarea", placeholder: "Locations Inspected ", defaultValue: apiData.locationsInspected },
-    { type: "textarea", placeholder: "TED updated", defaultValue: apiData.tedUpdated },
-    { type: "textarea", placeholder: "PNI updated IS+60 days", defaultValue: apiData.pniUpdatedIS },
-  ];
+const data = [
+  { type: "textarea", placeholder: "As-Builts Received",defaultValue: apiData?.postCompletionID>0?apiData.asBuiltsReceived:'' },
+  { type: "textarea", placeholder: "Locations Ready To Inspect", defaultValue: apiData?.postCompletionID>0? apiData.locationsReadyToInspect:'' },
+  { type: "textarea", placeholder: "Locations Inspected ", defaultValue: apiData?.postCompletionID>0? apiData.locationsInspected:'' },
+  { type: "textarea", placeholder: "TED updated", defaultValue: apiData?.postCompletionID>0?apiData.tedUpdated:'' },
+  { type: "textarea", placeholder: "PNI updated IS+60 days", defaultValue: apiData?.postCompletionID>0?apiData.pniUpdatedIS:'' },
+];
   return (
     <>
       {!loading && <Card

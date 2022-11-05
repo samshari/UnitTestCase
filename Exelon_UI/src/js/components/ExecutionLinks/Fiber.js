@@ -5,8 +5,7 @@ import { useDispatch,useSelector } from "react-redux";
 import { getApi,updateApi,createApi } from "../../../redux/components/ExecutionLinks/Fiber/FiberAction";
 import {getOvhdApi} from '../../../redux/components/ExecutionLinks/Ovhd/OvhdCocAction';
 
-let id =2;
-let stepID =1;
+let id =3;
 let fK_FiberCOCID = 0;
 let fiberCocName='';
 const Fiber = (props) => {
@@ -30,7 +29,7 @@ const Fiber = (props) => {
   }
 
   const createData=(data,dropData,multiDrop)=>{
-    createApi(data,dropData,id,stepID).then((res)=>{
+    createApi(data,dropData,id).then((res)=>{
       if(res.id>0)
         alert(`Data Created SuccessFully!`);
       else 
@@ -68,7 +67,7 @@ item?.map((value)=>{
 })
 
   const data = [
-    { type:"dropdown", placeholder: "Fiber COC",dropDownValues: data2?.OvhdCOCReducer?.data === null ? []: data2?.OvhdCOCReducer?.data,defaultDrop: fK_FiberCOCID, defaultValue: fiberCocName },
+    { type:"dropdown", placeholder: "Fiber COC",dropDownValues: [],defaultDrop: fK_FiberCOCID, defaultValue: fiberCocName },
     { type: "date", placeholder: "Fiber Start",defaultValue:apiData.strStartDate },
     { type: "date", placeholder: "Target Fiber Install Finish", defaultValue: apiData.strEndDate },
     { type: "textarea", placeholder: "Fiber Weekly FTE Count", defaultValue: apiData.weeklyFTECount   },

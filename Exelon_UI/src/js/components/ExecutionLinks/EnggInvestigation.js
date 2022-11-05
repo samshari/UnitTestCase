@@ -6,8 +6,7 @@ import { getApi,updateApi,createApi } from "../../../redux/components/ExecutionL
 import {getInnerApi} from '../../../redux/components/ExecutionLinks/Engginvestigation/InnerDuctCOCAction'
 
 
-let id =1;
-let stepID =1;
+let id =3;
 let fK_InnerductCOC =0;
 let innerName = '';
 
@@ -32,7 +31,7 @@ const EnggInvestigation = (props) => {
   }
 
   const createData=(data,dropData,multiDrop)=>{
-    createApi(data,dropData,id,stepID).then((res)=>{
+    createApi(data,dropData,id).then((res)=>{
       if(res.id>0)
         alert(`Data Created SuccessFully!`);
       else 
@@ -42,7 +41,7 @@ const EnggInvestigation = (props) => {
 
 useEffect(()=>{
   dispatch(getApi()).then((res)=>{
-    res.map((data)=>{
+    res?.status !== 404 && res.map((data)=>{
       if(data.fK_LinkingID === id){
         setID(data.enggInvestigationID);
         setapiData(data);
@@ -56,12 +55,14 @@ useEffect(()=>{
 
 let item = data2?.InnerDuctCOCReducer?.data;
 
-
+console.log('item',data2?.EnggInvestReducer?.data);
 item?.map((value)=>{
   let inner_id = 0; 
   if(data2?.EnggInvestReducer?.data ){
-    inner_id = data2?.EnggInvestReducer?.data[0].fK_InnerductCOC
-
+    data2?.EnggInvestReducer?.data?.filter((res)=>{
+      if(res.fK_LinkingID === id)
+        inner_id = res.fK_InnerductCOC;
+    })
   }
   if(value.innerductCOCID === inner_id){
     fK_InnerductCOC = inner_id
@@ -74,7 +75,7 @@ item?.map((value)=>{
 
   const data = [
     { type:"dropdown",placeholder: "Eng Investigation/ innerduct coc",dropDownValues: data2?.InnerDuctCOCReducer?.data === null ? []:data2?.InnerDuctCOCReducer?.data ,defaultDrop: fK_InnerductCOC, defaultValue: innerName },
-    { type:"textarea",placeholder: "Eng. Investigation Issues/Comments",defaultValue: apiData.comments }
+    { type:"textarea",placeholder: "Eng. Investigation Issues/Comments",defaultValue: apiData?.enggInvestigationID>0? apiData.comments:''}
   ];
   return (
     <>

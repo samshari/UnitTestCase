@@ -30,11 +30,11 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,apiData) {
+export function updateApi(id,data,linkID) {
     
-      return new Promise((resolve, reject) => {  
+  return id===0?createApi(data,linkID,1) : new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/engineering/updatedesign/${id}`,
+      fetch(`http://localhost:63006/api/engineering/updatedesign/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
@@ -69,7 +69,7 @@ export function updateApi(id,data,apiData) {
 
     export function createApi(data,linkID,stepID) {
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/engineering/createdesign`,
+        fetch(`http://localhost:63006/api/engineering/createdesign`,
             {
             method:'POST',
             body: JSON.stringify({

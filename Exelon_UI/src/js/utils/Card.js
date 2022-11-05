@@ -33,12 +33,14 @@ const Card = (props) => {
   const createData = (e) =>{
     props.onSubmit([...defaultCreate],[...defaultCreateDrop],[...defaultmultiDrop]);
 }
+   
 
   const selectedPrimaryKey = useSelector(
     (state) => state.headerReducer.selectedPrimaryKey
 
   );
 
+  
   useEffect(() => {
     !props.phase2 && setSelectedPhase3ButtonColor("burlywood");
     setSelectedPhase1ButtonColor("burlywood");
@@ -65,6 +67,9 @@ const Card = (props) => {
   const showEngineeringUpdateButton = useSelector(
     (state) => state.headerReducer.selectedPrimaryKey
   );
+  const showEngineeringdataUpdateButton = useSelector(
+    (state) => state.engineeringFormReducer.data?.length > 0
+  );
   const showExecutionLinksUpdateButton = useSelector(
     (state) => state.headerReducer.selectedProjectId
   )
@@ -74,12 +79,12 @@ const Card = (props) => {
   const showHutsExecutionUpdateButton = useSelector(
     (state) => state.headerReducer.selectedHutsExecutionLocation
   );
-  const handleSaveClick = () => {
-    dispatch(disableTabs(false))
-  };
+  // const handleSaveClick = () => {
+  //   console.log('idlink',linkingID);
+  //     linkingID===0 || linkingID === undefined?dispatch(disableTabs(true)):
+  // };
   return (
     <div class="Card">
-      {console.log('render', props.data)}
       <div class="card_inputArea">
         <div
           class="cardTitle"
@@ -184,7 +189,9 @@ const Card = (props) => {
               </div>
             ) : (
               <TextField
-                type={item.type === "number" && "number"}
+                type={item.type === "number" && `number`}
+                disabled={props.disable || item.disable}
+                required={item.required}
                 id="outlined-basic"
                 label={item.placeholder}
                 variant="outlined"
@@ -277,10 +284,9 @@ const Card = (props) => {
                       setDefaultDrop([...defaultCreateDrop], (defaultCreateDrop[index].value = id));
                     }
 
-
                   }}
                 >
-                  {item.dropDownValues.map((value) => {
+                  {item?.dropDownValues?.map((value) => {
                     return (
                       <MenuItem value={
                         item.placeholder === "Barn" ? value.barnName : (item.placeholder === "Region" ? value.regionName : value.name)
@@ -296,6 +302,7 @@ const Card = (props) => {
             return (
               <div style={{ margin: "5px" }}>
                 <BasicDatePicker
+                  disable={props.disable}
                   placeholder={item.placeholder}
                   style={{ padding: "3rem" }}
                   value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ? defaultData[index]?.value : defaultCreate[index]?.value) : blankState}
@@ -354,7 +361,31 @@ const Card = (props) => {
                 Submit
               </Button>
             );
-          } else {
+          } 
+          else if(item.type==="year"){
+           return (
+              <TextField
+                type="number"
+                InputProps={{ inputProps: { min: "0", max: "4", step: "1" } }}
+                disabled={props.disable}
+                id="outlined-basic"
+                label={item.placeholder}
+                variant="outlined"
+                style={{ margin: "5px" }}
+                size="small"
+                inputProps={{ style: { fontSize: 13 } }} // font size of input text
+                InputLabelProps={{ style: { fontSize: 13 } }} // font size of input label
+                value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ? defaultData[index]?.value : defaultCreate[index]?.value) : ''}
+                onChange={(value) => {
+                  if (showEngineeringUpdateButton || showExecutionLinksUpdateButton)
+                    setDefaultData([...defaultData], (defaultData[index].value = value.target.value));
+                  else
+                    setDefaultCreate([...defaultCreate], (defaultCreate[index].value = value.target.value));
+                }}
+              />
+            )
+          }
+          else {
             return (
               <TextareaAutosize
                 minRows={2}
@@ -367,6 +398,8 @@ const Card = (props) => {
                   fontFamily: "sans-serif",
                   fontSize: "0.85rem",
                 }}
+                
+                disabled={props.disable}
                 value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ? defaultData[index]?.value : defaultCreate[index].value) : ''}
                 onChange={(value) => {
                   if (showEngineeringUpdateButton || showExecutionLinksUpdateButton)
@@ -380,10 +413,10 @@ const Card = (props) => {
         })}
       </div>
       <div class="buttonsContainer">
-        { showEngineeringUpdateButton||
-          showExecutionLinksUpdateButton||
-          showPermittingUpdateButton||
-          showHutsUpdateButton||
+        { (showEngineeringUpdateButton) ||
+          showExecutionLinksUpdateButton ||
+          showPermittingUpdateButton ||
+          showHutsUpdateButton ||
           showHutsExecutionUpdateButton ? (
           <Button variant="contained" class="Button" onClick={updateData} >
             Update
@@ -392,10 +425,13 @@ const Card = (props) => {
           <Button
             variant="contained"
             class="Button"
+              style={{backgroundColor:props.disable?"gray": "#922c88",
+              border: props.disable?"1px solid gray":"1px solid #922c88"
+            }}
             onClick={() => {
               createData();
-              handleSaveClick();
             }}
+            disabled={props.disable}
           >
             Save
           </Button>

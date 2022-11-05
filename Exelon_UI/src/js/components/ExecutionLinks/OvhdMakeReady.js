@@ -5,8 +5,7 @@ import { useDispatch , useSelector} from "react-redux";
 import {getApi,updateApi,createApi} from "../../../redux/components/ExecutionLinks/Ovhd/OvhdAction"
 import {getOvhdApi} from '../../../redux/components/ExecutionLinks/Ovhd/OvhdCocAction'
 
-let id =1;
-let stepID=1;
+let id =3;
 let fK_OVHDCOCID=0;
 let ovhdName='';
 
@@ -30,7 +29,7 @@ const OvhdMakeReady = (props) => {
   }
 
   const createData=(data)=>{
-    createApi(data,id,stepID).then((res)=>{
+    createApi(data,id).then((res)=>{
       if(res.id>0)
         alert(`Data Created SuccessFully!`);
       else 
@@ -40,7 +39,7 @@ const OvhdMakeReady = (props) => {
 
 useEffect(()=>{
   dispatch(getApi()).then((res)=>{
-    res.map((data)=>{
+    res?.status !== 404 && res.map((data)=>{
       if(data.fK_LinkingID === id){
         setID(data.ovhdMakeReadyID);
         setapiData(data);
@@ -56,12 +55,13 @@ useEffect(()=>{
 
 let item = data2?.OvhdCOCReducer?.data;
 
-
 item?.map((value)=>{
   let ovhd_id = 0; 
-  if(data2?.OVHDReducer?.data ){
-    ovhd_id = data2?.OVHDReducer?.data[0].fK_OVHDCOCID
-
+  if(data2?.OVHDReducer?.length>0 ){
+    data2?.OVHDReducer?.data.filter((res)=>{
+      if(res.fK_LinkingID === id)
+        ovhd_id = res.fK_OVHDCOCID;
+    })
   }
   if(value.cocid === ovhd_id){
     fK_OVHDCOCID = ovhd_id
@@ -70,11 +70,11 @@ item?.map((value)=>{
 })
 
   const data = [
-    { type:"dropdown", placeholder: "OVHD COC",dropDownValues: data2?.OvhdCOCReducer?.data === null ? []: data2?.OvhdCOCReducer?.data,defaultDrop: fK_OVHDCOCID, defaultValue: ovhdName },
-    { type:"date",placeholder: "OVHD Start",defaultValue:apiData.strStartDate },
-    { type:"date",placeholder:"OVHD Finish",defaultValue:apiData.strEndDate},
-    { type:"textarea",placeholder: "Make-Ready Issues/ Comments",defaultValue:apiData.issuesOrComments },
-    { type:"textarea",placeholder:"OVHD Weekly FTE Count",defaultValue:apiData.weeklyFTECount   }
+    { type:"dropdown", placeholder: "OVHD COC",dropDownValues: [],defaultDrop: fK_OVHDCOCID, defaultValue: ovhdName },
+    { type:"date",placeholder: "OVHD Start",defaultValue: apiData?.ovhdMakeReadyID>0? apiData.strStartDate:'' },
+    { type:"date",placeholder:"OVHD Finish",defaultValue: apiData?.ovhdMakeReadyID>0?apiData.strEndDate:''},
+    { type:"textarea",placeholder: "Make-Ready Issues/ Comments",defaultValue:apiData?.ovhdMakeReadyID>0?apiData.issuesOrComments:'' },
+    { type:"textarea",placeholder:"OVHD Weekly FTE Count",defaultValue:apiData?.ovhdMakeReadyID>0?apiData.weeklyFTECount:''   }
   ];
   return (
     <>

@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import {
+  getallPrimaryKey,
+  getAllprimaryKeys,
+  getLabelData,
   getLinkData,
   getLinkInfoByPrimaryKey,
   getPDID,
@@ -29,6 +32,7 @@ import PlannedPoleReplacements from "../Engineering/PlannedPoleReplacements";
 import Owners from "../Engineering/Owners";
 import CustomTabs from "../../utils/Tabs";
 import { getPDApi } from "../../../redux/components/Engineering/PD/PDAction";
+import { disableTabs } from "../../../redux/utils/Tabs/TabsAction";
 
 const current = new Date();
 const date = `${current.getMonth()}/${current.getDate() + 1
@@ -194,9 +198,11 @@ const Engineering = (props) => {
     []
   );
 
+  const globalPrimaryKey = useSelector((state)=>state.headerReducer.selectedPrimaryKey)
   // ** States
   const [allData, setFilteredData] = useState([]);
-  const [linkingID, setLinkingId] = useState([])
+  const [indexData,setIndexData]=useState([]);
+  const [linkingID, setLinkingId] = useState(0);
   const [selectedValue, setSelectedValue] = useState(selectedPD);
   const [selectedPrimaryKey, setSelectedPrimaryKey] = useState(null);
   const dispatch = useDispatch();
@@ -204,25 +210,31 @@ const Engineering = (props) => {
   const PDData = useSelector((state) => {
     return state;
   });
+  const createlinkID=useSelector((state)=>state.engineeringFormReducer?.linkingID)
+  const updatelinkID=useSelector((state)=>state.engineeringFormReducer?.data?.linkingId);
   var data = [];
   const TabsArr = [
     {
       tabName: "Link Information",
       tabColor: "yellow",
+      disable: selectedPD.length===0 && selectedPrimaryKey===null && true,
       component: (
         <LinkInformation
           // disableFields={disable}
           tabColor="yellow"
           linkingID={data}
           primaryKey={data}
+          disableFields={selectedPD.length===0 && selectedPrimaryKey===null && true} 
         />
       ),
     },
     {
       tabName: "EOC/ Real Estate",
       tabColor: "#00bfff",
-      disable: true,
-      component: <RealEstate tabColor="#00bfff" linkingID={linkingID} />,
+      disable:  true,
+      component: <RealEstate tabColor="#00bfff" linkingID={linkingID} 
+      disableFields={(createlinkID >0 ) || (updatelinkID>0) ?false:true}
+      />,
     },
     {
       tabName: "IFA Fiber",
@@ -232,6 +244,7 @@ const Engineering = (props) => {
         <IFAFiber
           tabColor="#00ff00"
           linkingID={linkingID}
+          disableFields={(createlinkID >0 ) || (updatelinkID>0) ?false:true}
         />
       ),
     },
@@ -243,6 +256,7 @@ const Engineering = (props) => {
         <IFCFiber
           tabColor="orange"
           linkingID={linkingID}
+          disableFields={(createlinkID >0 ) || (updatelinkID>0) ?false:true}
         />
       ),
     },
@@ -254,6 +268,7 @@ const Engineering = (props) => {
         <IFAMakeReady
           tabColor="#66b032"
           linkingID={linkingID}
+          disableFields={(createlinkID >0 ) || (updatelinkID>0) ?false:true}
         />
       ),
     },
@@ -265,6 +280,7 @@ const Engineering = (props) => {
         <IFCMakeReady
           tabColor="#bcd4e6"
           linkingID={linkingID}
+          disableFields={(createlinkID >0 ) || (updatelinkID>0) ?false:true}
         />
       ),
     },
@@ -276,6 +292,7 @@ const Engineering = (props) => {
         <COCBidComplete
           tabColor="#C5B4E3"
           linkingID={linkingID}
+          disableFields={(createlinkID >0 ) || (updatelinkID>0) ?false:true}
         />
       ),
     },
@@ -288,6 +305,7 @@ const Engineering = (props) => {
         <DesignMiles
           tabColor="#ffa500"
           linkingID={linkingID}
+          disableFields={(createlinkID >0 ) || (updatelinkID>0) ?false:true}
         />
       ),
     },
@@ -299,6 +317,7 @@ const Engineering = (props) => {
         <Devices
           tabColor="#dea5a4"
           linkingID={linkingID}
+          disableFields={(createlinkID >0 ) || (updatelinkID>0) ?false:true}
         />
       ),
     },
@@ -310,6 +329,7 @@ const Engineering = (props) => {
         <PlannedPoleReplacements
           tabColor="#7BB2DD"
           linkingID={linkingID}
+          disableFields={(createlinkID >0 ) || (updatelinkID>0) ?false:true}
         />
       ),
     },
@@ -321,18 +341,19 @@ const Engineering = (props) => {
         <Owners
           tabColor="gray"
           linkingID={linkingID}
+          disableFields={(createlinkID >0 ) || (updatelinkID>0) ?false:true}
         />
       ),
     },
   ];
+
   useEffect(() => {
     dispatch(showUpdateButton(false));
     dispatch(hideEngineeringForm(false));
     dispatch(getPDApi()).then((res) => setLoading(false))
-    dispatch(getPrimaryKey(0)).then((res)=> {setAllprimaryKey(res.map((item)=>{
+    dispatch(getPrimaryKey(0)).then((res)=> { res?.status!==404 && dispatch(getAllprimaryKeys(res.map((item)=>{
       return item.primaryKey;
-    }))
-     
+    })))
   })
     return () => {
       dispatch(selectPrimaryKey(null))
@@ -340,12 +361,17 @@ const Engineering = (props) => {
   }, [dispatch]);
 
 
-  const PDValuesOptions = PDData?.PDReducer?.data?.map((item) => {
+  const PDValuesOptions = PDData?.PDReducer?.data!==null ? PDData?.PDReducer?.data.status!==404  ? PDData?.PDReducer?.data?.map((item) => {
     return item.name;
-  });
-  const PDValuesIDs = PDData?.PDReducer?.data?.map((item) => {
+  }):[]:[];
+  const PDValuesIDs = PDData?.PDReducer?.data!==null ? PDData?.PDReducer?.data.status!==404 ? PDData?.PDReducer?.data?.map((item) => {
     return item;
-  });
+  }):[]:[];
+
+  const allprimaryData = PDData?.engineeringFormReducer?.allPk;
+
+  const allPrimaryKey = PDData?.engineeringFormReducer?.allPrimaryKey;
+  const labelData = PDData?.engineeringFormReducer?.labelData;
 
   return (
     <>
@@ -365,11 +391,17 @@ const Engineering = (props) => {
               }}
               options={PDValuesOptions}
               onChange={(event, value) => {
+                value===null && dispatch(disableTabs(true));
                 setSelectedValue(value);
+                dispatch(selectPrimaryKey(null));
+                setSelectedPrimaryKey(null);
+                dispatch(getLinkData([]));
+                setLinkingId(0);
                 PDValuesIDs?.filter((item) => {
                   if (item.name === value) {
                     dispatch(getPrimaryKey(item.pdid)).then((Res) => {
-                      setFilteredData(Res)
+                      setFilteredData(Res);
+                      dispatch(getallPrimaryKey(Res));
                     })
                   }
                 })
@@ -387,7 +419,7 @@ const Engineering = (props) => {
                 width: 340,
                 marginTop: "3.2px",
               }}
-              renderInput={(params) => <TextField {...params} label="PD" />}
+              renderInput={(params) => <TextField {...params} label="PD *" />}
               renderOption={(props, option, { selected }) => (
                 <div {...props} style={{ height: "1.5rem", paddingLeft: "10px" }}>
                   <p>{props.key}</p>
@@ -406,19 +438,27 @@ const Engineering = (props) => {
                 sx: { fontSize: 13 },
               }}
               options={
-                allData.length > 0 ? allData?.map((item) => {
+                selectedPD.length===0 ?
+                 allPrimaryKey?.map((item)=>item):
+                 allprimaryData?.length>0 ? allprimaryData?.map((item) => {
                   return item.primaryKey;
-                }) :
-                 allprimaryKey.map((item)=>item)
+                }):[]
               }
               onChange={(event, value) => {
                 setSelectedPrimaryKey(value);
-                dispatch(selectPrimaryKey(value));
+                value!==null ? dispatch(selectPrimaryKey(value)):dispatch(selectPrimaryKey(null));;
                 dispatch(getLinkInfoByPrimaryKey(value)).then((res) => {
-                  setFilteredData(res)
-                  dispatch(getLinkData(res[0]))
-                  setLinkingId(res[0]?.linkingID)
-                })
+                  setIndexData(res);
+                  dispatch(getLabelData(res));
+                  dispatch(getLinkData(res[0]));
+                  setLinkingId(res[0]?.linkingID);
+                }) 
+                value ===null && dispatch(getLinkInfoByPrimaryKey(value)).then((res) => {
+                  setIndexData(res);
+                  dispatch(getLinkData([]));
+                  setLinkingId(0)})
+
+                
               }}
               clearOnBlur
               style={{
@@ -433,7 +473,7 @@ const Engineering = (props) => {
                 </div>
               )}
               disableCloseOnSelect
-              value={selectedPrimaryKey}
+              value={globalPrimaryKey}
             />
             {selectedPrimaryKey && (
               <div class="informationLabels">
@@ -441,14 +481,14 @@ const Engineering = (props) => {
                   Link Description:{" "}
                   <span>
                     {
-                     allData.length>0 && allData?.filter((item) =>  item.primaryKey === selectedPrimaryKey)
+                     labelData!==undefined && labelData.length>0  && labelData?.filter((item) =>  item.primaryKey === globalPrimaryKey)
                       .map((item) => item.description)}
                   </span>
                 </label>
                 <label>
                   Link Nickname:{" "}
                   <span>
-                    {allData.length>0 && allData?.filter((item) => item.primaryKey === selectedPrimaryKey)
+                    {labelData!==undefined && labelData.length>0  && labelData?.filter((item) => item.primaryKey === globalPrimaryKey)
                       .map((item) => item.nickname)}
                   </span>
                 </label>
@@ -465,8 +505,8 @@ const Engineering = (props) => {
                   //     ].color,
                   // }}
                   >
-                    {allData.length>0 && allData
-                      .filter((item) => item.primaryKey === selectedPrimaryKey)
+                    { labelData!==undefined && labelData.length>0  && labelData
+                      .filter((item) => item.primaryKey === globalPrimaryKey)
                       .map((item) => [item.statusName ])}
                   </span>
                 </label>

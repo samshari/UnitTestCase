@@ -30,10 +30,9 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,dropData,apiData) {
-      return new Promise((resolve, reject) => {  
-        
-        fetch(`http://localhost:63006/api/engineering/UpdateMCOCBID/${id}`,
+export function updateApi(id,data,dropData,linkID) {
+  return id ===0 ?createApi(data,dropData,linkID,1)  :new Promise((resolve, reject) => {  
+      fetch(`http://localhost:63006/api/engineering/UpdateMCOCBID/${id}`,
         {
             method:'PUT',
             body: JSON.stringify({
@@ -73,8 +72,8 @@ export function updateApi(id,data,dropData,apiData) {
             body: JSON.stringify({
                 'Fk_LinkingID': linkID,
                 'FK_StepID':stepID,
-                'fK_COCBidCompMkReadyID' : dropData[0].value === null?null: dropData[0].value,
-                'fK_COCBidCompFiberID' : dropData[1].value === null ?null:dropData[1].value
+                'fK_COCBidCompMkReadyID' : dropData[0].value === null || dropData[0].value ===0?null: dropData[0].value,
+                'fK_COCBidCompFiberID' : dropData[1].value === null || dropData[1].value ===0 ?null:dropData[1].value
             }),
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'

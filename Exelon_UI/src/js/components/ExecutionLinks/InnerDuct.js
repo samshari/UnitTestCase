@@ -4,8 +4,7 @@ import { useState,useEffect } from "react";
 import {useSelector,useDispatch} from 'react-redux'
 import { getApi,updateApi,createApi } from "../../../redux/components/ExecutionLinks/InnerDuct/InnerDuctAction";
 
-let id =2;
-let stepID=1;
+let id =3;
 const Innerduct = (props) => {
   const [apiData,setapiData]=useState([]);  
   const [loading,setLoading]=useState(true); 
@@ -18,7 +17,6 @@ const Innerduct = (props) => {
   const dispatch = useDispatch();
 
   const updateData=(data,dropData)=>{
-    console.log('data',data);
     updateApi(ID,data,dropData,apiData).then((res)=>{
       if(res.status === 200)
         alert(`Data Updated SuccessFully!`);
@@ -28,7 +26,7 @@ const Innerduct = (props) => {
   }
 
   const createData=(data,dropData,multiDrop)=>{
-    createApi(data,dropData,id,stepID).then((res)=>{
+    createApi(data,dropData,id).then((res)=>{
       if(res.id>0)
         alert(`Data Created SuccessFully!`);
       else 
@@ -38,7 +36,7 @@ const Innerduct = (props) => {
 
 useEffect(()=>{
   dispatch(getApi()).then((res)=>{
-    res.map((data)=>{
+    res?.status !== 404 && res.map((data)=>{
       if(data.fK_LinkingID === id){
         setID(data.rodAndRopeID);
         setapiData(data);
@@ -49,9 +47,9 @@ useEffect(()=>{
   })
 },[dispatch])
   const data = [
-    { type:"date",placeholder: "Innerduct Start", defaultValue: apiData.strInnerductStartDate },
-    { type:"date",placeholder: "Innerduct Finish", defaultValue: apiData.strInnerductEndDate},
-    { type:"textarea",placeholder: "Innerduct Comments", defaultValue: apiData.comments },
+    { type:"date",placeholder: "Innerduct Start", defaultValue: apiData?.rodAndRopeID>0? apiData.strInnerductStartDate:'' },
+    { type:"date",placeholder: "Innerduct Finish", defaultValue: apiData?.rodAndRopeID>0?apiData.strInnerductEndDate:''},
+    { type:"textarea",placeholder: "Innerduct Comments", defaultValue:apiData?.rodAndRopeID>0?apiData.comments:'' },
   ];
   return (
     <>

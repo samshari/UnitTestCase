@@ -10,6 +10,62 @@
   padding-left: 0.1rem;
   padding-bottom: 0.5rem;
 }
+.css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  padding: 4px !important;
+}
+.MuiInputLabel-formControl {
+
+  margin-right: 5px !important;
+
+
+
+}
+
+
+
+.MuiInputLabel-outlined.MuiInputLabel-shrink {
+
+  /*margin-right: 0px !important; */
+
+  padding: 2px !important;
+
+}
+
+.css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+
+  padding: 4px !important;
+
+}
+
+
+
+.datepicker{
+
+  padding: 0px 0px 50px 50px !important;
+
+}
+
+
+
+.css-1pysi21-MuiFormLabel-root-MuiInputLabel-root {
+
+  padding:5px 0px 0px 5px !important;}
+
+
+
+  .MuiOutlinedInput-inputMultiline {
+
+    height: 36px !important;
+
+  }
+
+
+
+  .MuiInput-underline:after {
+
+    border: 0px !important;
+
+}
 .card_inputArea {
   display: flex;
   align-items: flex-start;

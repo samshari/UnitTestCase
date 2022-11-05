@@ -38,6 +38,11 @@ export function updateApi(id,data,dropData,apiData) {
         {
         method:'PUT',
         body: JSON.stringify({
+          'asBuiltsReceived':data[0].value,
+          'locationsReadyToInspect':data[1].value,
+          'locationsInspected':data[2].value,
+          'tedUpdated':data[3].value,
+          'pniUpdatedIS':data[4].value
 
         }),
         headers: {
@@ -65,14 +70,18 @@ export function updateApi(id,data,dropData,apiData) {
     };
 
 
-    export function createApi(data,dropData,linkID,stepID) {
+    export function createApi(data,dropData,linkID) {
         return new Promise((resolve, reject) => {  
             fetch(`http://localhost:63006/api/engineering/createowner`,
             {
               method:'POST',
               body: JSON.stringify({
                 'FK_LinkingID':linkID,
-                'StepId':stepID
+                'asBuiltsReceived':data[0].value,
+                'locationsReadyToInspect':data[1].value,
+                'locationsInspected':data[2].value,
+                'tedUpdated':data[3].value,
+                'pniUpdatedIS':data[4].value
               }),
               headers: {
                 'Content-Type': 'application/json; charset=utf-8'

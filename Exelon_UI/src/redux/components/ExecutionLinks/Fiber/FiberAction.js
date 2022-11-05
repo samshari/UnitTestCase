@@ -79,14 +79,13 @@ export function updateApi(id,data,dropData,apiData) {
     };
 
 
-    export function createApi(data,dropData,linkID,stepID) {
+    export function createApi(data,dropData,linkID) {
         return new Promise((resolve, reject) => {  
             fetch(`http://localhost:63006/api/engineering/CreateFIBER`,
             {
               method:'POST',
               body: JSON.stringify({
                 'FK_LinkingID':linkID,
-                'StepId':stepID,
                 'fK_FiberCOCID':dropData[0].value==0?null:dropData[0].value,
                 'issuesOrComments':data[4].value,
                 'startDate':data[1].value,

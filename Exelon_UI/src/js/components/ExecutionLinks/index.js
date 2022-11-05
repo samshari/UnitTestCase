@@ -20,6 +20,8 @@ import PostCompletion from "./PostCompletion";
 import PreConstruction from "./PreConstruction";
 import CustomTabs from "../../utils/Tabs";
 import { selectPrimaryKey } from "../../../redux/views/Header/HeaderAction";
+import { getPDApi } from "../../../redux/components/Engineering/PD/PDAction";
+import { getPDID,getProjectId } from "../../../redux/components/ExecutionLinks/ExecutionLinksAction";
 
 function createData(projectID,linkNickname,workOrder , status) {
   return { projectID, linkNickname, workOrder, status };
@@ -34,95 +36,7 @@ const statusObj = {
   NA:{color:"#99badd"}
 };
 
-const TabsArr = [
-  {
-    tabName: "Link Information",
-    tabColor: "yellow",
-    component: <LinkInformation  tabColor="yellow" />,
-  },
-  {
-    tabName: "Eng. Investigation",
-    tabColor: "#00bfff",
-    disable:true,
-    component: (
-      <EnggInvestigation  tabColor="#00bfff" />
-    ),
-  },
-  {
-    tabName: "Innerduct (Rod and Rope)",
-    tabColor: "#a8ee90",
-    disable:true,
-    component: <Innerduct tabColor="#a8ee90" />,
-  },
-  {
-    tabName: "ComEd/External",
-    tabColor: "#FCC981",
-    disable:true,
-    component: <ComEdExternal tabColor="#FCC981" />,
-  },
-  {
-    tabName: "Pre-Construction",
-    tabColor: "#C5B4E3",
-    disable:true,
-    component: <PreConstruction tabColor="#C5B4E3" />,
-  },
-  {
-    tabName: "IFC Dates",
-    tabColor: "#0a7e8c",
-    disable:true,
-    component: <IFCDates tabColor="#0a7e8c" />,
-  },
-  {
-    tabName: "OVHD Make Ready",
-    tabColor: "orange",
-    disable:true,
-    component: <OvhdMakeReady tabColor="orange" />,
-  },
-  {
-    tabName: "Boring",
-    tabColor: "#99badd",
-    disable:true,
-    component: <Boring tabColor="#99badd" />,
-  },
-  {
-    tabName: "Civil",
-    tabColor: "#00ff00",
-    disable:true,
-    component: <Civil tabColor="#00ff00" />,
-  },
-  {
-    tabName: "Fiber",
-    tabColor: "red",
-    disable:true,
-    component: <Fiber tabColor="red" />,
-  },
-  {
-    tabName: "Completed Poles/Miles",
-    tabColor: "#76ff7a",
-    disable:true,
-    component: <CompletedPoles tabColor="#76ff7a" />,
-  },
-  {
-    tabName: "Completed Fiber Miles",
-    tabColor: "red",
-    disable:true,
-    component: (
-      <CompletedFiberMiles tabColor="red" />
-    ),
-  },
-  {
-    tabName: "Devices",
-    tabColor: "#7BB2DD",
-    disable:true,
-    component: <Devices tabColor="#7BB2DD" />,
-  },
-  {
-    tabName: "Post-Completion",
-    tabColor: "#ff9933",
-    disable:true,
-    component: <PostCompletion tabColor="#ff9933" />,
-  },
-];
+
 const PDValues = [
   {
     value: "1C224300 Backbone Ring 24",
@@ -218,9 +132,100 @@ const allRows = PDValues.map((item) => {
 const allRowsData = [].concat(...allRows);
 
 const ExecutionLinks = (props) => {
+
+  const TabsArr = [
+    {
+      tabName: "Link Information",
+      tabColor: "yellow",
+      
+      component: <LinkInformation tabColor="yellow" />,
+    },
+    {
+      tabName: "Eng. Investigation",
+      tabColor: "#00bfff",
+      disable:true,
+      component: (
+        <EnggInvestigation  tabColor="#00bfff" />
+      ),
+    },
+    {
+      tabName: "Innerduct (Rod and Rope)",
+      tabColor: "#a8ee90",
+      disable:true,
+      component: <Innerduct tabColor="#a8ee90" />,
+    },
+    {
+      tabName: "ComEd/External",
+      tabColor: "#FCC981",
+      disable:true,
+      component: <ComEdExternal tabColor="#FCC981" />,
+    },
+    {
+      tabName: "Pre-Construction",
+      tabColor: "#C5B4E3",
+      disable:true,
+      component: <PreConstruction tabColor="#C5B4E3" />,
+    },
+    {
+      tabName: "IFC Dates",
+      tabColor: "#0a7e8c",
+      disable:true,
+      component: <IFCDates tabColor="#0a7e8c" />,
+    },
+    {
+      tabName: "OVHD Make Ready",
+      tabColor: "orange",
+      disable:true,
+      component: <OvhdMakeReady tabColor="orange" />,
+    },
+    {
+      tabName: "Boring",
+      tabColor: "#99badd",
+      disable:true,
+      component: <Boring tabColor="#99badd" />,
+    },
+    {
+      tabName: "Civil",
+      tabColor: "#00ff00",
+      disable:true,
+      component: <Civil tabColor="#00ff00" />,
+    },
+    {
+      tabName: "Fiber",
+      tabColor: "red",
+      disable:true,
+      component: <Fiber tabColor="red" />,
+    },
+    {
+      tabName: "Completed Poles/Miles",
+      tabColor: "#76ff7a",
+      disable:true,
+      component: <CompletedPoles tabColor="#76ff7a" />,
+    },
+    {
+      tabName: "Completed Fiber Miles",
+      tabColor: "red",
+      disable:true,
+      component: (
+        <CompletedFiberMiles tabColor="red" />
+      ),
+    },
+    {
+      tabName: "Devices",
+      tabColor: "#7BB2DD",
+      disable:true,
+      component: <Devices tabColor="#7BB2DD" />,
+    },
+    {
+      tabName: "Post-Completion",
+      tabColor: "#ff9933",
+      disable:true,
+      component: <PostCompletion tabColor="#ff9933" />,
+    },
+  ];
   const tableRef = createRef();
   const selectedPD = useSelector((state) => state.headerReducer.selectedPD);
-
+  const [loading,setLoading]= useState(true);
   const filteredData = PDValues.filter((item) => item.value === selectedPD).map(
     (itemm) => {
       return itemm;
@@ -235,17 +240,29 @@ const ExecutionLinks = (props) => {
   const [allData, setFilteredData] = useState(allRowsData);
   const [selectedProjectID, setSelectedProjectID] = useState(null);
   const [selectedValue, setSelectedValue] = useState(selectedPD);
+  const PDData = useSelector((state) => {
+    return state;
+  });
 
   const dispatch = useDispatch();
-  const PDValuesOptions = PDValues.map((item) => {
-    return item.value;
-  });
+  // const PDValuesOptions = PDValues.map((item) => {
+  //   return item.value;
+  // });
   useEffect(()=>{
+    dispatch(getPDApi()).then((res) => setLoading(false))
     return()=>{
     dispatch(selectProjectID(null))
   }},[])
+
+  const PDValuesOptions = PDData?.PDReducer?.data!==null ? PDData?.PDReducer?.data.status!==404  ? PDData?.PDReducer?.data?.map((item) => {
+    return item.name;
+  }):[]:[];
+  const PDValuesIDs = PDData?.PDReducer?.data!==null ? PDData?.PDReducer?.data.status!==404 ? PDData?.PDReducer?.data?.map((item) => {
+    return item;
+  }):[]:[];
   return (
-    <div style={{ margin: "4.5rem 8rem 0.8rem 8rem", width: "89%" }}>
+    <>
+    { !loading && <div style={{ margin: "4.5rem 8rem 0.8rem 8rem", width: "89%" }}>
       <div
         style={{
           display:"flex" 
@@ -264,6 +281,18 @@ const ExecutionLinks = (props) => {
           }
           onChange={(event, value) => {
             setSelectedValue(value);
+            PDValuesIDs?.filter((item) => {
+              if (item.name === value) {
+                dispatch(getProjectId(item.pdid)).then((Res) => {
+                  setFilteredData(Res)
+                })
+              }
+            })
+            PDData?.PDReducer?.data?.map((item) => {
+              if (item.name === value) {
+                dispatch(getPDID(item.pdid));
+              }
+            })
             value!==null
               ? dispatch(selectPD(value, true))
               : dispatch(selectPD([], true));
@@ -273,7 +302,7 @@ const ExecutionLinks = (props) => {
             width:340,
             marginTop: "3.2px",
           }}
-          renderInput={(params) => <TextField {...params} label="PD" />}
+          renderInput={(params) => <TextField {...params} label="PD *" />}
           renderOption={(props, option, { selected }) => (
             <div {...props} style={{ height: "1.5rem", paddingLeft: "10px" }}>
               <p>{props.key}</p>
@@ -301,8 +330,8 @@ const ExecutionLinks = (props) => {
                 })
           }
           onChange={(event, value) => {
-            setSelectedProjectID(value);
-            dispatch(selectProjectID(value));
+            setSelectedProjectID(value);  
+              dispatch(selectProjectID(value));
           }}
           clearOnBlur
           style={{
@@ -362,7 +391,9 @@ const ExecutionLinks = (props) => {
       </div>
       <CustomTabs data={TabsArr} />
     </div>
-  );
+    }
+    </>
+    )
 };
 
 export default ExecutionLinks;

@@ -23,19 +23,19 @@ const Navbar = () => {
       path: "/",
       icon: `${icon}`,
     },
-    {
-      id: "2",
-      elementName: "Hut Permitting",
-      path: "/HutPermitting",
-      icon: `${hutpermittingIcon}`,
-    },
-    { id: "3", elementName: "Huts", path: "/Huts", icon: `${icon}` },
-    {
-      id: "4",
-      elementName: "Huts Execution",
-      path: "/HutsExecution",
-      icon: `${icon}`,
-    },
+    // {
+    //   id: "2",
+    //   elementName: "Hut Permitting",
+    //   path: "/HutPermitting",
+    //   icon: `${hutpermittingIcon}`,
+    // },
+    // // { id: "3", elementName: "Huts", path: "/Huts", icon: `${icon}` },
+    // {
+    //   id: "4",
+    //   elementName: "Huts Execution",
+    //   path: "/HutsExecution",
+    //   icon: `${icon}`,
+    // },
     {
       id: "5",
       elementName: "Execution Links",

@@ -1,12 +1,12 @@
-export const GET_ENGG_SUCCESS = "GET_ENGG_SUCCESS";
-export const UPDATE_ENGG_SUCCESS = "UPDATE_ENGG_SUCCESS";
-export const CREATE_ENGG_SUCCESS = "CREATE_ENGG_SUCCESS";
+export const GET_IFCDATES_SUCCESS = "GET_IFCDATES_SUCCESS";
+export const UPDATE_IFCDATES_SUCCESS = "UPDATE_IFCDATES_SUCCESS";
+export const CREATE_IFCDATES_SUCCESS = "CREATE_IFCDATES_SUCCESS";
 
 export function getApi() {
 return (dispatch)=>{
     return new Promise((resolve, reject) => {  
         fetch(
-          `http://localhost:63006/api/executionlinks/Getenginvest`
+          `http://localhost:63006/api/executionlinks/GetIFCDATES`
         )
           .then((res) => {
               const data = res.json().then((res)=> {
@@ -25,21 +25,21 @@ return (dispatch)=>{
 const getApiSuccess = (value) => {
  
   return {
-    type: GET_ENGG_SUCCESS,
+    type: GET_IFCDATES_SUCCESS,
     data: value
   };
 };
 
 export function updateApi(id,data,dropData,apiData) {
-    
+  
     return new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/executionlinks/Updateenginvest/${id}`,
+        fetch(`http://localhost:63006/api/executionlinks/UpdateIFCDATES/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
-            'fK_InnerductCOC':dropData[0].value,
-            'comments':data[1].value
+            'ifcMkReadyScheduledIssueDate':data[0].value,
+            'ifcFiberCurrentScheduledIssueDt':data[1].value
         }),
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
@@ -60,7 +60,7 @@ export function updateApi(id,data,dropData,apiData) {
     const updateApiSuccess = (value) => {
      
       return {
-        type: UPDATE_ENGG_SUCCESS,
+        type: UPDATE_IFCDATES_SUCCESS,
         data: value
       };
     };
@@ -68,13 +68,13 @@ export function updateApi(id,data,dropData,apiData) {
 
     export function createApi(data,dropData,linkID) {
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/executionlinks/Createenginvest`,
+            fetch(`http://localhost:63006/api/executionlinks/CreateIFCDATES`,
             {
               method:'POST',
               body: JSON.stringify({
                 'FK_LinkingID':linkID,
-                'fK_InnerductCOC':dropData[0].value,
-                'comments':data[1].value
+                'ifcMkReadyScheduledIssueDate':data[0].value,
+                'ifcFiberCurrentScheduledIssueDt':data[1].value
               }),
               headers: {
                 'Content-Type': 'application/json; charset=utf-8'
@@ -95,7 +95,7 @@ export function updateApi(id,data,dropData,apiData) {
         const createApiSuccess = (value) => {
          
           return {
-            type: CREATE_ENGG_SUCCESS,
+            type: CREATE_IFCDATES_SUCCESS,
             data: value
           };
         };
