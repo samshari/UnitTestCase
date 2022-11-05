@@ -10,33 +10,36 @@ namespace Exelon.Application.Service
 {
     public class COMEDEXService : ICOMEDEXService
     {
-        private readonly ICOMEDEXRepository _cOMEDEXRepository;
+        private readonly ICOMEDEXRepository _comEdRepository;
 
-
-        public COMEDEXService(ICOMEDEXRepository cOMEDEXRepository)
+        public COMEDEXService(ICOMEDEXRepository repository)
         {
-            _cOMEDEXRepository = cOMEDEXRepository;
+            _comEdRepository = repository;
         }
 
-
-        public async Task<List<COMEDEXModel>> GetCOMED(int id = 0)
+        public async Task<List<COMEDEXModel>> GetComEd(int id = 0)
         {
-            return await _cOMEDEXRepository.GetCOMED(id);
+            return await _comEdRepository.GetComEd(id);
         }
-
-        public async Task<Dictionary<COMEDEXModel, string>> CreateCOMED(COMEDEXModel cOMEDEXModel)
+        public async Task<Dictionary<COMEDEXModel, string>> CreateComEd(COMEDEXModel model)
         {
-            return await _cOMEDEXRepository.CreateCOMED(cOMEDEXModel);
+            return await _comEdRepository.CreateComEd(model);
         }
-
-        public async Task<COMEDEXModel> UpdateCOMED(COMEDEXModel cOMEDEXModel)
+        public async Task<COMEDEXModel> UpdateComEd(COMEDEXModel model)
         {
-            return await _cOMEDEXRepository.UpdateCOMED(cOMEDEXModel);
+            return await _comEdRepository.UpdateComEd(model);
         }
-
-        public async Task<int> DeleteCOMED(int id)
+        public async Task<int> DeleteComEd(int id)
         {
-            return await _cOMEDEXRepository.DeleteCOMED(id);
+            return await _comEdRepository.DeleteComEd(id);
+        }
+        public async Task<List<COMEDEXModel>> GetLnL()
+        {
+            return await _comEdRepository.GetLnL();
+        }
+       public async Task<int> GetComEdIdByLinkingId(long linkingId)
+        {
+            return await _comEdRepository.GetComEdIdByLinkingId(linkingId);
         }
     }
 }

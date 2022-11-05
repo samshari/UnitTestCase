@@ -53,7 +53,7 @@ namespace Exelon.Application.IServices
         public IFIBERService fIBERService { get; }
         public IOVHDMKService oVHDMKService { get; }
         public IPostCompletionService postCompletionService { get; }
-
+        public ICompletedPoleMileService completedPoleMileService { get; }
         #endregion
 
         #region Engineering 
@@ -95,5 +95,8 @@ namespace Exelon.Application.IServices
         public IHUTService hUTService { get; }
         #endregion
 
+        #region PD Details Controller 
+        public IPDDetailsService pDDetailsService { get; }
+        #endregion
     }
 }
