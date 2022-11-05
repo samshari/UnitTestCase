@@ -8,7 +8,6 @@ namespace Exelon.Domain
     {
 		public long PreContructionID { get; set; }
 		public long FK_LinkingID { get; set; }
-		public long FK_StepID { get; set; }
 		public Nullable<int> FK_EnvironmentalCOCID { get; set; }
 		public Nullable<int> FK_VegRequired { get; set; }
 		public Nullable<int> FK_StackingRequired { get; set; }

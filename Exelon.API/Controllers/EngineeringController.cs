@@ -60,13 +60,14 @@ namespace ExelonPOC.API.Controllers
         public async Task<ActionResult> CreateLinkInfo([FromBody] LinkingInfoModel linkingInfoModel)
         {
             linkingInfoModel.CreatedBy = "1";
-            string s = JsonConvert.SerializeObject(linkingInfoModel);
-            linkingInfoModel = System.Text.Json.JsonSerializer.Deserialize<LinkingInfoModel>(s);
             var result = await _unitOfWorkService.linkInfoService.CreateLinkInfo(linkingInfoModel);
-            if (result.LinkingId == 0)
+            KeyValuePair<LinkingInfoModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { ID = linkingInfoModel.LinkingId });
+            else if (i.Value == "")
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
-                return Ok(new { ID = result.LinkingId });
+                return BadRequest(new { status = 400, message = i.Value });
         }
 
         [HttpPut("{id}")]
@@ -74,13 +75,14 @@ namespace ExelonPOC.API.Controllers
         {
             linkingInfoModel.LinkingId = id;
             linkingInfoModel.UpdatedBy = "1";
-            string s = JsonConvert.SerializeObject(linkingInfoModel);
-            linkingInfoModel = System.Text.Json.JsonSerializer.Deserialize<LinkingInfoModel>(s);
             var result = await _unitOfWorkService.linkInfoService.UpdateLinkInfo(linkingInfoModel);
-            if (result.LinkingId == 0)
+            KeyValuePair<LinkingInfoModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { status = 200 });
+            else if (i.Value == "")
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
-                return Ok(new { status = 200 });
+                return BadRequest(new { status = 400, message = i.Value });
         }
 
         [HttpDelete("{id}")]
@@ -91,6 +93,27 @@ namespace ExelonPOC.API.Controllers
                 return Ok(new { status = 200 });
             else
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetPrimaryKeysByPDId(int id)
+        {
+            var result = await _unitOfWorkService.linkInfoService.GetPrimayKeysByPDId(id);
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetDetailsByLinkId(string id)
+        {
+            long linkInfoId = await _unitOfWorkService.linkInfoService.GetLinkInfoIdByPrimayKey(id);
+            if (linkInfoId == 0)
+                return NotFoundResult();
+
+            var result = await _unitOfWorkService.linkInfoService.GetLinkInfo((int)linkInfoId);
+            return Ok(result);
         }
         #endregion
 
@@ -733,26 +756,7 @@ namespace ExelonPOC.API.Controllers
         }
         #endregion
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetPrimaryKeysByPDId(int id)
-        {
-            var result = await _unitOfWorkService.linkInfoService.GetPrimayKeysByPDId(id);
-            if (result.Count == 0)
-                return NotFoundResult();
-            else
-                return Ok(result);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetDetailsByLinkId(string id)
-        {
-            long linkInfoId = await _unitOfWorkService.linkInfoService.GetLinkInfoIdByPrimayKey(id);
-            if (linkInfoId == 0)
-                return NotFoundResult();
-
-            var result = await _unitOfWorkService.linkInfoService.GetLinkInfo((int)linkInfoId);
-            return Ok(result);
-        }
+        
 
         #region COC BID Complete
         [HttpGet]

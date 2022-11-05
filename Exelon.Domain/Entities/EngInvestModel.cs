@@ -8,7 +8,6 @@ namespace Exelon.Domain
     {
         public long EnggInvestigationID { get; set; }
 		public long FK_LinkingID { get; set; }
-		public int FK_StepID { get; set; }
 		public Nullable<int> FK_InnerductCOC { get; set; }
 		public string Comments { get; set; }
         public string CreatedBy { get; set; }

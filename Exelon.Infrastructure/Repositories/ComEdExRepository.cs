@@ -50,7 +50,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@ComEdID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 0);
                             cmd.Parameters.AddWithValue("@FK_LNLID", 0);
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
                             cmd.Parameters.AddWithValue("@updatedBy", string.Empty);
@@ -71,8 +70,7 @@ namespace Exelon.Infrastructure.Repositories
                                     var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
                                     var com = new COMEDEXModel();
                                     com.ComEdID = (long)dataReader["ComEdID"];
-                                    com.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    com.FK_StepID = (int)dataReader["FK_StepID"];
+                                    com.FK_LinkingID = (long)dataReader["ExecutionLinkingID"];
                                     if (dataReader["FK_LNLID"] != DBNull.Value)
                                         com.FK_LNLID = (int)dataReader["FK_LNLID"];
                                     com.IsActive = Convert.ToBoolean(dataReader["IsActive"]);
@@ -110,7 +108,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 6);
                             cmd.Parameters.AddWithValue("@ComEdID", cOMEDEXModel.ComEdID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", cOMEDEXModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_StepID", cOMEDEXModel.FK_StepID);
                             cmd.Parameters.AddWithValue("@FK_LNLID",checkNull(cOMEDEXModel.FK_LNLID));
                             cmd.Parameters.AddWithValue("@createdBy", cOMEDEXModel.CreatedBy);
                             cmd.Parameters.AddWithValue("@updatedBy", cOMEDEXModel.CreatedBy);
@@ -155,7 +152,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@ComEdID", cOMEDEXModel.ComEdID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", cOMEDEXModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_StepID", cOMEDEXModel.FK_StepID);
                             cmd.Parameters.AddWithValue("@FK_LNLID", checkNull(cOMEDEXModel.FK_LNLID));
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
                             cmd.Parameters.AddWithValue("@updatedBy", cOMEDEXModel.UpdatedBy);
@@ -188,7 +184,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 3);
                             cmd.Parameters.AddWithValue("@ComEdID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 0);
                             cmd.Parameters.AddWithValue("@FK_LNLID", 0);
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
                             cmd.Parameters.AddWithValue("@updatedBy", string.Empty);

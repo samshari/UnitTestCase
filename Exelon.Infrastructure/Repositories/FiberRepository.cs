@@ -51,7 +51,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@FiberID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_stepID", 0);
                             cmd.Parameters.AddWithValue("@FK_FiberCOCID", 0);
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.Empty);
                             cmd.Parameters.AddWithValue("@StartDate", DBNull.Value);
@@ -76,8 +75,7 @@ namespace Exelon.Infrastructure.Repositories
                                     var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
                                     var fiber = new FIBERModel();
                                     fiber.FiberID = (long)dataReader["FiberID"];
-                                    fiber.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    fiber.FK_stepID = (int)dataReader["FK_stepID"];
+                                    fiber.FK_LinkingID = (long)dataReader["ExecutionLinkingID"];
                                     if (dataReader["FK_FiberCOCID"] != DBNull.Value)
                                         fiber.FK_FiberCOCID = (int)dataReader["FK_FiberCOCID"];
                                     fiber.IssuesOrComments = dataReader["IssuesOrComments"].ToString();
@@ -132,7 +130,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 6);
                             cmd.Parameters.AddWithValue("@FiberID", fIBERModel.FiberID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", fIBERModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_stepID", fIBERModel.FK_stepID);
                             cmd.Parameters.AddWithValue("@FK_FiberCOCID",checkNull(fIBERModel.FK_FiberCOCID));
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.IsNullOrEmpty(fIBERModel.IssuesOrComments) ? string.Empty : fIBERModel.IssuesOrComments);
                             cmd.Parameters.AddWithValue("@StartDate",checkNull(fIBERModel.StartDate));
@@ -181,7 +178,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@FiberID", fIBERModel.FiberID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", fIBERModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_stepID", fIBERModel.FK_stepID);
                             cmd.Parameters.AddWithValue("@FK_FiberCOCID", checkNull(fIBERModel.FK_FiberCOCID));
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.IsNullOrEmpty(fIBERModel.IssuesOrComments) ? string.Empty : fIBERModel.IssuesOrComments);
                             cmd.Parameters.AddWithValue("@StartDate", checkNull(fIBERModel.StartDate));
@@ -218,7 +214,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 3);
                             cmd.Parameters.AddWithValue("@FiberID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_stepID", 0);
                             cmd.Parameters.AddWithValue("@FK_FiberCOCID", 0);
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.Empty);
                             cmd.Parameters.AddWithValue("@StartDate", DBNull.Value);

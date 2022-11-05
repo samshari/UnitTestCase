@@ -49,7 +49,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@BoringID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_stepID", 0);
                             cmd.Parameters.AddWithValue("@FK_BoringCOCID", 0);
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.Empty);
                             cmd.Parameters.AddWithValue("@StartDate", DBNull.Value);
@@ -73,8 +72,7 @@ namespace Exelon.Infrastructure.Repositories
                                     var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
                                     var bore = new BORINGModel();
                                     bore.BoringID = (long)dataReader["BoringID"];
-                                    bore.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    bore.FK_stepID = (int)dataReader["FK_stepID"];
+                                    bore.FK_LinkingID = (long)dataReader["ExecutionLinkingID"];
                                     if(dataReader["FK_BoringCOCID"] != DBNull.Value)
                                         bore.FK_BoringCOCID = (int)dataReader["FK_BoringCOCID"];
                                     bore.IssuesOrComments = dataReader["IssuesOrComments"].ToString();
@@ -125,7 +123,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 6);
                             cmd.Parameters.AddWithValue("@BoringID", bORINGModel.BoringID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", bORINGModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_stepID", bORINGModel.FK_stepID);
                             cmd.Parameters.AddWithValue("@FK_BoringCOCID", checkNull(bORINGModel.FK_BoringCOCID));
                             cmd.Parameters.AddWithValue("@IssuesOrComments",string.IsNullOrEmpty(bORINGModel.IssuesOrComments)?string.Empty:bORINGModel.IssuesOrComments);
                             cmd.Parameters.AddWithValue("@StartDate",checkNull(bORINGModel.StartDate));
@@ -173,7 +170,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@BoringID", bORINGModel.BoringID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", bORINGModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_stepID", bORINGModel.FK_stepID);
                             cmd.Parameters.AddWithValue("@FK_BoringCOCID", checkNull(bORINGModel.FK_BoringCOCID));
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.IsNullOrEmpty(bORINGModel.IssuesOrComments) ? string.Empty : bORINGModel.IssuesOrComments);
                             cmd.Parameters.AddWithValue("@StartDate", checkNull(bORINGModel.StartDate));
@@ -209,7 +205,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 3);
                             cmd.Parameters.AddWithValue("@BoringID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_stepID", 0);
                             cmd.Parameters.AddWithValue("@FK_BoringCOCID", 0);
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.Empty);
                             cmd.Parameters.AddWithValue("@StartDate", DBNull.Value);

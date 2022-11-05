@@ -4,17 +4,16 @@ using Exelon.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Exelon.Infrastructure.Repositories
 {
-    public class LinkingInfoRepository : ILinkingInfoRepository
+    public class ExLinkingInfoRepository: IExLinkingInfoRepository
     {
         private readonly string _connectionString;
-        private readonly string _storedProcedure = "[dbo].[spMLINKINGActions]";
+        private readonly string _storedProcedure = "[dbo].[spExLINKINGInfoActions]";
 
-        public LinkingInfoRepository(IAppSettings appSettings)
+        public ExLinkingInfoRepository(IAppSettings appSettings)
         {
             _connectionString = appSettings.GetConnectionString();
         }
@@ -27,21 +26,12 @@ namespace Exelon.Infrastructure.Repositories
             return value;
         }
 
-        private object checkNullWithValue(object Value, object changeValue)
-        {
-            if (Value == null && changeValue == null)
-                return DBNull.Value;
-            else if (Value == null)
-                return changeValue;
-            return Value;
-
-        }
-
-        public async Task<List<LinkingInfoModel>> GetLinkInfo(int id = 0)
+        
+        public async Task<List<ExLinkingInfoModel>> GetExLinkInfo(int id = 0)
         {
             return await Task.Run(() =>
             {
-                var lstLinkInfo = new List<LinkingInfoModel>();
+                var lstLinkInfo = new List<ExLinkingInfoModel>();
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -52,7 +42,7 @@ namespace Exelon.Infrastructure.Repositories
 
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@LinkingID", id);
+                            cmd.Parameters.AddWithValue("@ExecutionLinkingID", id);
                             cmd.Parameters.AddWithValue("@PrimaryKey", string.Empty);
                             cmd.Parameters.AddWithValue("@Description", string.Empty);
                             cmd.Parameters.AddWithValue("@Nickname", string.Empty);
@@ -68,7 +58,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@ScopeComments", string.Empty);
                             cmd.Parameters.AddWithValue("@ITN", string.Empty);
                             cmd.Parameters.AddWithValue("@FK_ProjectStatusID", 0);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 0);
                             cmd.Parameters.AddWithValue("@FiberCount", string.Empty);
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
                             cmd.Parameters.AddWithValue("@updatedBy", string.Empty);
@@ -82,8 +71,8 @@ namespace Exelon.Infrastructure.Repositories
                                 while (dataReader.Read())
                                 {
                                     var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
-                                    var linkInfo = new LinkingInfoModel();
-                                    linkInfo.LinkingId = (long)dataReader["LinkingID"];
+                                    var linkInfo = new ExLinkingInfoModel();
+                                    linkInfo.ExecutionLinkingID = (long)dataReader["ExecutionLinkingID"];
                                     linkInfo.PrimaryKey = dataReader["PrimaryKey"].ToString();
                                     linkInfo.Description = dataReader["Description"].ToString();
                                     linkInfo.Nickname = dataReader["Nickname"].ToString();
@@ -118,17 +107,10 @@ namespace Exelon.Infrastructure.Repositories
 
         }
 
-        public async Task<Dictionary<LinkingInfoModel,string>> CreateLinkInfo(LinkingInfoModel linkingInfoModel)
+        public async Task<ExLinkingInfoModel> CreateExLinkInfo(ExLinkingInfoModel linkingInfoModel)
         {
             return await Task.Run(() =>
             {
-                var result = new Dictionary<LinkingInfoModel, string>();
-                if (string.IsNullOrEmpty(linkingInfoModel.PrimaryKey))
-                {
-                    result[linkingInfoModel] = "Primary key is Empty!";
-                    return result;
-                }
-                
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -137,8 +119,8 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procID", 8);
-                            cmd.Parameters.AddWithValue("@LinkingID", 0);
+                            cmd.Parameters.AddWithValue("@procID", 1);
+                            cmd.Parameters.AddWithValue("@ExecutionLinkingID", 0);
                             cmd.Parameters.AddWithValue("@PrimaryKey", string.IsNullOrEmpty(linkingInfoModel.PrimaryKey) ? string.Empty : linkingInfoModel.PrimaryKey);
                             cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(linkingInfoModel.Description) ? string.Empty : linkingInfoModel.Description);
                             cmd.Parameters.AddWithValue("@Nickname", string.IsNullOrEmpty(linkingInfoModel.Nickname) ? string.Empty : linkingInfoModel.Nickname);
@@ -155,39 +137,25 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@ITN", string.IsNullOrEmpty(linkingInfoModel.ITN) ? string.Empty : linkingInfoModel.ITN);
                             cmd.Parameters.AddWithValue("@FK_ProjectStatusID", checkNull(linkingInfoModel.ProjectStatusId));
                             cmd.Parameters.AddWithValue("@FiberCount", checkNull(linkingInfoModel.FiberCount));
-                            cmd.Parameters.AddWithValue("@FK_StepID", linkingInfoModel.StepId);
                             cmd.Parameters.AddWithValue("@createdBy", linkingInfoModel.CreatedBy);
                             cmd.Parameters.AddWithValue("@updatedBy", linkingInfoModel.CreatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            int check = (int)cmd.ExecuteScalar();
-                            if (check == 1)
-                            {
-                                cmd.Parameters["@procId"].Value = 1;
-                            }
-                            else
-                            {
-                                connection.Close();
-                                result[linkingInfoModel] = "Primary key Already Exists!";
-                                return result;
-                            }
-                            linkingInfoModel.LinkingId = (long)cmd.ExecuteScalar();
+                            linkingInfoModel.ExecutionLinkingID = (long)cmd.ExecuteScalar();
                             connection.Close();
-                            result[linkingInfoModel] = "ok";
-                            return result;
+                            return linkingInfoModel;
 
                         }
                     }
                 }
-                catch (Exception ex) { return new Dictionary<LinkingInfoModel, string>(); }
+                catch (Exception ex) { throw ex; }
             });
         }
 
-        public async Task<Dictionary<LinkingInfoModel, string>> UpdateLinkInfo(LinkingInfoModel infoModel)
+        public async Task<ExLinkingInfoModel> UpdateExLinkInfo(ExLinkingInfoModel infoModel)
         {
             return await Task.Run(() =>
             {
-                var result = new Dictionary<LinkingInfoModel, string>();
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -197,8 +165,8 @@ namespace Exelon.Infrastructure.Repositories
 
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procID", 9);
-                            cmd.Parameters.AddWithValue("@LinkingID", infoModel.LinkingId);
+                            cmd.Parameters.AddWithValue("@procID", 2);
+                            cmd.Parameters.AddWithValue("@ExecutionLinkingID", infoModel.ExecutionLinkingID);
                             cmd.Parameters.AddWithValue("@PrimaryKey", string.IsNullOrEmpty(infoModel.PrimaryKey) ? string.Empty : infoModel.PrimaryKey);
                             cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(infoModel.Description) ? string.Empty : infoModel.Description);
                             cmd.Parameters.AddWithValue("@Nickname", string.IsNullOrEmpty(infoModel.Nickname) ? string.Empty : infoModel.Nickname);
@@ -215,34 +183,21 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@ITN", string.IsNullOrEmpty(infoModel.ITN) ? string.Empty : infoModel.ITN);
                             cmd.Parameters.AddWithValue("@FK_ProjectStatusID", checkNull(infoModel.ProjectStatusId));
                             cmd.Parameters.AddWithValue("@FiberCount", string.IsNullOrEmpty(infoModel.FiberCount) ? string.Empty : infoModel.FiberCount);
-                            cmd.Parameters.AddWithValue("@FK_StepID", infoModel.StepId);
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
                             cmd.Parameters.AddWithValue("@updatedBy", infoModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            int check =(int)cmd.ExecuteScalar();
-                            if (check == 1)
-                            {
-                                cmd.Parameters["@procId"].Value = 2;
-                            }
-                            else
-                            {
-                                connection.Close();
-                                result[infoModel] = "Primary key Already Exists!";
-                                return result;
-                            }
                             cmd.ExecuteNonQuery();
                             connection.Close();
-                            result[infoModel] = "ok";
-                            return result;
+                            return infoModel;
                         }
                     }
                 }
-                catch (Exception ex) { return new Dictionary<LinkingInfoModel, string>(); }
+                catch (Exception ex) { return new ExLinkingInfoModel(); }
             });
         }
 
-        public async Task<int> DeleteLinkInfo(int id)
+        public async Task<int> DeleteExLinkInfo(int id)
         {
             return await Task.Run(() =>
             {
@@ -255,7 +210,7 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@procId", 5);
-                            cmd.Parameters.AddWithValue("@LinkingID", id);
+                            cmd.Parameters.AddWithValue("@ExecutionLinkingID", id);
                             cmd.Parameters.AddWithValue("@PrimaryKey", string.Empty);
                             cmd.Parameters.AddWithValue("@Description", string.Empty);
                             cmd.Parameters.AddWithValue("@Nickname", string.Empty);
@@ -271,7 +226,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@ScopeComments", string.Empty);
                             cmd.Parameters.AddWithValue("@ITN", string.Empty);
                             cmd.Parameters.AddWithValue("@FK_ProjectStatusID", 0);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 0);
                             cmd.Parameters.AddWithValue("@FiberCount", string.Empty);
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
                             cmd.Parameters.AddWithValue("@updatedBy", string.Empty);
@@ -287,11 +241,11 @@ namespace Exelon.Infrastructure.Repositories
             });
         }
 
-        public async Task<List<LinkingInfoModel>> GetPrimayKeysByPDId(int id = 0)
+        public async Task<List<ExLinkingInfoModel>> GetProjectIDsByPDId(int id = 0)
         {
             return await Task.Run(() =>
             {
-                var lstLinkInfo = new List<LinkingInfoModel>();
+                var lstLinkInfo = new List<ExLinkingInfoModel>();
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -301,7 +255,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@LinkingID", 0);
+                            cmd.Parameters.AddWithValue("@ExecutionLinkingID", 0);
                             cmd.Parameters.AddWithValue("@ProcId", 6);
                             cmd.Parameters.AddWithValue("@PrimaryKey", string.Empty);
                             cmd.Parameters.AddWithValue("@Description", string.Empty);
@@ -318,7 +272,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@ScopeComments", string.Empty);
                             cmd.Parameters.AddWithValue("@ITN", string.Empty);
                             cmd.Parameters.AddWithValue("@FK_ProjectStatusID", 0);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 0);
                             cmd.Parameters.AddWithValue("@FiberCount", 0);
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
                             cmd.Parameters.AddWithValue("@updatedBy", string.Empty);
@@ -327,7 +280,7 @@ namespace Exelon.Infrastructure.Repositories
                             {
                                 while (dataReader.Read())
                                 {
-                                    var linkInfo = new LinkingInfoModel();
+                                    var linkInfo = new ExLinkingInfoModel();
                                     linkInfo.PrimaryKey = dataReader["PrimaryKey"].ToString();
                                     lstLinkInfo.Add(linkInfo);
                                 }
@@ -340,7 +293,7 @@ namespace Exelon.Infrastructure.Repositories
             });
 
         }
-        public async Task<Int64> GetLinkInfoIdByPrimayKey(string id)
+        public async Task<Int64> GetLinkInfoIdByProjectId(string id)
         {
             var linkInfo = new LinkingInfoModel();
             return await Task.Run(() =>
@@ -354,9 +307,9 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@LinkingID", 0);
+                            cmd.Parameters.AddWithValue("@ExecutionLinkingID", 0);
                             cmd.Parameters.AddWithValue("@ProcId", 7);
-                            cmd.Parameters.AddWithValue("@PrimaryKey", id);
+                            cmd.Parameters.AddWithValue("@PrimaryKey", string.Empty);
                             cmd.Parameters.AddWithValue("@Description", string.Empty);
                             cmd.Parameters.AddWithValue("@Nickname", string.Empty);
                             cmd.Parameters.AddWithValue("@PDID", 0);
@@ -366,12 +319,11 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@FK_RegionID", 0);
                             cmd.Parameters.AddWithValue("@FK_BarnID", 0);
                             cmd.Parameters.AddWithValue("@WorkOrder", string.Empty);
-                            cmd.Parameters.AddWithValue("@ProjectID", string.Empty);
+                            cmd.Parameters.AddWithValue("@ProjectID", id);
                             cmd.Parameters.AddWithValue("@Comments", string.Empty);
                             cmd.Parameters.AddWithValue("@ScopeComments", string.Empty);
                             cmd.Parameters.AddWithValue("@ITN", string.Empty);
                             cmd.Parameters.AddWithValue("@FK_ProjectStatusID", 0);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 0);
                             cmd.Parameters.AddWithValue("@FiberCount", 0);
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
                             cmd.Parameters.AddWithValue("@updatedBy", string.Empty);

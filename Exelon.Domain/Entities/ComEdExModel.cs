@@ -8,7 +8,6 @@ namespace Exelon.Domain
     {
 		public long ComEdID { get; set; }
 		public long FK_LinkingID { get; set; }
-		public int FK_StepID { get; set; }
 		public Nullable<int> FK_LNLID { get; set; }
         public string CreatedBy { get; set; }
         public string CreatedDate { get; set; }

@@ -34,7 +34,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@OVHDMakeReadyID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_stepID", 0);
                             cmd.Parameters.AddWithValue("@FK_OVHDCOCID", 0);
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.Empty);
                             cmd.Parameters.AddWithValue("@StartDate", DBNull.Value);
@@ -59,8 +58,7 @@ namespace Exelon.Infrastructure.Repositories
                                     var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
                                     var ovhd = new OVHDMKModel();
                                     ovhd.OVHDMakeReadyID = (long)dataReader["OVHDMakeReadyID"];
-                                    ovhd.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    ovhd.FK_stepID = (int)dataReader["FK_stepID"];
+                                    ovhd.FK_LinkingID = (long)dataReader["ExecutionLinkingID"];
                                     if(dataReader["FK_OVHDCOCID"]!=DBNull.Value)
                                         ovhd.FK_OVHDCOCID = (int)dataReader["FK_OVHDCOCID"];
                                     ovhd.IssuesOrComments = dataReader["IssuesOrComments"].ToString();
@@ -113,7 +111,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 6);
                             cmd.Parameters.AddWithValue("@OVHDMakeReadyID", oVHDMKModel.OVHDMakeReadyID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", oVHDMKModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_stepID", oVHDMKModel.FK_stepID);
                             if (oVHDMKModel.FK_OVHDCOCID == null)
                                 cmd.Parameters.AddWithValue("@FK_OVHDCOCID", DBNull.Value);
                             else
@@ -176,7 +173,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@OVHDMakeReadyID", oVHDMKModel.OVHDMakeReadyID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", oVHDMKModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_stepID", oVHDMKModel.FK_stepID);
                             if (oVHDMKModel.FK_OVHDCOCID == null)
                                 cmd.Parameters.AddWithValue("@FK_OVHDCOCID", DBNull.Value);
                             else
@@ -226,7 +222,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 3);
                             cmd.Parameters.AddWithValue("@OVHDMakeReadyID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_stepID", 0);
                             cmd.Parameters.AddWithValue("@FK_OVHDCOCID", 0);
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.Empty);
                             cmd.Parameters.AddWithValue("@StartDate", DBNull.Value);

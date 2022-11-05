@@ -55,6 +55,7 @@ namespace Exelon.Application.Service
         private readonly IFIBERService _fIBERService;
         private readonly IOVHDMKService _oVHDMKService;
         private readonly IPostCompletionService _postCompletionService;
+        private readonly IExLinkingInfoService _exlinkingInfoService;
         #endregion
 
         #region Engineering Declaration 
@@ -113,6 +114,7 @@ namespace Exelon.Application.Service
             IIFCDATESService iFCDATESService, IPRECONSTRUCTIONService pRECONSTRUCTIONService,
             ICOMEDEXService cOMEDEXService, ICIVILService cIVILService, IBORINGService bORINGService,
             IFIBERService fIBERService, IOVHDMKService oVHDMKService, IPostCompletionService postCompletionService,
+            IExLinkingInfoService exLinkingInfoService,
 
             //Engineering 
             ILinkingInfoService linkingInfoService,
@@ -189,6 +191,7 @@ namespace Exelon.Application.Service
             _fIBERService = fIBERService;
             _oVHDMKService = oVHDMKService;
             _postCompletionService = postCompletionService;
+            _exlinkingInfoService = exLinkingInfoService;
             #endregion
 
             #region Engineering Initialization 
@@ -573,6 +576,14 @@ namespace Exelon.Application.Service
             get
             {
                 return _postCompletionService;
+            }
+        }
+
+        public IExLinkingInfoService exLinkingInfoService
+        {
+            get
+            {
+                return _exlinkingInfoService;
             }
         }
 

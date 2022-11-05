@@ -29,6 +29,83 @@ namespace Exelon.API.Controllers
         }
 
 
+        #region Linking Information
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllExLinkInfo()
+        {
+            var result = await _unitOfWorkService.exLinkingInfoService.GetExLinkInfo();
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetExLinkInfo(int id)
+        {
+            var result = await _unitOfWorkService.exLinkingInfoService.GetExLinkInfo(id);
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateExLinkInfo([FromBody] ExLinkingInfoModel linkingInfoModel)
+        {
+            linkingInfoModel.CreatedBy = "1";
+            var result = await _unitOfWorkService.exLinkingInfoService.CreateExLinkInfo(linkingInfoModel);
+            if (result.ExecutionLinkingID == 0)
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return Ok(new { ID = result.ExecutionLinkingID });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateExLinkInfo(int id, [FromBody] ExLinkingInfoModel linkingInfoModel)
+        {
+            linkingInfoModel.ExecutionLinkingID = id;
+            linkingInfoModel.UpdatedBy = "1";
+            var result = await _unitOfWorkService.exLinkingInfoService.UpdateExLinkInfo(linkingInfoModel);
+            if (result.ExecutionLinkingID == 0)
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return Ok(new { status = 200 });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteExLinkInfo(int id)
+        {
+            var result = await _unitOfWorkService.exLinkingInfoService.DeleteExLinkInfo(id);
+            if (result == 1)
+                return Ok(new { status = 200 });
+            else
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetProjectIdsByPDId(int id)
+        {
+            var result = await _unitOfWorkService.exLinkingInfoService.GetProjectIDsByPDId(id);
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetLinkInfoIdByProjectId(string id)
+        {
+            long linkInfoId = await _unitOfWorkService.exLinkingInfoService.GetLinkInfoIdByProjectId(id);
+            if (linkInfoId == 0)
+                return NotFoundResult();
+
+            var result = await _unitOfWorkService.linkInfoService.GetLinkInfo((int)linkInfoId);
+            return Ok(result);
+        }
+        #endregion
+
         #region Engineering Invest
         [HttpGet]
         public async Task<ActionResult> GetENGINVEST()

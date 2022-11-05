@@ -53,6 +53,7 @@ namespace Exelon.Application.IServices
         public IFIBERService fIBERService { get; }
         public IOVHDMKService oVHDMKService { get; }
         public IPostCompletionService postCompletionService { get; }
+        public IExLinkingInfoService exLinkingInfoService { get; }
 
         #endregion
 
