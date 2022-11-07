@@ -57,6 +57,8 @@ namespace Exelon.Application.Service
         private readonly IPostCompletionService _postCompletionService;
         private readonly IPDDetailsService pDDetails;
         private readonly ICompletedPoleMileService poleMileService;
+        private readonly IOSPPermitEasementService oSPPermitService;
+        private readonly IPerformProgressService progressService;
         #endregion
 
         #region Engineering Declaration 
@@ -144,6 +146,7 @@ namespace Exelon.Application.Service
             IHUTService hUTService,
             // PD Details
             IPDDetailsService pdDetailsService
+
             )
         {
 
@@ -797,6 +800,16 @@ namespace Exelon.Application.Service
             {
                 return pDDetails;
             }
+        }
+
+        public IOSPPermitEasementService oSPPermitEasementService
+        {
+            get { return oSPPermitService; }
+        }
+
+        public IPerformProgressService performProgressService 
+        {
+            get { return progressService; }
         }
 
         #endregion

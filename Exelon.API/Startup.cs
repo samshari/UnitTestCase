@@ -233,6 +233,12 @@ namespace Exelon.API
 
             services.AddTransient<ICompletedPoleMileService,CompletedPoleMileService>();
             services.AddTransient<ICompletedPoleAndMile, CompletedPoleAndMileRepository>();
+
+            services.AddTransient<IOSPPermitEasementService, OSPPermitEasementService>();
+            services.AddTransient<IOSPPermitEasementRepository, OSPPermitEasementRepository>();
+
+            services.AddTransient<IPerformProgressService, PerformProgressService>();
+            services.AddTransient<IPerformProgressRepository, PerformProgressRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
