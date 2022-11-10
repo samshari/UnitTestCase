@@ -8,7 +8,8 @@ using Exelon.Application.IServices;
 using Exelon.Application.Service;
 using Exelon.Domain.Abstractions;
 using Exelon.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Cors;
+using Microsoft.OpenApi.Models;
+using System.Linq;
 
 namespace Exelon.API
 {
@@ -19,11 +20,14 @@ namespace Exelon.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson();
-
             services.AddCors();
             services.AddMvc();
-            
+            services.AddControllers().AddNewtonsoftJson();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Exelon API", Version = "v1" });
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            });
             services.AddSingleton<IAppSettings, AppSettings>();
             services.AddTransient<IUnitOfWorkService, UnitOfWorkService>();
 
@@ -238,6 +242,12 @@ namespace Exelon.API
 
             services.AddTransient<ICompletedPoleMileService,CompletedPoleMileService>();
             services.AddTransient<ICompletedPoleAndMile, CompletedPoleAndMileRepository>();
+
+            services.AddTransient<IOSPPermitEasementService, OSPPermitEasementService>();
+            services.AddTransient<IOSPPermitEasementRepository, OSPPermitEasementRepository>();
+
+            services.AddTransient<IPerformProgressService, PerformProgressService>();
+            services.AddTransient<IPerformProgressRepository, PerformProgressRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -250,15 +260,18 @@ namespace Exelon.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exelon API V1");
+                c.RoutePrefix = string.Empty;
+            });
             app.UseRouting();
 
-            
             app.UseCors(builder => builder
             .AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader());
-
-
             app.UseAuthorization();
 
             

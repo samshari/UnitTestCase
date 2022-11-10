@@ -58,7 +58,7 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@jobStatus", model.JobStatus);
                             cmd.Parameters.AddWithValue("@ownerName", model.OwnerName);
                             cmd.Parameters.AddWithValue("@workOrderPriorityLevel", model.WorkOrderPriorityLevel);
-                            if (model.WorkOrderDueDate==null)
+                            if (model.WorkOrderDueDate == null)
                                 cmd.Parameters.AddWithValue("@workOrderDueDate", DBNull.Value);
                             else
                                 cmd.Parameters.AddWithValue("@workOrderDueDate", model.WorkOrderDueDate);
@@ -73,7 +73,9 @@ namespace Exelon.Infrastructure.Repositories
                         }
                     }
                 }
-                catch (Exception) {return new PDDetailsModel(); 
+                catch (Exception)
+                {
+                    return new PDDetailsModel();
                 }
             });
         }
@@ -171,25 +173,13 @@ namespace Exelon.Infrastructure.Repositories
                     {
                         using (SqlCommand cmd = new SqlCommand())
                         {
-                            cmd.CommandText = _storedProcedureName;
+                            cmd.CommandText = "sp_PdEOCActions";
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 2);
-                            cmd.Parameters.AddWithValue("@pdInformationId", id);
-                            cmd.Parameters.AddWithValue("@yearId", 0);
-                            cmd.Parameters.AddWithValue("@projectName", string.Empty);
-                            cmd.Parameters.AddWithValue("@itn", 0);
-                            cmd.Parameters.AddWithValue("@sr", string.Empty);
-                            cmd.Parameters.AddWithValue("@regionId", 0);
-                            cmd.Parameters.AddWithValue("@barnId", 0);
-                            cmd.Parameters.AddWithValue("@WorkOrder", string.Empty);
-                            cmd.Parameters.AddWithValue("@projectStatusId", 0);
-                            cmd.Parameters.AddWithValue("@projectId", string.Empty);
-                            cmd.Parameters.AddWithValue("@pdId", 0);
-                            cmd.Parameters.AddWithValue("@linkNickName", string.Empty);
-                            cmd.Parameters.AddWithValue("@jobStatus", string.Empty);
-                            cmd.Parameters.AddWithValue("@ownerName", string.Empty);
-                            cmd.Parameters.AddWithValue("@workOrderDueDate", DateTime.Now);
-                            cmd.Parameters.AddWithValue("@priorityLevel", string.Empty);
+                            cmd.Parameters.AddWithValue("@procId", 3);
+                            cmd.Parameters.AddWithValue("@pdEOCId", 0);
+                            cmd.Parameters.AddWithValue("@pdInformationId", 0);
+                            cmd.Parameters.AddWithValue("@eOCId", 0);
+                            cmd.Parameters.AddWithValue("@eOCReleaseDate", DateTime.Now);
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
                             cmd.Parameters.AddWithValue("@updatedBy", string.Empty);
                             cmd.Connection = connection;
@@ -199,24 +189,12 @@ namespace Exelon.Infrastructure.Repositories
                             {
                                 while (dataReader.Read())
                                 {
-                                    var model = new PDDetailsModel();
-                                    model.BarnId = (int)dataReader["BarnID"];
-                                    model.FinancialYearId = (int)dataReader["FinancialYearID"];
-                                    model.ITN = (int)dataReader["ITN"];
-                                    model.JobStatus = dataReader["JobStatus"].ToString();
-                                    model.LinkNickName = (int)dataReader["LinkNickName"];
-                                    model.OwnerName = dataReader["OwnerName"].ToString();
-                                    model.PDId = (int)dataReader["PDId"];
-                                    model.PDInformationId = (int)dataReader["PDInformationId"];
-                                    model.PriorityLevel = dataReader["PriorityLevel"].ToString();
-                                    model.ProjectId = dataReader["ProjectId"].ToString();
-                                    model.ProjectName = dataReader["ProjectName"].ToString();
-                                    model.ProjectStatusId = (int)dataReader["ProjectStatusId"];
-                                    model.RegionId = (int)dataReader["RegionId"];
-                                    model.SR = (int)dataReader["SR"];
-                                    model.WorkOrder = dataReader["WorkOrder"].ToString();
-                                    model.WorkOrderDueDate = (DateTime)dataReader["WorkOrderDueDate"];
-                                    model.WorkOrderPriorityLevel = dataReader["WorkOrderPriorityLevel"].ToString();
+                                    var model = new PDEOCModel();
+                                    model.PDEOCId = (Int64)dataReader["PDEOCID"];
+                                    model.PDInformationId = (Int64)dataReader["PDInformationID"];
+                                    model.EOCId = (int)dataReader["EOCID"];
+                                    model.EOCReleaseDate = Convert.ToDateTime(dataReader["EOCReleaseDate"]);
+                                    result = model;
                                 }
                             }
                             connection.Close();
@@ -274,9 +252,48 @@ namespace Exelon.Infrastructure.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task<PDCOCModel> GetPDCOCById(int id = 0)
+        public async Task<PDCOCModel> GetPDCOCById(int id = 0)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() =>
+            {
+                var result = new PDCOCModel();
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        connection.Open();
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = "sp_PdCOCActions";
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.Add("@procID", SqlDbType.Int);
+                            cmd.Parameters.AddWithValue("@pdCOCID", id);
+                            cmd.Parameters.AddWithValue("@pdInformationID", 0);
+                            cmd.Parameters.AddWithValue("@ohFiberCOC", string.Empty);
+                            cmd.Parameters.AddWithValue("@ugFiberCOC", string.Empty);
+                            cmd.Parameters.AddWithValue("@createdBy", string.Empty);
+                            cmd.Parameters.AddWithValue("@updatedBy", string.Empty);
+                            cmd.Connection = connection;
+
+                            using (SqlDataReader dataReader = cmd.ExecuteReader())
+                            {
+                                while (dataReader.Read())
+                                {
+                                    var model = new PDCOCModel();
+                                    model.PDCOCId = (int)dataReader["PDCOCID"];
+                                    model.PDInformationId = (long)dataReader["PDInformationID"];
+                                    model.OHFiberCOC = dataReader["Description"].ToString();
+                                    model.UGFiberCOC = Convert.ToString(dataReader["UGFiberCOC"]);
+                                    result = model;
+                                }
+                            }
+                            connection.Close();
+                        }
+                    }
+                    return result;
+                }
+                catch (Exception) { return new PDCOCModel(); }
+            });
         }
         #endregion
 
@@ -299,9 +316,9 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = "dbo.sp_PdCOCActions";
                             cmd.CommandType = CommandType.StoredProcedure;
-                            if(model.PDCOCId==0)
-                            cmd.Parameters.AddWithValue("@procId", 1);
-                            else if(model.PDCOCId>0)
+                            if (model.PDCOCId == 0)
+                                cmd.Parameters.AddWithValue("@procId", 1);
+                            else if (model.PDCOCId > 0)
                                 cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@pdCOCID", model.PDCOCId);
                             cmd.Parameters.AddWithValue("@pdInformationID", model.PDInformationId);
@@ -328,9 +345,57 @@ namespace Exelon.Infrastructure.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Task<PDFiberModel> GetPDFiberById(int id = 0)
+        public async Task<PDFiberModel> GetPDFiberById(int id = 0)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() =>
+            {
+                var result = new PDFiberModel();
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        connection.Open();
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = "sp_PdFiberActions";
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@procId", 3);
+                            cmd.Parameters.AddWithValue("@pdFiberId", id);
+                            cmd.Parameters.AddWithValue("@pdInformationId", 0);
+                            cmd.Parameters.AddWithValue("@fiberCount", 0);
+                            cmd.Parameters.AddWithValue("@pdIFA", DateTime.Now);
+                            cmd.Parameters.AddWithValue("@pdIFC", DateTime.Now);
+                            cmd.Parameters.AddWithValue("@milesOH", 0M);
+                            cmd.Parameters.AddWithValue("@milesUG", 0M);
+                            cmd.Parameters.AddWithValue("@fiberOpticHutSize", string.Empty);
+                            cmd.Parameters.AddWithValue("@createdBy", string.Empty);
+                            cmd.Parameters.AddWithValue("@updatedBy", string.Empty);
+                            cmd.Connection = connection;
+
+                            using (SqlDataReader dataReader = cmd.ExecuteReader())
+                            {
+                                while (dataReader.Read())
+                                {
+                                    var model = new PDFiberModel();
+                                    model.PDFiberId = (long)dataReader["PDFiberID"];
+                                    model.PDInformationId = (long)dataReader["PDInformationID"];
+                                    model.FiberCount = (int)dataReader["FiberCount"];
+                                    model.PDIFA = Convert.ToDateTime(dataReader["PDIFA"]);
+                                    model.PDIFC = Convert.ToDateTime(dataReader["PDIFC"]);
+                                    model.MilesOH = (decimal)dataReader["MilesOH"];
+                                    model.MilesUG = (decimal)dataReader["MilesUG"];
+                                    model.FiberOpticHutSize = dataReader["FiberOpticHutSize"].ToString();
+                                    result = model;
+                                }
+                            }
+
+                        }
+                        connection.Close();
+                    }
+                    return result;
+                }
+                catch (Exception) { return new PDFiberModel(); }
+            });
         }
         #endregion
 

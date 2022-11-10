@@ -100,5 +100,13 @@ namespace Exelon.Application.IServices
         #region PD Details Controller 
         public IPDDetailsService pDDetailsService { get; }
         #endregion
+
+        #region [OSP Permit Easement Service]
+        public IOSPPermitEasementService oSPPermitEasementService { get; }
+        #endregion
+
+        #region [Perform Progress Service]
+        public IPerformProgressService performProgressService { get; }
+        #endregion
     }
 }

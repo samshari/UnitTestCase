@@ -22,6 +22,7 @@ namespace Exelon.API.Controllers
 
 
         //NotFound Method
+        [NonAction]
         public ActionResult NotFoundResult()
         {
             return NotFound(new { status = 404, message = "Not Exists!" });
