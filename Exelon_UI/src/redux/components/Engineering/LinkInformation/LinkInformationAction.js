@@ -1,13 +1,13 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_LINK_SUCCESS = "GET_LINK_SUCCESS";
 export const UPDATE_LINK_SUCCESS = "UPDATE_LINK_SUCCESS";
 export const CREATE_LINK_SUCCESS = "CREATE_LINK_SUCCESS";
-
 
 export function getApi(id) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       fetch(
-        `http://localhost:63006/api/engineering/GetLinkInfo/${id}`
+        `${BASE_URL}/api/engineering/GetLinkInfo/${id}`
       )
       .then((res) => {
         const data = res.json().then((res)=> {
@@ -32,7 +32,7 @@ const getApiSuccess = (value) => {
 export function updateApi(id,data,dropData,fiberCount,apiData) {
   return new Promise((resolve, reject) => {  
       
-      fetch(`http://localhost:63006/api/engineering/updatelinkinfo/${id}`,
+      fetch(`${BASE_URL}/api/engineering/updatelinkinfo/${id}`,
       {
       method:'PUT',
       body: JSON.stringify({
@@ -80,7 +80,7 @@ export function updateApi(id,data,dropData,fiberCount,apiData) {
 
   export function createApi(data,dropData,fiberCount,stepID,pdID) {
       return new Promise((resolve, reject) => {  
-          fetch(`http://localhost:63006/api/engineering/createlinkinfo`,
+          fetch(`${BASE_URL}/api/engineering/createlinkinfo`,
           {
             method:'POST',
             body: JSON.stringify({
@@ -88,14 +88,14 @@ export function updateApi(id,data,dropData,fiberCount,apiData) {
               'nickname':data[1].value?data[1].value:null,
               'engineeringYear':data[2].value?data[2].value:null,
               'executionYear':data[3].value?data[3].value:null,
-              'technologyId':dropData[4].value?data[4].value:null,
-              'regionId':dropData[5].value?data[5].value:null,
-              'barnId':dropData[6].value?data[6].value:null,
+              'technologyId':dropData[4].value?dropData[4].value:null,
+              'regionId':dropData[5].value?dropData[5].value:null,
+              'barnId':dropData[6].value?dropData[6].value:null,
               'workOrder':data[7].value?data[7].value:null,
               'projectID':data[8].value?data[8].value:null,
               'comments':data[9].value?data[9].value:null,
               'itn':data[10].value?data[10].value:null,
-              'projectStatusId':dropData[11].value?data[11].value:null,
+              'projectStatusId':dropData[11].value?dropData[11].value:null,
               'description':data[12].value?data[12].value:null,
               'scopeComments':data[13].value?data[13].value:null,
               'fiberCount':fiberCount?fiberCount:null,

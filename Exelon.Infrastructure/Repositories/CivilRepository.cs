@@ -51,7 +51,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@CivilID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_stepID", 0);
                             cmd.Parameters.AddWithValue("@FK_CivilCOCID", 0);
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.Empty);
                             cmd.Parameters.AddWithValue("@StartDate", DBNull.Value);
@@ -75,8 +74,7 @@ namespace Exelon.Infrastructure.Repositories
                                     var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
                                     var civil = new CIVILModel();
                                     civil.CivilID = (long)dataReader["CivilID"];
-                                    civil.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    civil.FK_stepID = (int)dataReader["FK_stepID"];
+                                    civil.FK_LinkingID = (long)dataReader["ExecutionLinkingID"];
                                     if(dataReader["FK_CivilCOCID"] != DBNull.Value)
                                         civil.FK_CivilCOCID = (int)dataReader["FK_CivilCOCID"];
                                     civil.IssuesOrComments = dataReader["IssuesOrComments"].ToString();
@@ -128,7 +126,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 6);
                             cmd.Parameters.AddWithValue("@CivilID", cIVILModel.CivilID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", cIVILModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_stepID", cIVILModel.FK_stepID);
                             cmd.Parameters.AddWithValue("@FK_CivilCOCID",checkNull(cIVILModel.FK_CivilCOCID));
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.IsNullOrEmpty(cIVILModel.IssuesOrComments) ? string.Empty : cIVILModel.IssuesOrComments);
                             cmd.Parameters.AddWithValue("@StartDate",checkNull(cIVILModel.StartDate));
@@ -173,10 +170,9 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@CivilID", cIVILModel.CivilID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", cIVILModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_stepID", cIVILModel.FK_stepID);
                             cmd.Parameters.AddWithValue("@FK_CivilCOCID", checkNull(cIVILModel.FK_CivilCOCID));
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.IsNullOrEmpty(cIVILModel.IssuesOrComments) ? string.Empty : cIVILModel.IssuesOrComments);
                             cmd.Parameters.AddWithValue("@StartDate", checkNull(cIVILModel.StartDate));
@@ -212,7 +208,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@CivilID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_stepID", 0);
                             cmd.Parameters.AddWithValue("@FK_CivilCOCID", 0);
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.Empty);
                             cmd.Parameters.AddWithValue("@StartDate", DBNull.Value);

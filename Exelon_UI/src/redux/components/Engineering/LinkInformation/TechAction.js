@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_TECH_REQUEST = "GET_TECH_REQUEST";
 
 export function getTechApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/GetMTECH`
+      `${BASE_URL}/api/common/GetMTECH`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

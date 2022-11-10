@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_PM_REQUEST = "GET_PM_REQUEST";
 
 export function getPMApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/GetMPM`
+      `${BASE_URL}/api/common/GetMPM`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

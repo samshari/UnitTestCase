@@ -51,7 +51,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@IFCDateID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 0);
                             cmd.Parameters.AddWithValue("@IFCMkReadyScheduledIssueDate", DBNull.Value);
                             cmd.Parameters.AddWithValue("@IFCFiberCurrentScheduledIssueDt", DBNull.Value);
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
@@ -72,8 +71,7 @@ namespace Exelon.Infrastructure.Repositories
                                     var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
                                     var ifc = new IFCDATESModel();
                                     ifc.IFCDateID = (int)dataReader["IFCDateID"];
-                                    ifc.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    ifc.FK_StepID = (int)dataReader["FK_StepID"];
+                                    ifc.FK_LinkingID = (long)dataReader["ExecutionLinkingID"];
                                     if(dataReader["IFCMkReadyScheduledIssueDate"] != DBNull.Value)
                                         ifc.IFCMkReadyScheduledIssueDate = Convert.ToDateTime(dataReader["IFCMkReadyScheduledIssueDate"]);
                                     if(dataReader["IFCFiberCurrentScheduledIssueDt"] != DBNull.Value)
@@ -117,7 +115,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 6);
                             cmd.Parameters.AddWithValue("@IFCDateID", iFCDATESModel.IFCDateID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", iFCDATESModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_StepID", iFCDATESModel.FK_StepID);
                             cmd.Parameters.AddWithValue("@IFCMkReadyScheduledIssueDate",checkNull(iFCDATESModel.IFCMkReadyScheduledIssueDate));
                             cmd.Parameters.AddWithValue("@IFCFiberCurrentScheduledIssueDt",checkNull(iFCDATESModel.IFCFiberCurrentScheduledIssueDt));
                             cmd.Parameters.AddWithValue("@createdBy", iFCDATESModel.CreatedBy);
@@ -162,7 +159,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@IFCDateID", iFCDATESModel.IFCDateID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", iFCDATESModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_StepID", iFCDATESModel.FK_StepID);
                             cmd.Parameters.AddWithValue("@IFCMkReadyScheduledIssueDate", checkNull(iFCDATESModel.IFCMkReadyScheduledIssueDate));
                             cmd.Parameters.AddWithValue("@IFCFiberCurrentScheduledIssueDt", checkNull(iFCDATESModel.IFCFiberCurrentScheduledIssueDt));
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);
@@ -195,7 +191,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 3);
                             cmd.Parameters.AddWithValue("@IFCDateID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 0);
                             cmd.Parameters.AddWithValue("@IFCMkReadyScheduledIssueDate", DBNull.Value);
                             cmd.Parameters.AddWithValue("@IFCFiberCurrentScheduledIssueDt", DBNull.Value);
                             cmd.Parameters.AddWithValue("@createdBy", string.Empty);

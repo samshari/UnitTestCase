@@ -8,7 +8,6 @@ namespace Exelon.Domain.Entities
     {
 		public long PostCompletionID { get; set; }
 		public long FK_LinkingID { get; set; }
-		public int FK_StepID { get; set; }
 		public string AsBuiltsReceived { get; set; }
 		public string LocationsReadyToInspect { get; set; }
 		public string LocationsInspected { get; set; }

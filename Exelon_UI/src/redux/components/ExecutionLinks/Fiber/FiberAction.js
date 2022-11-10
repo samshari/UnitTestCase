@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_FIBER_SUCCESS = "GET_FIBER_SUCCESS";
 export const UPDATE_FIBER_SUCCESS = "UPDATE_FIBER_SUCCESS";
 export const CREATE_FIBER_SUCCESS = "CREATE_FIBER_SUCCESS";
@@ -6,7 +7,7 @@ export function getApi() {
 return (dispatch)=>{
     return new Promise((resolve, reject) => {  
         fetch(
-          `http://localhost:63006/api/executionlinks/GetFIBER`
+          `${BASE_URL}/api/executionlinks/GetFIBER`
         )
           .then((res) => {
               const data = res.json().then((res)=> {
@@ -30,19 +31,10 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,dropData,apiData) {
-    console.log(JSON.stringify({
-      'fK_FiberCOCID':dropData[0].value?dropData[0].value:null,
-      'issuesOrComments':data[4].value,
-      'startDate':data[1].value,
-      'endDate':data[2].value,
-      'weeklyFTECount':data[3].value,
-      'otdrCompletionDate':data[5].value
-
-    }))
-    return new Promise((resolve, reject) => {  
+export function updateApi(id,data,dropData,linkID) {
+    return id===0?createApi(data,dropData,linkID): new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/executionlinks/UpdateFIBER/${id}`,
+        fetch(`${BASE_URL}/api/executionlinks/UpdateFIBER/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
@@ -79,14 +71,14 @@ export function updateApi(id,data,dropData,apiData) {
     };
 
 
-    export function createApi(data,dropData,linkID,stepID) {
+    export function createApi(data,dropData,linkID) {
+        console.log('data',data);
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/engineering/CreateFIBER`,
+            fetch(`${BASE_URL}/api/executionlinks/CreateFIBER`,
             {
               method:'POST',
               body: JSON.stringify({
-                'FK_LinkingID':linkID,
-                'StepId':stepID,
+                'fK_LinkingID':linkID,
                 'fK_FiberCOCID':dropData[0].value==0?null:dropData[0].value,
                 'issuesOrComments':data[4].value,
                 'startDate':data[1].value,

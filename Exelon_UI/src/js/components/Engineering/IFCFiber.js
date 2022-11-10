@@ -4,21 +4,39 @@ import { useState, useEffect } from "react";
 import { getApi,updateApi,createApi } from "../../../redux/components/Engineering/IFCFiber/IFCFiberActions";
 import { useSelector,useDispatch } from "react-redux";
 import {Circles} from 'react-loader-spinner'
+import CustomSnackBar from "../../utils/Snackbar";
 
 let stepID = 1;
 const IFCFiber = (props) => {
-
+  let count = 0;
   const [apiData,setapiData]=useState([]);  
   const [loading,setLoading]=useState(true) 
   const [ID,setID]=useState(0);
+  const [open, setOpen] = React.useState(false);
+  const [isDataUpdated,setDataUpdated]=useState(false);
+
+  const [message, setMessage] = useState("");
+  const handleToClose = (event, reason) => {
+    if ("clickaway" == reason) return;
+    setOpen(false);
+  };
 
   const dispatch = useDispatch();
   const updateData=(data,dropData)=>{
-    updateApi(ID,data,apiData).then((res)=>{
-      if(res.status === 200)
-        alert(`Data Updated SuccessFully!`);
-      else 
-        alert(res.message);
+    updateApi(ID,data,datatest.linkingId).then((res)=>{
+      if(res.status === 200){
+        setOpen(true);
+        setMessage(`Data Updated SuccessFully!`);
+        setDataUpdated(!isDataUpdated);
+      }
+      else if(res.id>0){
+        setID(res.id);
+        setOpen(true);
+        setMessage(`Data Created SuccessFully!`);
+      }
+      else{
+        setOpen(true);
+        setMessage(res.message);}
       })
   }
 
@@ -27,36 +45,45 @@ const IFCFiber = (props) => {
 
   const createData=(data,dropData,multiDrop)=>{
     createApi(data,datatest1,stepID).then(res=>{
-      if(res.id>0)
-        alert(`Data Created SuccessFully!`);
-      else 
-        alert(res.message);
+      if(res.id>0){
+        setOpen(true);
+        setMessage(`Data Created SuccessFully!`);
+      }
+      else{
+        setOpen(true);
+        setMessage(res.message);
+      }
     });
   }
 
 
 useEffect( ()=>{
-  {datatest!==undefined? dispatch(getApi()).then((res)=>{
-    res.map((data)=>{
+  {datatest?.linkingId!==undefined? dispatch(getApi()).then((res)=>{
+    res?.status!==404 && res.map((data)=>{
       if(data.fK_LinkingID === datatest.linkingId){
         setID(data.ifcFiberID);
         setapiData(data);
+        count = count + 1;
       }
       return data;
     })
+    if(count === 0){
+      setID(0);
+      setapiData([]);
+    }
     setLoading(false);
   }):setLoading(false)
 setapiData([])}
-},[dispatch])
+},[dispatch,datatest?.linkingId,ID,isDataUpdated])
 
 
   const data = [
-    { type: "date", placeholder: "IFC Fiber Original Scheduled Date",defaultValue: apiData.strOriginalScheduledDate },
-    { type: "date", placeholder: "IFC Fiber Current Scheduled Date", defaultValue: apiData.strCurrentScheduledDate },
-    { type: "date", placeholder: "IFC Fiber Missed Dates", defaultValue: apiData.strMissedDates },
-    { type: "date", placeholder: "IFC Fiber Initial Issue Date", defaultValue: apiData.strInitialIssueDate },
-    { type: "date", placeholder: "IFC Fiber Final Issue Date", defaultValue: apiData.strFinalIssueDate },
-    { type: "textarea", placeholder: "IFC Fiber Missed Reasons", defaultValue: apiData.missedReason }
+    { type: "date", placeholder: "Original Scheduled Date",defaultValue: apiData?.ifcFiberID>0?apiData.strOriginalScheduledDate:'' },
+    { type: "date", placeholder: "Current Scheduled Date", defaultValue: apiData?.ifcFiberID>0?apiData.strCurrentScheduledDate:'' },
+    { type: "date", placeholder: "Missed Dates",  defaultValue: apiData?.ifcFiberID>0?apiData.strMissedDates:'' },
+    { type: "date", placeholder: "Initial Issue Date", defaultValue: apiData?.ifcFiberID>0?apiData.strInitialIssueDate:'' },
+    { type: "date", placeholder: "Final Issue Date", defaultValue: apiData?.ifcFiberID>0?apiData.strFinalIssueDate:'' },
+    { type: "textarea", placeholder: "Missed Reasons", defaultValue: apiData?.ifcFiberID>0?apiData.missedReason:'' }
   ];
 
   
@@ -64,16 +91,19 @@ setapiData([])}
   return (
     <>
       {/* <h1>RealEstate</h1> */}
-      {!loading ? <Card
+      {!loading && <Card
         data={data}
         disable={props.disableFields}
         cardTitle="IFC Fiber"
         tabColor={props.tabColor}
         onClick={updateData}
         onSubmit={createData}
-      />: <div className="loader">
-      <Circles type="Circles" color="#4d841d" height={60} width={60} />
-      </div>}
+      />}
+      <CustomSnackBar
+        open={open}
+        onClose={() => handleToClose()}
+        message={message}
+      />
     </>
   );
 };

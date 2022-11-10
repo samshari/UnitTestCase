@@ -55,8 +55,9 @@ namespace Exelon.Application.Service
         private readonly IFIBERService _fIBERService;
         private readonly IOVHDMKService _oVHDMKService;
         private readonly IPostCompletionService _postCompletionService;
-        private readonly IPDDetailsService pDDetails;
-        private readonly ICompletedPoleMileService poleMileService;
+        private readonly IExLinkingInfoService _exlinkingInfoService;
+        private readonly IPDDetailsService _pDDetails;
+        private readonly ICompletedPoleMileService _poleMileService;
         private readonly IOSPPermitEasementService oSPPermitService;
         private readonly IPerformProgressService progressService;
         #endregion
@@ -117,6 +118,7 @@ namespace Exelon.Application.Service
             IIFCDATESService iFCDATESService, IPRECONSTRUCTIONService pRECONSTRUCTIONService,
             ICOMEDEXService cOMEDEXService, ICIVILService cIVILService, IBORINGService bORINGService,
             IFIBERService fIBERService, IOVHDMKService oVHDMKService, IPostCompletionService postCompletionService,
+            IExLinkingInfoService exLinkingInfoService, ICompletedPoleMileService poleMileService,
 
             //Engineering 
             ILinkingInfoService linkingInfoService,
@@ -146,7 +148,6 @@ namespace Exelon.Application.Service
             IHUTService hUTService,
             // PD Details
             IPDDetailsService pdDetailsService
-
             )
         {
 
@@ -196,6 +197,8 @@ namespace Exelon.Application.Service
             _fIBERService = fIBERService;
             _oVHDMKService = oVHDMKService;
             _postCompletionService = postCompletionService;
+            _exlinkingInfoService = exLinkingInfoService;
+            _poleMileService = poleMileService;
             #endregion
 
             #region Engineering Initialization 
@@ -236,7 +239,7 @@ namespace Exelon.Application.Service
             #endregion
 
             #region PD Details Initialization 
-            pDDetails = pdDetailsService ;
+            _pDDetails = pdDetailsService ;
             #endregion
         }
 
@@ -586,8 +589,19 @@ namespace Exelon.Application.Service
         }
         public ICompletedPoleMileService completedPoleMileService
         {
-            get { return poleMileService; }
+            get 
+            { 
+                return _poleMileService; 
+            }
         }
+        public IExLinkingInfoService exLinkingInfoService
+        {
+            get
+            {
+                return _exlinkingInfoService;
+            }
+        }
+
         #endregion
 
 
@@ -798,7 +812,7 @@ namespace Exelon.Application.Service
         {
             get
             {
-                return pDDetails;
+                return _pDDetails;
             }
         }
 

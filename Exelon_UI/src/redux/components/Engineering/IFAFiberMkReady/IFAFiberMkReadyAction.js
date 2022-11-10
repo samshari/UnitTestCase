@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_IFAMAKE_SUCCESS = "GET_IFAMAKE_SUCCESS";
 export const UPDATE_IFAMAKE_SUCCESS = "UPDATE_IFAMAKE_SUCCESS";
 export const CREATE_IFAMAKE_SUCCESS = "CREATE_IFAMAKE_SUCCESS";
@@ -6,7 +7,7 @@ export function getApi() {
 return (dispatch)=>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/engineering/getIFA`
+      `${BASE_URL}/api/engineering/getIFA`
     )
       .then((res) => {
           const data = res.json().then((res)=> {
@@ -30,11 +31,11 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,apiData) {
+export function updateApi(id,data,linkID) {
     
-    return new Promise((resolve, reject) => {  
+    return  id===0?createApi(data,linkID,1):new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/engineering/updateIFA/${id}`,
+      fetch(`${BASE_URL}/api/engineering/updateIFA/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
@@ -71,7 +72,7 @@ export function updateApi(id,data,apiData) {
 
     export function createApi(data,linkID,stepID) {
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/engineering/createIFA`,
+            fetch(`${BASE_URL}/api/engineering/createIFA`,
             {
               method:'POST',
               body: JSON.stringify({

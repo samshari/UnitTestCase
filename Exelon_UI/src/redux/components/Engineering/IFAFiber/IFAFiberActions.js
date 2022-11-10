@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_IFAFIBER_SUCCESS = "GET_IFAFIBER_SUCCESS";
 export const UPDATE_IFAFIBER_SUCCESS = "UPDATE_IFAFIBER_SUCCESS";
 export const CREATE_IFAFIBER_SUCCESS = "CREATE_IFAFIBER_SUCCESS";
@@ -7,7 +8,7 @@ export function getApi() {
 return (dispatch)=>{
     return new Promise((resolve, reject) => {  
         fetch(
-          `http://localhost:63006/api/engineering/getIFAFiber`
+          `${BASE_URL}/api/engineering/getIFAFiber`
         )
           .then((res) => {
               const data = res.json().then((res)=> {
@@ -31,10 +32,10 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,apiData) {
-    return new Promise((resolve, reject) => {  
+export function updateApi(id,data,linkID) {
+    return id ===0 ?createApi(data,linkID,1) : new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/engineering/updateifafiber/${id}`,
+       fetch(`${BASE_URL}/api/engineering/updateifafiber/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
@@ -72,7 +73,7 @@ export function updateApi(id,data,apiData) {
     export function createApi(data,linkID,stepID) {
         
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/engineering/createIFAFiber`,
+            fetch(`${BASE_URL}/api/engineering/createIFAFiber`,
             {
               method:'POST',
               body: JSON.stringify({

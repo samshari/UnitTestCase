@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import MultipleSelect from "./MultiSelect";
 import DropDown from "./DropDown";
 import { disableTabs } from "../../redux/utils/Tabs/TabsAction";
+import Box from '@mui/material/Box';
 
 const Card = (props) => {
   const dispatch = useDispatch();
@@ -33,12 +34,14 @@ const Card = (props) => {
   const createData = (e) =>{
     props.onSubmit([...defaultCreate],[...defaultCreateDrop],[...defaultmultiDrop]);
 }
+   
 
   const selectedPrimaryKey = useSelector(
     (state) => state.headerReducer.selectedPrimaryKey
 
   );
 
+  
   useEffect(() => {
     !props.phase2 && setSelectedPhase3ButtonColor("burlywood");
     setSelectedPhase1ButtonColor("burlywood");
@@ -46,7 +49,6 @@ const Card = (props) => {
 
 
   useEffect(() => {
-
     selectedPrimaryKey === null && setblankState(null)
     const testData1 = props.data.map((item) => ({ value: item.defaultValue }));
     setDefaultData(testData1);
@@ -65,6 +67,9 @@ const Card = (props) => {
   const showEngineeringUpdateButton = useSelector(
     (state) => state.headerReducer.selectedPrimaryKey
   );
+  const showEngineeringdataUpdateButton = useSelector(
+    (state) => state.engineeringFormReducer.data?.length > 0
+  );
   const showExecutionLinksUpdateButton = useSelector(
     (state) => state.headerReducer.selectedProjectId
   )
@@ -74,12 +79,12 @@ const Card = (props) => {
   const showHutsExecutionUpdateButton = useSelector(
     (state) => state.headerReducer.selectedHutsExecutionLocation
   );
-  const handleSaveClick = () => {
-    dispatch(disableTabs(false))
-  };
+  // const handleSaveClick = () => {
+  //   console.log('idlink',linkingID);
+  //     linkingID===0 || linkingID === undefined?dispatch(disableTabs(true)):
+  // };
   return (
     <div class="Card">
-      {console.log('render', props.data)}
       <div class="card_inputArea">
         <div
           class="cardTitle"
@@ -162,7 +167,9 @@ const Card = (props) => {
             )}
           </div>
         </div>
+        <Box sx={{display:'grid',gridTemplateColumns: 'repeat(4, 2fr)'}}>
         {data.map((item, index) => {
+          console.log(item.disable);
           if (
             item.type == null ||
             item.type === "number" ||
@@ -182,9 +189,12 @@ const Card = (props) => {
                   {item.checkboxLabel}
                 </label>
               </div>
-            ) : (
+            ) : 
+            (
               <TextField
-                type={item.type === "number" && "number"}
+                type={item.type === "number" && `number`}
+                disabled={props.disable || item.disable}
+                required={item.required}
                 id="outlined-basic"
                 label={item.placeholder}
                 variant="outlined"
@@ -192,9 +202,9 @@ const Card = (props) => {
                 size="small"
                 inputProps={{ style: { fontSize: 13 } }} // font size of input text
                 InputLabelProps={{ style: { fontSize: 13 } }} // font size of input label
-                value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ? defaultData[index]?.value : defaultCreate[index]?.value) : ''}
+                value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton ? defaultData[index]?.value : defaultCreate[index]?.value) : ''}
                 onChange={(value) => {
-                  if (showEngineeringUpdateButton || showExecutionLinksUpdateButton)
+                  if (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton)
                     setDefaultData([...defaultData], (defaultData[index].value = value.target.value));
                   else
                     setDefaultCreate([...defaultCreate], (defaultCreate[index].value = value.target.value));
@@ -215,6 +225,7 @@ const Card = (props) => {
                 </InputLabel>
                 <Select
                   disabled={props.disable}
+                  required={item.required}
                   class="dropdown"
                   labelId="id"
                   label={item.placeholder}
@@ -226,9 +237,9 @@ const Card = (props) => {
                     borderRadius: "5px",
                     height: "2.4rem",
                   }}
-                  value = {defaultData.length>0? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ?(defaultData[index]?.value !== undefined ?defaultData[index]?.value:''):(defaultCreate[index]?.value !== undefined ?defaultCreate[index]?.value:'')):''}
+                  value = {defaultData.length>0? (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton ?(defaultData[index]?.value !== undefined ?defaultData[index]?.value:''):(defaultCreate[index]?.value !== undefined ?defaultCreate[index]?.value:'')):''}
                   onChange ={(value)=>{
-                    if(showEngineeringUpdateButton || showExecutionLinksUpdateButton){
+                    if(showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton){
                       setDefaultData([...defaultData], (defaultData[index].value = value.target.value ));
                     let id;
                     item.dropDownValues.map((values)=>{
@@ -243,7 +254,7 @@ const Card = (props) => {
                           id = values.statusID
                         else if(item.placeholder === "Eng Investigation/ innerduct coc")
                           id = values.innerductCOCID;
-                        else if(item.placeholder === "OVHD COC" || item.placeholder === "Fiber COC")
+                        else if(item.placeholder === "OVHD COC" || item.placeholder === "Fiber COC" || item.placeholder === "Civil COC" || item.placeholder === "Boring COC")
                           id = values.cocid
                         else
                           id = values.id
@@ -267,7 +278,7 @@ const Card = (props) => {
                               id = values.statusID
                             else if(item.placeholder === "Eng Investigation/ innerduct coc")
                               id = values.innerductCOCID;
-                            else if(item.placeholder === "OVHD COC" || item.placeholder === "Fiber COC")
+                            else if(item.placeholder === "OVHD COC" || item.placeholder === "Fiber COC" || item.placeholder === "Civil COC" || item.placeholder === "Boring COC")
                               id = values.cocid
                             else
                               id = values.id
@@ -277,10 +288,9 @@ const Card = (props) => {
                       setDefaultDrop([...defaultCreateDrop], (defaultCreateDrop[index].value = id));
                     }
 
-
                   }}
                 >
-                  {item.dropDownValues.map((value) => {
+                  {item?.dropDownValues?.map((value) => {
                     return (
                       <MenuItem value={
                         item.placeholder === "Barn" ? value.barnName : (item.placeholder === "Region" ? value.regionName : value.name)
@@ -296,18 +306,19 @@ const Card = (props) => {
             return (
               <div style={{ margin: "5px" }}>
                 <BasicDatePicker
+                  disable={props.disable}
                   placeholder={item.placeholder}
                   style={{ padding: "3rem" }}
-                  value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ? defaultData[index]?.value : defaultCreate[index]?.value) : blankState}
+                  value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton ? defaultData[index]?.value : defaultCreate[index]?.value) : blankState}
                   onChange={(value) => {
 
-                    if (showEngineeringUpdateButton || showExecutionLinksUpdateButton) {
-                      setDefaultData([...defaultData], defaultData[index].value = `${value.$d.getMonth() + 1
-                      }/${value.$d.getDate()}/${value.$d.getFullYear()}`);
+                    if (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton) {
+                      setDefaultData([...defaultData], defaultData[index].value = value!==null?`${value.$d.getMonth() + 1
+                      }/${value.$d.getDate()}/${value.$d.getFullYear()}`:'');
                     }
                     else {
-                      setDefaultCreate([...defaultCreate], defaultCreate[index].value = `${value.$d.getMonth() + 1
-                      }/${value.$d.getDate()}/${value.$d.getFullYear()}`);
+                      setDefaultCreate([...defaultCreate], defaultCreate[index].value = value!==null?`${value.$d.getMonth() + 1
+                      }/${value.$d.getDate()}/${value.$d.getFullYear()}`:'');
                     }
                   }
                   }
@@ -319,6 +330,7 @@ const Card = (props) => {
               <DropDown
                 placeholder={item.placeholder}
                 dropDownValues={item.dropDownValues}
+                value={showPermittingUpdateButton? item.defaultValue:''}
               />
             );
           } else if (item.type === "multiSelect") {
@@ -328,9 +340,9 @@ const Card = (props) => {
                   disable={props.disable}
                   placeholder={item.placeholder}
                   options={item.optionValues}
-                  value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ? defaultData[index]?.value : defaultmultiDrop[index].value) : []}
+                  value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton ? defaultData[index]?.value : defaultmultiDrop[index].value) : []}
                   onChange={(event) => {
-                    if (showEngineeringUpdateButton || showExecutionLinksUpdateButton) {
+                    if (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton) {
                       const {
                         target: { value },
                       } = event;
@@ -354,36 +366,132 @@ const Card = (props) => {
                 Submit
               </Button>
             );
-          } else {
+          } 
+          else if (item.type==="year"){
+
+            return(
+              <div style={{margin:'5px'}} class="year">
+              <BasicDatePicker
+                  disable={props.disable}
+                  placeholder={item.placeholder}
+
+                  views={['year']}
+
+                  style={{ padding: "3rem" }}
+
+                  value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton ? defaultData[index]?.value : defaultCreate[index]?.value) : blankState}
+
+                  onChange={(value) => {
+
+
+
+                    if (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton) {
+
+                      setDefaultData([...defaultData], defaultData[index].value = value!==null? `${value.$d.getMonth() + 1
+
+                      }/${value.$d.getDate()}/${value.$d.getFullYear()}`:'');
+
+                    }
+
+                    else {
+
+                      setDefaultCreate([...defaultCreate], defaultCreate[index].value = value!==null?`${value.$d.getMonth() + 1
+
+                      }/${value.$d.getDate()}/${value.$d.getFullYear()}`:'');
+
+                    }
+
+                  }
+
+                  }
+
+                />
+                </div>
+
+            )
+
+          }
+          else {
             return (
-              <TextareaAutosize
-                minRows={2}
-                placeholder={item.placeholder}
+              // <TextField
+              //   id="outlined-basic"
+              //   variant="outlined"
+              //   multiline
+              //   size="small"
+              //   minRows={2}
+              //   placeholder={item.placeholder}
+              //   style={{
+              //     width: 240,
+              //     borderRadius: "5px",
+              //     marginTop: "0.35rem",
+              //     margin: "8px 5px 18px 5px",
+              //     fontFamily: "sans-serif",
+              //     fontSize: "0.85rem",
+                  
+              //   }}
+              //   disabled={props.disable}
+              //   value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton ? defaultData[index]?.value : defaultCreate[index].value) : ''}
+              //   onChange={(value) => {
+              //     if (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton)
+              //       setDefaultData([...defaultData], (defaultData[index].value = value.target.value));
+              //     else
+              //       setDefaultCreate([...defaultCreate], (defaultCreate[index].value = value.target.value));
+              //   }}
+              // ></TextField>
+              <div class="Textarea">
+              <TextField
+
+              id="outlined-basic"
+              variant="outlined"
+
+              multiline
+
+              size="small"
+              minRows={2}
+
+                label={item.placeholder}
+
                 style={{
-                  width: 240,
+
+                  width: 265,
+
+                  height: "0px",
+
                   borderRadius: "5px",
+
                   marginTop: "0.35rem",
-                  margin: "5px",
+
+                  margin: "8px 5px 18px 5px",
+
+                  border:"0",
+
                   fontFamily: "sans-serif",
-                  fontSize: "0.85rem",
+
+                  fontSize: "13px",
+
                 }}
-                value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton ? defaultData[index]?.value : defaultCreate[index].value) : ''}
+
+                disabled={props.disable}
+                value={defaultData.length > 0 ? (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton ? defaultData[index]?.value : defaultCreate[index].value) : ''}
                 onChange={(value) => {
-                  if (showEngineeringUpdateButton || showExecutionLinksUpdateButton)
+                  if (showEngineeringUpdateButton || showExecutionLinksUpdateButton || showPermittingUpdateButton)
                     setDefaultData([...defaultData], (defaultData[index].value = value.target.value));
                   else
                     setDefaultCreate([...defaultCreate], (defaultCreate[index].value = value.target.value));
                 }}
-              ></TextareaAutosize>
+
+              ></TextField>
+              </div>
             );
           }
         })}
+        </Box>
       </div>
       <div class="buttonsContainer">
-        { showEngineeringUpdateButton||
-          showExecutionLinksUpdateButton||
-          showPermittingUpdateButton||
-          showHutsUpdateButton||
+        { (showEngineeringUpdateButton) ||
+          showExecutionLinksUpdateButton ||
+          showPermittingUpdateButton ||
+          showHutsUpdateButton ||
           showHutsExecutionUpdateButton ? (
           <Button variant="contained" class="Button" onClick={updateData} >
             Update
@@ -392,10 +500,13 @@ const Card = (props) => {
           <Button
             variant="contained"
             class="Button"
+              style={{backgroundColor:props.disable?"gray": "#922c88",
+              border: props.disable?"1px solid gray":"1px solid #922c88"
+            }}
             onClick={() => {
               createData();
-              handleSaveClick();
             }}
+            disabled={props.disable}
           >
             Save
           </Button>

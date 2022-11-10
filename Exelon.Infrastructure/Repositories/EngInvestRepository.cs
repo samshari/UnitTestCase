@@ -50,7 +50,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@EnggInvestigationID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID",1);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 1);
                             cmd.Parameters.AddWithValue("@FK_InnerductCOC", 1);
                             cmd.Parameters.AddWithValue("@Comments", string.Empty);
                             cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);
@@ -69,8 +68,7 @@ namespace Exelon.Infrastructure.Repositories
                                     var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
                                     var eng = new ENGINVESTModel();
                                     eng.EnggInvestigationID = (long)dataReader["EnggInvestigationID"];
-                                    eng.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    eng.FK_StepID = (int)dataReader["FK_StepID"];
+                                    eng.FK_LinkingID = (long)dataReader["FK_ExecutionLinkingID"];
                                     if (dataReader["FK_InnerductCOC"] != DBNull.Value)
                                         eng.FK_InnerductCOC = (int)dataReader["FK_InnerductCOC"];
                                     eng.Comments = dataReader["Comments"].ToString();
@@ -88,7 +86,7 @@ namespace Exelon.Infrastructure.Repositories
                         }
                     }
                 }
-                catch(Exception ex) { return new List<ENGINVESTModel>(); }
+                catch(Exception ex) { throw ex; }
             });
         }
 
@@ -109,7 +107,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 6);
                             cmd.Parameters.AddWithValue("@EnggInvestigationID", 0);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", eNGINVESTModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_StepID", eNGINVESTModel.FK_StepID);
                             cmd.Parameters.AddWithValue("@FK_InnerductCOC",checkNull(eNGINVESTModel.FK_InnerductCOC));
                             cmd.Parameters.AddWithValue("@Comments", string.IsNullOrEmpty(eNGINVESTModel.Comments)?string.Empty:eNGINVESTModel.Comments);
                             cmd.Parameters.AddWithValue("@CreatedBy", eNGINVESTModel.CreatedBy);
@@ -154,7 +151,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@EnggInvestigationID", eNGINVESTModel.EnggInvestigationID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", DBNull.Value);
-                            cmd.Parameters.AddWithValue("@FK_StepID", DBNull.Value);
                             cmd.Parameters.AddWithValue("@FK_InnerductCOC",checkNull(eNGINVESTModel.FK_InnerductCOC));
                             cmd.Parameters.AddWithValue("@Comments", string.IsNullOrEmpty(eNGINVESTModel.Comments) ? string.Empty : eNGINVESTModel.Comments);
                             cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);
@@ -188,7 +184,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 3);
                             cmd.Parameters.AddWithValue("@EnggInvestigationID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 1);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 1);
                             cmd.Parameters.AddWithValue("@FK_InnerductCOC", 1);
                             cmd.Parameters.AddWithValue("@Comments", string.Empty);
                             cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);

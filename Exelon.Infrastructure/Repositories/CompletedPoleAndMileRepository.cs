@@ -39,11 +39,16 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@procId", 3);
-                            cmd.Parameters.AddWithValue("@executionDeviceId", id);
+                            cmd.Parameters.AddWithValue("@completedPloeMilesId", id);
                             cmd.Parameters.AddWithValue("@executionLinkingId", 0);
-                            cmd.Parameters.AddWithValue("@installedDevices", 0);
-                            cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);
-                            cmd.Parameters.AddWithValue("@UpdatedBy", string.Empty);
+                            cmd.Parameters.AddWithValue("@totalNumberOfPolesNeeded", 0);
+                            cmd.Parameters.AddWithValue("@polesInstalled", 0);
+                            cmd.Parameters.AddWithValue("@ohMilesTotal", 0);
+                            cmd.Parameters.AddWithValue("@makeReadyOHMilesCompleted", 0);
+                            cmd.Parameters.AddWithValue("@ugMilesTotal", 0);
+                            cmd.Parameters.AddWithValue("@ugMilesCompleted", 0);
+                            cmd.Parameters.AddWithValue("@createdBy", "1");
+                            cmd.Parameters.AddWithValue("@updatedBy", "1");
                             cmd.Connection = connection;
 
                             using (SqlDataReader dataReader = cmd.ExecuteReader())
@@ -52,7 +57,7 @@ namespace Exelon.Infrastructure.Repositories
                                 {
                                     var model = new CompletedPoleAndMile();
                                     model.CompletedPoleMileId = (Int64)dataReader["CompletedPoleMileID"];
-                                    model.ExecutionLinkingId = (Int64)dataReader["ExecutionLinkidID"];
+                                    model.ExecutionLinkingId = (Int64)dataReader["ExecutionLinkingID"];
                                     model.TotalNoOfPolesNeeded = (int)dataReader["TotalNoOfPolesNeeded"];
                                     model.PoleInstalled = (int)dataReader["PoleInstalled"];
                                     model.OHMilesTotal = (int)dataReader["OHMilesTotal"];
@@ -71,16 +76,16 @@ namespace Exelon.Infrastructure.Repositories
                 }
                 catch (Exception) { return new CompletedPoleAndMile(); }
             });
-        } 
+        }
         #endregion
 
-        #region [Save Update Completed Pole Mile]
+        #region [Get Completed Pole Mile By Link Id]
         /// <summary>
-        /// Save Update Completed Pole Mile
+        /// Get Completed Pole Mile By Id
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<CompletedPoleAndMile> SaveUpdateCompletedPoleMile(CompletedPoleAndMile model)
+        public async Task<CompletedPoleAndMile> GetCompletedPoleMileByLinkId(int id)
         {
             return await Task.Run(() =>
             {
@@ -89,15 +94,72 @@ namespace Exelon.Infrastructure.Repositories
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
                     {
+                        connection.Open();
                         using (SqlCommand cmd = new SqlCommand())
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            if (model.CompletedPoleMileId == 0)
-                                cmd.Parameters.AddWithValue("@procId", 1);
-                            else if (model.CompletedPoleMileId > 0)
-                                cmd.Parameters.AddWithValue("@procId", 2);
+                            cmd.Parameters.AddWithValue("@procId", 4);
+                            cmd.Parameters.AddWithValue("@completedPloeMilesId", 0);
+                            cmd.Parameters.AddWithValue("@executionLinkingId", id);
+                            cmd.Parameters.AddWithValue("@totalNumberOfPolesNeeded", 0);
+                            cmd.Parameters.AddWithValue("@polesInstalled", 0);
+                            cmd.Parameters.AddWithValue("@ohMilesTotal", 0);
+                            cmd.Parameters.AddWithValue("@makeReadyOHMilesCompleted", 0);
+                            cmd.Parameters.AddWithValue("@ugMilesTotal", 0);
+                            cmd.Parameters.AddWithValue("@ugMilesCompleted", 0);
+                            cmd.Parameters.AddWithValue("@createdBy", "1");
+                            cmd.Parameters.AddWithValue("@updatedBy", "1"); 
+                            cmd.Connection = connection;
 
+                            using (SqlDataReader dataReader = cmd.ExecuteReader())
+                            {
+                                while (dataReader.Read())
+                                {
+                                    var model = new CompletedPoleAndMile();
+                                    model.CompletedPoleMileId = (Int64)dataReader["CompletedPoleMileID"];
+                                    model.ExecutionLinkingId = (Int64)dataReader["ExecutionLinkingID"];
+                                    model.TotalNoOfPolesNeeded = (int)dataReader["TotalNoOfPolesNeeded"];
+                                    model.PoleInstalled = (int)dataReader["PoleInstalled"];
+                                    model.OHMilesTotal = (int)dataReader["OHMilesTotal"];
+                                    model.MakeReadyOHMilesCompleted = (int)dataReader["MakeReadyOHMilesCompleted"];
+                                    model.UGMilesTotal = (int)dataReader["UGMilesTotal"];
+                                    model.UGMilesCompleted = (int)dataReader["UGMilesCompleted"];
+                                    model.CreatedBy = dataReader["CreatedBy"].ToString();
+                                    model.UpdatedBy = dataReader["UpdatedBy"].ToString();
+                                    result = model;
+                                }
+                            }
+                        }
+                        connection.Close();
+                    }
+                    return result;
+                }
+                catch (Exception ex) { return new CompletedPoleAndMile(); }
+            });
+        }
+        #endregion
+
+        #region [Save Update Completed Pole Mile]
+        /// <summary>
+        /// Save Update Completed Pole Mile
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<Dictionary<CompletedPoleAndMile,string>> SaveUpdateCompletedPoleMile(CompletedPoleAndMile model)
+        {
+            return await Task.Run(() =>
+            {
+                var result = new Dictionary<CompletedPoleAndMile, string>();
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = _storedProcedure;
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@procId", 5);
                             cmd.Parameters.AddWithValue("@completedPloeMilesId", model.CompletedPoleMileId);
                             cmd.Parameters.AddWithValue("@executionLinkingId", model.ExecutionLinkingId);
                             cmd.Parameters.AddWithValue("@totalNumberOfPolesNeeded", model.TotalNoOfPolesNeeded);
@@ -105,20 +167,73 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@ohMilesTotal", model.OHMilesTotal);
                             cmd.Parameters.AddWithValue("@makeReadyOHMilesCompleted", model.MakeReadyOHMilesCompleted);
                             cmd.Parameters.AddWithValue("@ugMilesTotal", model.UGMilesTotal);
-                            cmd.Parameters.AddWithValue("@ugMilesCompleted", model.UGMilesTotal);
+                            cmd.Parameters.AddWithValue("@ugMilesCompleted", model.UGMilesCompleted);
                             cmd.Parameters.AddWithValue("@createdBy", model.CreatedBy);
                             cmd.Parameters.AddWithValue("@updatedBy", model.CreatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            result.CompletedPoleMileId = (Int64)cmd.ExecuteScalar();
+                            int check = (int)cmd.ExecuteScalar();
+                            if(check == 1)
+                            {
+                                cmd.Parameters["@procId"].Value = 1;
+                            }
+                            else
+                            {
+                                connection.Close();
+                                result[model] = "Linking Id Already Exists!";
+                                return result;
+                            }
+                            model.CompletedPoleMileId = (long)cmd.ExecuteScalar();
                             connection.Close();
+                            result[model] = "ok";
                             return result;
+                        }
+                    }
+                }
+                catch (Exception) { return new Dictionary<CompletedPoleAndMile, string>(); }
+            });
+        }
+        #endregion
+        #region [Save Update Completed Pole Mile]
+        /// <summary>
+        /// Save Update Completed Pole Mile
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<CompletedPoleAndMile> UpdateCompletedPoleMile(CompletedPoleAndMile model)
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = _storedProcedure;
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@procId", 2);
+                            cmd.Parameters.AddWithValue("@completedPloeMilesId", model.CompletedPoleMileId);
+                            cmd.Parameters.AddWithValue("@executionLinkingId", model.ExecutionLinkingId);
+                            cmd.Parameters.AddWithValue("@totalNumberOfPolesNeeded", model.TotalNoOfPolesNeeded);
+                            cmd.Parameters.AddWithValue("@polesInstalled", model.PoleInstalled);
+                            cmd.Parameters.AddWithValue("@ohMilesTotal", model.OHMilesTotal);
+                            cmd.Parameters.AddWithValue("@makeReadyOHMilesCompleted", model.MakeReadyOHMilesCompleted);
+                            cmd.Parameters.AddWithValue("@ugMilesTotal", model.UGMilesTotal);
+                            cmd.Parameters.AddWithValue("@ugMilesCompleted", model.UGMilesCompleted);
+                            cmd.Parameters.AddWithValue("@createdBy", model.UpdatedBy);
+                            cmd.Parameters.AddWithValue("@updatedBy", model.UpdatedBy);
+                            cmd.Connection = connection;
+                            connection.Open();
+                            cmd.ExecuteNonQuery();
+                            connection.Close();
+                            return model;
                         }
                     }
                 }
                 catch (Exception) { return new CompletedPoleAndMile(); }
             });
-        } 
+        }
         #endregion
     }
 }

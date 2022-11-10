@@ -6,7 +6,6 @@ namespace Exelon.Domain
     {
 		public long	 OVHDMakeReadyID { get; set; }
 		public long FK_LinkingID { get; set; }
-		public int FK_stepID { get; set; }
 		public Nullable<int> FK_OVHDCOCID { get; set; }
 		public string IssuesOrComments { get; set; }
 		public Nullable<DateTime> StartDate { get; set; }

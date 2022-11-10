@@ -51,7 +51,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@RodAndRopeID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 1);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 1);
                             cmd.Parameters.AddWithValue("@InnerductStartDate", DBNull.Value);
                             cmd.Parameters.AddWithValue("@InnerductEndDate", DBNull.Value);
                             cmd.Parameters.AddWithValue("@Comments", string.Empty);
@@ -72,8 +71,7 @@ namespace Exelon.Infrastructure.Repositories
                                     var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
                                     var inner = new InnerRodRopeModel();
                                     inner.RodAndRopeID = (long)dataReader["RodAndRopeID"];
-                                    inner.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    inner.FK_StepID = (int)dataReader["FK_StepID"];
+                                    inner.FK_LinkingID = (long)dataReader["ExecutionLinkingID"];
                                     if (dataReader["InnerductStartDate"] != DBNull.Value)
                                         inner.InnerductStartDate = Convert.ToDateTime(dataReader["InnerductStartDate"]);
                                     if (dataReader["InnerductEndDate"] != DBNull.Value)
@@ -118,7 +116,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 6);
                             cmd.Parameters.AddWithValue("@RodAndRopeID", 0);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", iNNERODROPEModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_StepID", iNNERODROPEModel.FK_StepID);
                             cmd.Parameters.AddWithValue("@InnerductStartDate", checkNull(iNNERODROPEModel.InnerductStartDate));
                             cmd.Parameters.AddWithValue("@InnerductEndDate", checkNull(iNNERODROPEModel.InnerductEndDate));
                             cmd.Parameters.AddWithValue("@Comments", string.IsNullOrEmpty(iNNERODROPEModel.Comments) ? string.Empty : iNNERODROPEModel.Comments);
@@ -165,7 +162,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@RodAndRopeID", iNNERODROPEModel.RodAndRopeID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", DBNull.Value);
-                            cmd.Parameters.AddWithValue("@FK_StepID", DBNull.Value);
                             cmd.Parameters.AddWithValue("@InnerductStartDate", checkNull(iNNERODROPEModel.InnerductStartDate));
                             cmd.Parameters.AddWithValue("@InnerductEndDate", checkNull(iNNERODROPEModel.InnerductEndDate));
                             cmd.Parameters.AddWithValue("@Comments", string.IsNullOrEmpty(iNNERODROPEModel.Comments) ? string.Empty : iNNERODROPEModel.Comments);
@@ -200,7 +196,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 3);
                             cmd.Parameters.AddWithValue("@RodAndRopeID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 1);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 1);
                             cmd.Parameters.AddWithValue("@InnerductStartDate", DBNull.Value);
                             cmd.Parameters.AddWithValue("@InnerductEndDate", DBNull.Value);
                             cmd.Parameters.AddWithValue("@Comments", string.Empty);

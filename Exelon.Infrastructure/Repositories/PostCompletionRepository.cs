@@ -35,7 +35,6 @@ namespace Exelon.Infrastructure.Repositories
                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
                            cmd.Parameters.AddWithValue("@PostCompletionID", id);
                            cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                           cmd.Parameters.AddWithValue("@FK_StepID", 0);
                            cmd.Parameters.AddWithValue("@AsBuiltsReceived", string.Empty);
                            cmd.Parameters.AddWithValue("@LocationsReadyToInspect", string.Empty);
                            cmd.Parameters.AddWithValue("@LocationsInspected", string.Empty);
@@ -60,8 +59,7 @@ namespace Exelon.Infrastructure.Repositories
                                    var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
                                    var post = new PostCompletionModel();
                                    post.PostCompletionID = (long)dataReader["PostCompletionID"];
-                                   post.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                   post.FK_StepID = (int)dataReader["FK_StepID"];
+                                   post.FK_LinkingID = (long)dataReader["ExecutionLinkingID"];
                                    post.AsBuiltsReceived = dataReader["AsBuiltsReceived"].ToString();
                                    post.LocationsInspected = dataReader["LocationsInspected"].ToString();
                                    post.LocationsReadyToInspect = dataReader["LocationsReadyToInspect"].ToString();
@@ -106,7 +104,6 @@ namespace Exelon.Infrastructure.Repositories
                                 cmd.Parameters.AddWithValue("@procId", 6);
                                 cmd.Parameters.AddWithValue("@PostCompletionID", postCompletionModel.PostCompletionID);
                                 cmd.Parameters.AddWithValue("@FK_LinkingID", postCompletionModel.FK_LinkingID);
-                                cmd.Parameters.AddWithValue("@FK_StepID", postCompletionModel.FK_StepID);
                                 cmd.Parameters.AddWithValue("@AsBuiltsReceived",string.IsNullOrEmpty(postCompletionModel.AsBuiltsReceived)?string.Empty:postCompletionModel.AsBuiltsReceived);
                                 cmd.Parameters.AddWithValue("@LocationsReadyToInspect", string.IsNullOrEmpty(postCompletionModel.LocationsReadyToInspect)?string.Empty:postCompletionModel.LocationsReadyToInspect);
                                 cmd.Parameters.AddWithValue("@LocationsInspected", string.IsNullOrEmpty(postCompletionModel.LocationsInspected)?string.Empty:postCompletionModel.LocationsInspected);
@@ -159,7 +156,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@PostCompletionID", postCompletionModel.PostCompletionID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", postCompletionModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_StepID", postCompletionModel.FK_StepID);
                             cmd.Parameters.AddWithValue("@AsBuiltsReceived", string.IsNullOrEmpty(postCompletionModel.AsBuiltsReceived) ? string.Empty : postCompletionModel.AsBuiltsReceived);
                             cmd.Parameters.AddWithValue("@LocationsReadyToInspect", string.IsNullOrEmpty(postCompletionModel.LocationsReadyToInspect) ? string.Empty : postCompletionModel.LocationsReadyToInspect);
                             cmd.Parameters.AddWithValue("@LocationsInspected", string.IsNullOrEmpty(postCompletionModel.LocationsInspected) ? string.Empty : postCompletionModel.LocationsInspected);
@@ -197,7 +193,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 3);
                             cmd.Parameters.AddWithValue("@PostCompletionID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 0);
                             cmd.Parameters.AddWithValue("@AsBuiltsReceived", string.Empty);
                             cmd.Parameters.AddWithValue("@LocationsReadyToInspect", string.Empty);
                             cmd.Parameters.AddWithValue("@LocationsInspected", string.Empty);

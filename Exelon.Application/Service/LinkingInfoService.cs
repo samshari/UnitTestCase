@@ -23,12 +23,12 @@ namespace Exelon.Application.Service
             return await _linkingInfoRepository.GetLinkInfo(id);
         }
 
-        public async Task<LinkingInfoModel> CreateLinkInfo(LinkingInfoModel lINKINFOModel)
+        public async Task<Dictionary<LinkingInfoModel, string>> CreateLinkInfo(LinkingInfoModel lINKINFOModel)
         {
             return await _linkingInfoRepository.CreateLinkInfo(lINKINFOModel);
         }
 
-        public async Task<LinkingInfoModel> UpdateLinkInfo(LinkingInfoModel lINKINFOModel)
+        public async Task<Dictionary<LinkingInfoModel, string>> UpdateLinkInfo(LinkingInfoModel lINKINFOModel)
         {
             return await _linkingInfoRepository.UpdateLinkInfo(lINKINFOModel);
         }

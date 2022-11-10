@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_IFCMAKE_SUCCESS = "GET_IFCMAKE_SUCCESS";
 export const UPDATE_IFCMAKE_SUCCESS = "UPDATE_IFCMAKE_SUCCESS";
 export const CREATE_IFCMAKE_SUCCESS = "CREATE_IFCMAKE_SUCCESS";
@@ -6,7 +7,7 @@ export function getApi() {
 return (dispatch)=>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/engineering/getIFC`
+      `${BASE_URL}/api/engineering/getIFC`
     )
       .then((res) => {
           const data = res.json().then((res)=> {
@@ -30,11 +31,11 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,apiData) {
+export function updateApi(id,data,linkID) {
     
-    return new Promise((resolve, reject) => {  
+    return id===0?createApi(data,linkID,0):new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/engineering/updateIFC/${id}`,
+      fetch(`${BASE_URL}/api/engineering/updateIFC/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
@@ -71,7 +72,7 @@ export function updateApi(id,data,apiData) {
 
     export function createApi(data,linkID,stepID) {
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/engineering/createIFC`,
+            fetch(`${BASE_URL}/api/engineering/createIFC`,
             {
               method:'POST',
               body: JSON.stringify({

@@ -1,7 +1,9 @@
 ﻿using Exelon.Application.IServices;
 using Exelon.Domain;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,6 +39,16 @@ namespace Exelon.API.Controllers
                 return Ok(result);
 
         }
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetHUTBySub(string id)
+        {
+            var result = await _unitOfWorkService.hUTPERMITService.GetHutBySub(id);
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+
+        }
 
 
         [HttpGet("{id}")]
@@ -55,11 +67,13 @@ namespace Exelon.API.Controllers
         {
             hUTPERMITTINGModel.CreatedBy = "1";
             var result = await _unitOfWorkService.hUTPERMITService.CreateHUT(hUTPERMITTINGModel);
-            if(result.HutPermittingID ==0)
+            KeyValuePair<HUTPERMITTINGModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { ID = i.Key.HutPermittingID });
+            else if (i.Value == "")
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
-                return Ok(new { ID = result.HutPermittingID });
-
+                return BadRequest(new { status = 400, message = i.Value });
         }
 
         [HttpPut("{id}")]
@@ -68,10 +82,13 @@ namespace Exelon.API.Controllers
             hUTPERMITTINGModel.UpdatedBy = "1";
             hUTPERMITTINGModel.HutPermittingID = id;
             var result = await _unitOfWorkService.hUTPERMITService.UpdateHUT(hUTPERMITTINGModel);
-            if (result.HutPermittingID == 0)
+            KeyValuePair<HUTPERMITTINGModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { status = 200 });
+            else if (i.Value == "")
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
-                return Ok(new { status=200 });
+                return BadRequest(new { status = 400, message = i.Value });
         }
 
         [HttpDelete("{id}")]

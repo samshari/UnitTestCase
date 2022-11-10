@@ -1,12 +1,14 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_COCBID_REQUEST = "GET_COCBID_REQUEST";
 export const UPDATE_COCBID_REQUEST = "UPDATE_COCBID_REQUEST"
 export const CREATE_COCBID_REQUEST = "CREATE_COCBID_REQUEST"
+
 
 export function getApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/engineering/GetMCOCBID`
+      `${BASE_URL}/api/engineering/GetMCOCBID`
     )
       .then((res) => {
           const data = res.json().then((res)=> {
@@ -30,10 +32,9 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,dropData,apiData) {
-      return new Promise((resolve, reject) => {  
-        
-        fetch(`http://localhost:63006/api/engineering/UpdateMCOCBID/${id}`,
+export function updateApi(id,data,dropData,linkID) {
+  return id ===0 ?createApi(data,dropData,linkID,1)  :new Promise((resolve, reject) => {  
+      fetch(`${BASE_URL}/api/engineering/UpdateMCOCBID/${id}`,
         {
             method:'PUT',
             body: JSON.stringify({
@@ -67,14 +68,14 @@ export function updateApi(id,data,dropData,apiData) {
 
     export function createApi(data,dropData,linkID,stepID) {
         return new Promise((resolve, reject) => {  
-              fetch(`http://localhost:63006/api/engineering/CreateMCOCBID`,
+              fetch(`${BASE_URL}/api/engineering/CreateMCOCBID`,
             {
             method:'POST',
             body: JSON.stringify({
                 'Fk_LinkingID': linkID,
                 'FK_StepID':stepID,
-                'fK_COCBidCompMkReadyID' : dropData[0].value === null?null: dropData[0].value,
-                'fK_COCBidCompFiberID' : dropData[1].value === null ?null:dropData[1].value
+                'fK_COCBidCompMkReadyID' : dropData[0].value === null || dropData[0].value ===0?null: dropData[0].value,
+                'fK_COCBidCompFiberID' : dropData[1].value === null || dropData[1].value ===0 ?null:dropData[1].value
             }),
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'

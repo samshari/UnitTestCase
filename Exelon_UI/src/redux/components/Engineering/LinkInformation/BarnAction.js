@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_BARN_REQUEST = "GET_BARN_REQUEST";
 
 export function getBarnApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/GetAllBarn`
+      `${BASE_URL}/api/common/GetAllBarn`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

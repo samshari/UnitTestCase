@@ -1,4 +1,4 @@
-
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_PPReplace_SUCCESS = "GET_PPReplace_SUCCESS";
 export const UPDATE_PPReplace_SUCCESS = "UPDATE_PPReplace_SUCCESS";
 export const CREATE_PPReplace_SUCCESS = "CREATE_PPReplace_SUCCESS";
@@ -7,7 +7,7 @@ export function getApi() {
   return (dispatch)=>{
     return new Promise((resolve, reject) => {  
       fetch(
-        `http://localhost:63006/api/engineering/getppreplace`
+        `${BASE_URL}/api/engineering/getppreplace`
       )
         .then((res) => {
             const data = res.json().then((res)=> {
@@ -31,11 +31,11 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,apiData) {
+export function updateApi(id,data,linkID) {
     
-    return new Promise((resolve, reject) => {  
+    return id === 0?createApi(data,linkID,1)  :new Promise((resolve, reject) => {  
         
-      fetch(`http://localhost:63006/api/engineering/updateppreplace/${id}`,
+    fetch(`${BASE_URL}/api/engineering/updateppreplace/${id}`,
       {
         method:'PUT',
         body: JSON.stringify({
@@ -78,7 +78,7 @@ export function updateApi(id,data,apiData) {
 
     export function createApi(data,linkID,stepID) {
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/engineering/createppreplace`,
+            fetch(`${BASE_URL}/api/engineering/createppreplace`,
     {
       method:'POST',
       body: JSON.stringify({

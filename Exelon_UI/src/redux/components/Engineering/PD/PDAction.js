@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_PD_REQUEST = "GET_PD_REQUEST";
 
 export function getPDApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/engineering/GetPD`
+      `${BASE_URL}/api/engineering/GetPD`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

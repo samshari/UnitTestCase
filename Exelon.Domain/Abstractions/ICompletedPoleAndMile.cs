@@ -9,6 +9,8 @@ namespace Exelon.Domain.Abstractions
    public interface ICompletedPoleAndMile
     {
         Task<CompletedPoleAndMile> GetCompletedPoleMileById(int id);
-        Task<CompletedPoleAndMile> SaveUpdateCompletedPoleMile(CompletedPoleAndMile model);
+        Task<Dictionary<CompletedPoleAndMile, string>> SaveUpdateCompletedPoleMile(CompletedPoleAndMile model);
+        Task<CompletedPoleAndMile> UpdateCompletedPoleMile(CompletedPoleAndMile model);
+        Task<CompletedPoleAndMile> GetCompletedPoleMileByLinkId(int id);
     }
 }
