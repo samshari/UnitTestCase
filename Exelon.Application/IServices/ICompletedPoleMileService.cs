@@ -9,6 +9,8 @@ namespace Exelon.Application.IServices
     public interface ICompletedPoleMileService
     {
         Task<CompletedPoleAndMile> GetCompletedPoleMileById(int id);
-        Task<CompletedPoleAndMile> SaveUpdateCompletedPoleMile(CompletedPoleAndMile model);
+        Task<Dictionary<CompletedPoleAndMile, string>> SaveUpdateCompletedPoleMile(CompletedPoleAndMile model);
+        Task<CompletedPoleAndMile> UpdateCompletedPoleMile(CompletedPoleAndMile model);
+        Task<CompletedPoleAndMile> GetCompletedPoleMileByLinkId(int id);
     }
 }

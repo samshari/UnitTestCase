@@ -1,6 +1,10 @@
 // ** React Imports
 import { useState, createRef, useEffect } from "react";
 import {
+  getallDataBysubstation,
+  getApi,
+  gethutPermitLabelData,
+  getsubStation,
   hidePermittingForm,
   showUpdateButton,
 } from "../../../redux/components/HutPermitting/HutPermittingAction";
@@ -27,6 +31,7 @@ import {
 import { TextField, Autocomplete } from "@mui/material";
 import { Chip } from "@mui/joy";
 import Form from "./Form";
+import { amber } from "@mui/material/colors";
 const columns = [
   { id: "substation", label: "Substation", minWidth: "25%", sort: "true" },
   {
@@ -79,6 +84,8 @@ const statusObj = {
   "Not Permitted": { color: "#FF4C51" },
   "In Progress": { color: "#16B1FF" },
 };
+
+
 
 const PDValues = [
   {
@@ -166,15 +173,20 @@ const allRows = PDValues.map((item) => {
   return [...item.rows];
 });
 const allRowsData = [].concat(...allRows);
-const substationValuesOptions = allRowsData.map(
-  (element) => element.substation
-);
+// const substationValuesOptions = allRowsData.map(
+//   (element) => element.substation
+// );
 const HutPermitting = (props) => {
+  const [substationValuesOptions,setsubstationValuesOptions]=useState([]);
   const tableRef = createRef();
   const clearSelectedRow = useSelector(
     (state) => state.hutPermittingFormReducer.clearSelectedTableRow
   );
   const [allData, setFilteredData] = useState(allRowsData);
+  const dataState = useSelector((state)=>state.hutPermittingFormReducer);
+
+  const substateOptions= dataState.subState;
+  
 
   const [selectedValue, setSelectedValue] = useState(null);
   const [isActive, setIsActive] = useState(null);
@@ -197,11 +209,24 @@ const HutPermitting = (props) => {
     .map((itemm) => {
       return itemm;
     });
+
+  const selectedSubstationValue=useSelector((state)=>state.headerReducer.selectedSubstation);
+  console.log('substation',selectedSubstationValue);
   // ** States
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [FilteredData, setFilteredDataValues] = useState(filteredDataValues);
   const dispatch = useDispatch();
+  const hutstate=useSelector((state)=>state.hutPermittingFormReducer)
+  const labelData = hutstate.hutLabel;
+  useEffect(()=>{
+    dispatch(getApi()).then((res)=>{
+      if(res.status!== 404) {
+        dispatch(getsubStation(res.map((data)=>{
+          return data.substation
+      }))) 
+    }})
+  },[])
   
   return (
     <div style={{ margin: "4.5rem 8rem 0.8rem 8rem", width: "89%" }}>
@@ -212,13 +237,16 @@ const HutPermitting = (props) => {
         ListboxProps={{
           sx: { fontSize: 13 },
         }}
-        options={substationValuesOptions}
+        options={substateOptions}
         onChange={(event, value) => {
           setSelectedValue(value);
+          dispatch(getallDataBysubstation(value)).then((res)=>{
+            dispatch(gethutPermitLabelData(res));
+          })
           dispatch(selectSubstation(value))
         }}
         clearOnBlur
-        value={selectedValue}
+        value={selectedSubstationValue}
         style={{
           width: 340,
           marginTop: "3.2px",
@@ -232,36 +260,36 @@ const HutPermitting = (props) => {
             <label>
               EOC:{" "}
               <span>
-                {allData
-                  .filter((item) => item.substation === selectedValue)
-                  .map((item) => item.eoc)}
+                {labelData!==undefined && labelData.length>0  && labelData
+                  .filter((item) => item.substation === selectedSubstationValue)
+                  .map((item) => item.eocName)}
               </span>
             </label>
             <label>
               Size:{" "}
               <span>
-                {allData
-                  .filter((item) => item.substation === selectedValue)
-                  .map((item) => item.size)}
+                {labelData!==undefined && labelData.length>0  && labelData
+                  .filter((item) => item.substation === selectedSubstationValue)
+                  .map((item) => item.sizeName)}
               </span>
             </label>
             <label>
               Status:{" "}
               <span
                 class="Chip"
-                style={{
-                  backgroundColor:
-                    statusObj[
-                      allData
-                        .filter(
-                          (item) => item.substation === selectedValue
-                        )
-                        .map((item) => item.status)
-                    ].color,
-                }}
+                // style={{
+                //   backgroundColor:
+                //     statusObj[
+                //       allData
+                //         .filter(
+                //           (item) => item.substation === selectedValue
+                //         )
+                //         .map((item) => item.status)
+                //     ].color,
+                // }}
               >
-                {allData
-                  .filter((item) => item.substation === selectedValue)
+                {labelData!==undefined && labelData.length>0  && labelData
+                  .filter((item) => item.substation === selectedSubstationValue)
                   .map((item) => item.status)}
               </span>
             </label>

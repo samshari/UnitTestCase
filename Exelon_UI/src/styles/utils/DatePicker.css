@@ -1,6 +1,6 @@
 .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 9px 0px !important;
-  width: 12.7rem !important;
+  width: 203px !important;
 }
 /* datepicker input mm/dd/yyyy */
 .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
@@ -12,9 +12,36 @@
   .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
     padding-left: 0.7rem !important;
     padding-top: 0.85rem !important;
-    width: 12.45rem !important;
+    width: 203px !important;
 }
 
+.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
+
+  color: #909394 !important;
+
+}
+.year input{
+  font-size: 0.85rem !important;
+  margin-top: 0px !important;
+  padding-bottom: 13px !important;
+}
+
+
+
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+
+  border-color: #909394 !important;
+
+}
+
+
+
+
+.MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+
+  border-color: #909394 !important;
+
+}
 /* datepicker calender divs */
 
 .css-169iwlq-MuiCalendarPicker-root{

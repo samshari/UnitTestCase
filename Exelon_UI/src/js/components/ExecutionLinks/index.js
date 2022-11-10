@@ -2,7 +2,7 @@
 import { useState, createRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectPD, selectProjectID } from "../../../redux/views/Header/HeaderAction";
-import {TextField, Autocomplete} from "@mui/material";
+import { TextField, Autocomplete } from "@mui/material";
 import "../../../styles/components/Execution.css";
 import LinkInformation from "./LinkInformation";
 import EnggInvestigation from "./EnggInvestigation";
@@ -20,8 +20,13 @@ import PostCompletion from "./PostCompletion";
 import PreConstruction from "./PreConstruction";
 import CustomTabs from "../../utils/Tabs";
 import { selectPrimaryKey } from "../../../redux/views/Header/HeaderAction";
+import { getPDApi } from "../../../redux/components/Engineering/PD/PDAction";
+import { getallProjectId, getExLabelData, getExLinkData, GetLinkInfoIdByProjectId, getProjectId, getProjectIDByPD } from "../../../redux/components/ExecutionLinks/ExecutionLinksAction";
+import {getallPrimaryKey, getPDID, getPrimaryKey} from "../../../redux/components/Engineering/EngineeringAction"
+import { disableTabs } from "../../../redux/utils/Tabs/TabsAction";
 
-function createData(projectID,linkNickname,workOrder , status) {
+
+function createData(projectID, linkNickname, workOrder, status) {
   return { projectID, linkNickname, workOrder, status };
 }
 const statusObj = {
@@ -31,107 +36,19 @@ const statusObj = {
   Closed: { color: "#56CA00" },
   "In Service": { color: "#b784a7" },
   "On Hold": { color: "#16B1FF" },
-  NA:{color:"#99badd"}
+  NA: { color: "#99badd" }
 };
 
-const TabsArr = [
-  {
-    tabName: "Link Information",
-    tabColor: "yellow",
-    component: <LinkInformation  tabColor="yellow" />,
-  },
-  {
-    tabName: "Eng. Investigation",
-    tabColor: "#00bfff",
-    disable:true,
-    component: (
-      <EnggInvestigation  tabColor="#00bfff" />
-    ),
-  },
-  {
-    tabName: "Innerduct (Rod and Rope)",
-    tabColor: "#a8ee90",
-    disable:true,
-    component: <Innerduct tabColor="#a8ee90" />,
-  },
-  {
-    tabName: "ComEd/External",
-    tabColor: "#FCC981",
-    disable:true,
-    component: <ComEdExternal tabColor="#FCC981" />,
-  },
-  {
-    tabName: "Pre-Construction",
-    tabColor: "#C5B4E3",
-    disable:true,
-    component: <PreConstruction tabColor="#C5B4E3" />,
-  },
-  {
-    tabName: "IFC Dates",
-    tabColor: "#0a7e8c",
-    disable:true,
-    component: <IFCDates tabColor="#0a7e8c" />,
-  },
-  {
-    tabName: "OVHD Make Ready",
-    tabColor: "orange",
-    disable:true,
-    component: <OvhdMakeReady tabColor="orange" />,
-  },
-  {
-    tabName: "Boring",
-    tabColor: "#99badd",
-    disable:true,
-    component: <Boring tabColor="#99badd" />,
-  },
-  {
-    tabName: "Civil",
-    tabColor: "#00ff00",
-    disable:true,
-    component: <Civil tabColor="#00ff00" />,
-  },
-  {
-    tabName: "Fiber",
-    tabColor: "red",
-    disable:true,
-    component: <Fiber tabColor="red" />,
-  },
-  {
-    tabName: "Completed Poles/Miles",
-    tabColor: "#76ff7a",
-    disable:true,
-    component: <CompletedPoles tabColor="#76ff7a" />,
-  },
-  {
-    tabName: "Completed Fiber Miles",
-    tabColor: "red",
-    disable:true,
-    component: (
-      <CompletedFiberMiles tabColor="red" />
-    ),
-  },
-  {
-    tabName: "Devices",
-    tabColor: "#7BB2DD",
-    disable:true,
-    component: <Devices tabColor="#7BB2DD" />,
-  },
-  {
-    tabName: "Post-Completion",
-    tabColor: "#ff9933",
-    disable:true,
-    component: <PostCompletion tabColor="#ff9933" />,
-  },
-];
+
 const PDValues = [
   {
     value: "1C224300 Backbone Ring 24",
     rows: [
       {
-        projectID:"21SPD414",
+        projectID: "21SPD414",
         linkNickname: "12",
-        workOrder:"17162217",
-        status:'NA'
+        workOrder: "17162217",
+        status: 'NA'
       },
       createData(
         "20SPD200",
@@ -218,9 +135,104 @@ const allRows = PDValues.map((item) => {
 const allRowsData = [].concat(...allRows);
 
 const ExecutionLinks = (props) => {
-  const tableRef = createRef();
-  const selectedPD = useSelector((state) => state.headerReducer.selectedPD);
 
+  const createlinkID=useSelector((state)=>state.hideExecutionLinksFormReducer?.globallinkID)
+  const updatelinkID=useSelector((state)=>state.hideExecutionLinksFormReducer?.data?.executionLinkingID);
+  const selectedPD = useSelector((state) => state.headerReducer.selectedPD);
+  const [selectedProjectID, setSelectedProjectID] = useState(null);
+  const TabsArr = [
+    {
+      tabName: "Link Information",
+      tabColor: "yellow",
+      disable: selectedPD.length === 0 && selectedProjectID === null && true,
+      component: <LinkInformation tabColor="yellow" disableFields={selectedPD.length === 0 && selectedProjectID === null && true} />,
+    },
+    {
+      tabName: "Eng. Investigation",
+      tabColor: "#00bfff",
+      disable: true,
+      component: (
+        <EnggInvestigation tabColor="#00bfff" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />
+      ),
+    },
+    {
+      tabName: "Innerduct (Rod and Rope)",
+      tabColor: "#a8ee90",
+      disable: true,
+      component: <Innerduct tabColor="#a8ee90" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />,
+    },
+    {
+      tabName: "ComEd/External",
+      tabColor: "#FCC981",
+      disable: true,
+      component: <ComEdExternal tabColor="#FCC981" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />,
+    },
+    {
+      tabName: "Pre-Construction",
+      tabColor: "#C5B4E3",
+      disable: true,
+      component: <PreConstruction tabColor="#C5B4E3" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />,
+    },
+    {
+      tabName: "IFC Dates",
+      tabColor: "#0a7e8c",
+      disable: true,
+      component: <IFCDates tabColor="#0a7e8c" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />,
+    },
+    {
+      tabName: "OVHD Make Ready",
+      tabColor: "orange",
+      disable: true,
+      component: <OvhdMakeReady tabColor="orange" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />,
+    },
+    {
+      tabName: "Boring",
+      tabColor: "#99badd",
+      disable: true,
+      component: <Boring tabColor="#99badd" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />,
+    },
+    {
+      tabName: "Civil",
+      tabColor: "#00ff00",
+      disable: true,
+      component: <Civil tabColor="#00ff00" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />,
+    },
+    {
+      tabName: "Fiber",
+      tabColor: "red",
+      disable: true,
+      component: <Fiber tabColor="red" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />,
+    },
+    {
+      tabName: "Completed Poles/Miles",
+      tabColor: "#76ff7a",
+      disable: true,
+      component: <CompletedPoles tabColor="#76ff7a" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />,
+    },
+    {
+      tabName: "Completed Fiber Miles",
+      tabColor: "red",
+      disable: true,
+      component: (
+        <CompletedFiberMiles tabColor="red" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />
+      ),
+    },
+    {
+      tabName: "Devices",
+      tabColor: "#7BB2DD",
+      disable: true,
+      component: <Devices tabColor="#7BB2DD" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />,
+    },
+    {
+      tabName: "Post-Completion",
+      tabColor: "#ff9933",
+      disable: true,
+      component: <PostCompletion tabColor="#ff9933" disableFields={(createlinkID > 0) || (updatelinkID > 0) ? false : true} />,
+    },
+  ];
+  const tableRef = createRef();
+  
+  const [loading, setLoading] = useState(true);
   const filteredData = PDValues.filter((item) => item.value === selectedPD).map(
     (itemm) => {
       return itemm;
@@ -233,136 +245,188 @@ const ExecutionLinks = (props) => {
 
   // ** States
   const [allData, setFilteredData] = useState(allRowsData);
-  const [selectedProjectID, setSelectedProjectID] = useState(null);
+  
   const [selectedValue, setSelectedValue] = useState(selectedPD);
+  const PDData = useSelector((state) => {
+    return state;
+  });
 
   const dispatch = useDispatch();
-  const PDValuesOptions = PDValues.map((item) => {
-    return item.value;
-  });
-  useEffect(()=>{
-    return()=>{
-    dispatch(selectProjectID(null))
-  }},[])
+  // const PDValuesOptions = PDValues.map((item) => {
+  //   return item.value;
+  // });
+  const allprojectIdData = PDData?.hideExecutionLinksFormReducer?.projectID;
+  const allprojectData = PDData?.hideExecutionLinksFormReducer?.allprojectId;
+  const labelData = PDData?.hideExecutionLinksFormReducer?.labelData;
+  console.log('all',labelData);
+
+  useEffect(() => {
+    dispatch(getPDApi()).then((res) => setLoading(false));
+    dispatch(getProjectId(0)).then((res) => {
+      res?.status !== 404 && dispatch(getallProjectId(res.map((item) => {
+        return item.projectId;
+      })))
+    })
+    return () => {
+      dispatch(selectProjectID(null))
+    }
+  }, [])
+
+  const PDValuesOptions = PDData?.PDReducer?.data !== null ? PDData?.PDReducer?.data.status !== 404 ? PDData?.PDReducer?.data?.map((item) => {
+    return item.name;
+  }) : [] : [];
+  const PDValuesIDs = PDData?.PDReducer?.data !== null ? PDData?.PDReducer?.data.status !== 404 ? PDData?.PDReducer?.data?.map((item) => {
+    return item;
+  }) : [] : [];
   return (
-    <div style={{ margin: "4.5rem 8rem 0.8rem 8rem", width: "89%" }}>
-      <div
-        style={{
-          display:"flex" 
-        }}
-      >
-        <Autocomplete
-          size="medium"
-          // multiple
-          disablePortal
-          ListboxProps={{
-            sx: { fontSize: 13 },
-          }}
-          
-          options={
-           PDValuesOptions
-          }
-          onChange={(event, value) => {
-            setSelectedValue(value);
-            value!==null
-              ? dispatch(selectPD(value, true))
-              : dispatch(selectPD([], true));
-          }}
-          clearOnBlur
+    <>
+      {!loading && <div style={{ margin: "4.5rem 8rem 0.8rem 8rem", width: "89%" }}>
+        <div
           style={{
-            width:340,
-            marginTop: "3.2px",
+            display: "flex"
           }}
-          renderInput={(params) => <TextField {...params} label="PD" />}
-          renderOption={(props, option, { selected }) => (
-            <div {...props} style={{ height: "1.5rem", paddingLeft: "10px" }}>
-              <p>{props.key}</p>
+        >
+          <Autocomplete
+            size="medium"
+            // multiple
+            disablePortal
+            ListboxProps={{
+              sx: { fontSize: 13 },
+            }}
+
+            options={
+              PDValuesOptions
+            }
+            onChange={(event, value) => {
+              value===null && dispatch(disableTabs(true));
+              setSelectedValue(value);
+              setSelectedProjectID(null);
+              dispatch(selectProjectID(null));
+              dispatch(getExLinkData([]));
+              PDValuesIDs?.filter((item) => {
+                if (item.name === value) {
+                  dispatch(getProjectId(item.pdid)).then((Res) => {
+                    setFilteredData(Res);
+                    dispatch(getProjectIDByPD(Res));
+                  })
+                  dispatch(getPrimaryKey(item.pdid)).then((Res) => {
+                    dispatch(getallPrimaryKey(Res));
+                  })
+                }
+              })
+              PDData?.PDReducer?.data?.map((item) => {
+                if (item.name === value) {
+                  dispatch(getPDID(item.pdid));
+                }
+              })
+              value !== null
+                ? dispatch(selectPD(value, true))
+                : dispatch(selectPD([], true));
+            }}
+            clearOnBlur
+            style={{
+              width: 340,
+              marginTop: "3.2px",
+            }}
+            renderInput={(params) => <TextField {...params} label="PD *" />}
+            renderOption={(props, option, { selected }) => (
+              <div {...props} style={{ height: "1.5rem", paddingLeft: "10px" }}>
+                <p>{props.key}</p>
+              </div>
+            )}
+            value={selectedPD}
+          />
+        </div>
+        <div class="informationContainer">
+          <Autocomplete
+            size="medium"
+            // multiple
+            disablePortal
+            ListboxProps={{
+              sx: { fontSize: 13 },
+            }}
+            options={
+              selectedPD.length === 0
+                ?allprojectData.length>0? allprojectData?.map((item) => {
+                  return item;
+                }):[]
+                : allprojectIdData?.length > 0 ? allprojectIdData?.map((item) => {
+                  return item.projectId;
+                }) : []
+            }
+            onChange={(event, value) => {
+              setSelectedProjectID(value);
+              value !== null ? dispatch(selectProjectID(value)) : dispatch(selectProjectID(null));
+
+              dispatch(GetLinkInfoIdByProjectId(value)).then((res)=>{
+                  dispatch(getExLabelData(res));
+                  dispatch(getExLinkData(res[0]));
+              })
+
+              value === null && dispatch(GetLinkInfoIdByProjectId(value)).then((res) => {
+                dispatch(getExLinkData([]));
+              })
+            }}
+            clearOnBlur
+            style={{
+              width: 340,
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label="Project ID" />
+            )}
+            renderOption={(props) => (
+              <div {...props} style={{ height: "1.5rem", paddingLeft: "15px" }}>
+                <p>{props.key}</p>
+              </div>
+            )}
+            value={selectedProjectID}
+          />
+          {selectedProjectID && (
+            <div class="informationLabelsExecution">
+              <label>
+                Work Order:{" "}
+                <span>
+                  {labelData!==undefined && labelData.length>0  && labelData
+                    .filter((item) => item.projectId === selectedProjectID)
+                    .map((item) => item.workOrder)}
+                </span>
+              </label>
+              <label>
+                ITN:{" "}
+                <span>
+                  {labelData!==undefined && labelData.length>0  && labelData
+                    .filter((item) => item.projectId === selectedProjectID)
+                    .map((item) => item.itn)}
+                </span>
+              </label>
+              <label>
+                Status:{" "}
+                <span
+                  class="Chip"
+                // style={{
+                //   backgroundColor:
+                //     statusObj[
+                //       allData
+                //         .filter(
+                //           (item) => item.projectID === selectedProjectID
+                //         )
+                //         .map((item) => item.status)
+                //     ].color,
+                // }}
+                >
+                  {labelData!==undefined && labelData.length>0  && labelData
+                    .filter((item) => item.projectId === selectedProjectID)
+                    .map((item) => item.statusName)}
+                </span>
+              </label>
             </div>
           )}
-          disableCloseOnSelect
-          value={selectedPD}
-        />
+        </div>
+        <CustomTabs data={TabsArr} />
       </div>
-      <div class="informationContainer">
-        <Autocomplete
-          size="medium"
-          // multiple
-          disablePortal
-          ListboxProps={{
-            sx: { fontSize: 13 },
-          }}
-          options={
-            selectedPD.length===0
-              ? allData.map((item) => {
-                  return item.projectID;
-                })
-              : selectedFilteredData.map((item) => {
-                  return item.projectID;
-                })
-          }
-          onChange={(event, value) => {
-            setSelectedProjectID(value);
-            dispatch(selectProjectID(value));
-          }}
-          clearOnBlur
-          style={{
-            width: 340,
-          }}
-          renderInput={(params) => (
-            <TextField {...params} label="Project ID" />
-          )}
-          renderOption={(props) => (
-            <div {...props} style={{ height: "1.5rem", paddingLeft: "15px" }}>
-              <p>{props.key}</p>
-            </div>
-          )}
-          disableCloseOnSelect
-          value={selectedProjectID}
-        />
-        {selectedProjectID && (
-          <div class="informationLabelsExecution">
-            <label>
-              Work Order:{" "}
-              <span>
-                {allData
-                  .filter((item) => item.projectID === selectedProjectID)
-                  .map((item) => item.workOrder)}
-              </span>
-            </label>
-            <label>
-              Link Nickname:{" "}
-              <span>
-                {allData
-                  .filter((item) => item.projectID === selectedProjectID)
-                  .map((item) => item.linkNickname)}
-              </span>
-            </label>
-            <label>
-              Status:{" "}
-              <span
-                class="Chip"
-                style={{
-                  backgroundColor:
-                    statusObj[
-                      allData
-                        .filter(
-                          (item) => item.projectID === selectedProjectID
-                        )
-                        .map((item) => item.status)
-                    ].color,
-                }}
-              >
-                {allData
-                  .filter((item) => item.projectID === selectedProjectID)
-                  .map((item) => item.status)}
-              </span>
-            </label>
-          </div>
-        )}
-      </div>
-      <CustomTabs data={TabsArr} />
-    </div>
-  );
+      }
+    </>
+  )
 };
 
 export default ExecutionLinks;

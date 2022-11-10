@@ -52,7 +52,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.AddWithValue("@PreContructionID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 0);
                             cmd.Parameters.AddWithValue("@FK_EnvironmentalCOCID", 0);
                             cmd.Parameters.AddWithValue("@FK_VegRequired", 0);
                             cmd.Parameters.AddWithValue("@FK_StackingRequired", 0);
@@ -73,8 +72,7 @@ namespace Exelon.Infrastructure.Repositories
                                     var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
                                     var preconst = new PRECONSTRUCTIONModel();
                                     preconst.PreContructionID = (long)dataReader["PreContructionID"];
-                                    preconst.FK_LinkingID = (long)dataReader["FK_LinkingID"];
-                                    preconst.FK_StepID = (int)dataReader["FK_StepID"];
+                                    preconst.FK_LinkingID = (long)dataReader["ExecutionLinkingID"];
                                     if (dataReader["FK_EnvironmentalCOCID"] != DBNull.Value)
                                         preconst.FK_EnvironmentalCOCID = (int)dataReader["FK_EnvironmentalCOCID"];
                                     if (dataReader["FK_VegRequired"] != DBNull.Value)
@@ -118,7 +116,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 6);
                             cmd.Parameters.AddWithValue("@PreContructionID", pRECONSTRUCTIONModel.PreContructionID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", pRECONSTRUCTIONModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_StepID", pRECONSTRUCTIONModel.FK_StepID);
                             cmd.Parameters.AddWithValue("@FK_EnvironmentalCOCID",checkNull(pRECONSTRUCTIONModel.FK_EnvironmentalCOCID));
                             cmd.Parameters.AddWithValue("@FK_VegRequired", checkNull(pRECONSTRUCTIONModel.FK_VegRequired));
                             cmd.Parameters.AddWithValue("@FK_StackingRequired",checkNull(pRECONSTRUCTIONModel.FK_StackingRequired));
@@ -166,7 +163,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@PreContructionID", pRECONSTRUCTIONModel.PreContructionID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", pRECONSTRUCTIONModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_StepID", pRECONSTRUCTIONModel.FK_StepID);
                             cmd.Parameters.AddWithValue("@FK_EnvironmentalCOCID", checkNull(pRECONSTRUCTIONModel.FK_EnvironmentalCOCID));
                             cmd.Parameters.AddWithValue("@FK_VegRequired", checkNull(pRECONSTRUCTIONModel.FK_VegRequired));
                             cmd.Parameters.AddWithValue("@FK_StackingRequired", checkNull(pRECONSTRUCTIONModel.FK_StackingRequired));
@@ -201,7 +197,6 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 3);
                             cmd.Parameters.AddWithValue("@PreContructionID", id);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", 0);
-                            cmd.Parameters.AddWithValue("@FK_StepID", 0);
                             cmd.Parameters.AddWithValue("@FK_EnvironmentalCOCID", 0);
                             cmd.Parameters.AddWithValue("@FK_VegRequired", 0);
                             cmd.Parameters.AddWithValue("@FK_StackingRequired", 0);

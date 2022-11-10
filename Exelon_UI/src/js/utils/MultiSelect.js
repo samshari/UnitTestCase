@@ -50,6 +50,7 @@ export default function MultipleSelectCheckmarks(props) {
         <Select
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
+          disabled={props.disable}
           multiple
           value={props.value}
           onChange={props.onChange}

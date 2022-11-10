@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_ENGG_SUCCESS = "GET_ENGG_SUCCESS";
 export const UPDATE_ENGG_SUCCESS = "UPDATE_ENGG_SUCCESS";
 export const CREATE_ENGG_SUCCESS = "CREATE_ENGG_SUCCESS";
@@ -6,7 +7,7 @@ export function getApi() {
 return (dispatch)=>{
     return new Promise((resolve, reject) => {  
         fetch(
-          `http://localhost:63006/api/executionlinks/Getenginvest`
+          `${BASE_URL}/api/executionlinks/Getenginvest`
         )
           .then((res) => {
               const data = res.json().then((res)=> {
@@ -30,11 +31,11 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,dropData,apiData) {
+export function updateApi(id,data,dropData,linkID) {
     
-    return new Promise((resolve, reject) => {  
+    return id===0?createApi(data,dropData,linkID): new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/executionlinks/Updateenginvest/${id}`,
+        fetch(`${BASE_URL}/api/executionlinks/Updateenginvest/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
@@ -66,14 +67,13 @@ export function updateApi(id,data,dropData,apiData) {
     };
 
 
-    export function createApi(data,dropData,linkID,stepID) {
+    export function createApi(data,dropData,linkID) {
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/executionlinks/Createenginvest`,
+            fetch(`${BASE_URL}/api/executionlinks/Createenginvest`,
             {
               method:'POST',
               body: JSON.stringify({
                 'FK_LinkingID':linkID,
-                'StepId':stepID,
                 'fK_InnerductCOC':dropData[0].value,
                 'comments':data[1].value
               }),

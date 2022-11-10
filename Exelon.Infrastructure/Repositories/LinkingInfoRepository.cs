@@ -101,11 +101,10 @@ namespace Exelon.Infrastructure.Repositories
                                     linkInfo.FiberCount = dataReader["FiberCount"].ToString();
                                     linkInfo.Comments = dataReader["Comments"].ToString();
                                     linkInfo.ScopeComments = dataReader["ScopeComments"].ToString();
-                                    if (id != 0) linkInfo.StatusName = string.IsNullOrEmpty(dataReader["StatusName"].ToString()) ?  "NA": dataReader["StatusName"].ToString();
+                                    linkInfo.StatusName = dataReader["StatusName"].ToString();
                                     linkInfo.ITN = dataReader["ITN"].ToString();
                                     if (dataReader["FK_ProjectStatusID"] != DBNull.Value)
                                         linkInfo.ProjectStatusId = (int)dataReader["FK_ProjectStatusID"];
-                                    linkInfo.StepId = (int)dataReader["FK_StepID"];
                                     lstLinkInfo.Add(linkInfo);
 
                                 }
@@ -119,10 +118,17 @@ namespace Exelon.Infrastructure.Repositories
 
         }
 
-        public async Task<LinkingInfoModel> CreateLinkInfo(LinkingInfoModel linkingInfoModel)
+        public async Task<Dictionary<LinkingInfoModel,string>> CreateLinkInfo(LinkingInfoModel linkingInfoModel)
         {
             return await Task.Run(() =>
             {
+                var result = new Dictionary<LinkingInfoModel, string>();
+                if (string.IsNullOrEmpty(linkingInfoModel.PrimaryKey))
+                {
+                    result[linkingInfoModel] = "Primary key is Empty!";
+                    return result;
+                }
+                
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -131,7 +137,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procID", 1);
+                            cmd.Parameters.AddWithValue("@procID", 8);
                             cmd.Parameters.AddWithValue("@LinkingID", 0);
                             cmd.Parameters.AddWithValue("@PrimaryKey", string.IsNullOrEmpty(linkingInfoModel.PrimaryKey) ? string.Empty : linkingInfoModel.PrimaryKey);
                             cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(linkingInfoModel.Description) ? string.Empty : linkingInfoModel.Description);
@@ -154,21 +160,39 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", linkingInfoModel.CreatedBy);
                             cmd.Connection = connection;
                             connection.Open();
+                            int check = (int)cmd.ExecuteScalar();
+                            if (check == 1)
+                            {
+                                cmd.Parameters["@procId"].Value = 1;
+                            }
+                            else
+                            {
+                                connection.Close();
+                                result[linkingInfoModel] = "Primary key Already Exists!";
+                                return result;
+                            }
                             linkingInfoModel.LinkingId = (long)cmd.ExecuteScalar();
                             connection.Close();
-                            return linkingInfoModel;
+                            result[linkingInfoModel] = "ok";
+                            return result;
 
                         }
                     }
                 }
-                catch (Exception ex) { return new LinkingInfoModel(); }
+                catch (Exception ex) { return new Dictionary<LinkingInfoModel, string>(); }
             });
         }
 
-        public async Task<LinkingInfoModel> UpdateLinkInfo(LinkingInfoModel infoModel)
+        public async Task<Dictionary<LinkingInfoModel, string>> UpdateLinkInfo(LinkingInfoModel infoModel)
         {
             return await Task.Run(() =>
             {
+                var result = new Dictionary<LinkingInfoModel, string>();
+                if (string.IsNullOrEmpty(infoModel.PrimaryKey))
+                {
+                    result[infoModel] = "Primary key is Empty!";
+                    return result;
+                }
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -178,7 +202,7 @@ namespace Exelon.Infrastructure.Repositories
 
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procID", 2);
+                            cmd.Parameters.AddWithValue("@procID", 9);
                             cmd.Parameters.AddWithValue("@LinkingID", infoModel.LinkingId);
                             cmd.Parameters.AddWithValue("@PrimaryKey", string.IsNullOrEmpty(infoModel.PrimaryKey) ? string.Empty : infoModel.PrimaryKey);
                             cmd.Parameters.AddWithValue("@Description", string.IsNullOrEmpty(infoModel.Description) ? string.Empty : infoModel.Description);
@@ -201,13 +225,25 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", infoModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
+                            int check =(int)cmd.ExecuteScalar();
+                            if (check == 1)
+                            {
+                                cmd.Parameters["@procId"].Value = 2;
+                            }
+                            else
+                            {
+                                connection.Close();
+                                result[infoModel] = "Primary key Already Exists!";
+                                return result;
+                            }
                             cmd.ExecuteNonQuery();
                             connection.Close();
-                            return infoModel;
+                            result[infoModel] = "ok";
+                            return result;
                         }
                     }
                 }
-                catch (Exception ex) { return new LinkingInfoModel(); }
+                catch (Exception ex) { return new Dictionary<LinkingInfoModel, string>(); }
             });
         }
 

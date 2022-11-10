@@ -1,10 +1,10 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_COCBIDFiber_REQUEST = "GET_COCBIDFiber_REQUEST";
-
 export function getFiberApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/GetMCOCBIDFIBER`
+      `${BASE_URL}/api/common/GetMCOCBIDFIBER`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

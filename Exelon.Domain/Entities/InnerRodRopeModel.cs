@@ -8,7 +8,6 @@ namespace Exelon.Domain
     {
         public long RodAndRopeID { get; set; }
         public long FK_LinkingID { get; set; }
-        public int FK_StepID { get; set; }
         public Nullable<DateTime> InnerductStartDate { get; set; }
         public Nullable<DateTime> InnerductEndDate { get; set; }
         public string StrInnerductStartDate { get; set; }

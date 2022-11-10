@@ -149,7 +149,8 @@ table {
 .linkDescriptionLabel span{
   float: right;
   flex-wrap: wrap;
-  width: 17.5rem;
+  max-width: 17.5rem;
+  min-width: 0rem;
   margin-left: 0.2rem;
 }
 .informationContainer label span{
@@ -161,3 +162,30 @@ table {
   border-radius: 12px;
   margin-top: 0.2rem;
 }
+.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root{
+  font-size: none !important;
+}
+.css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  padding: 4px !important;
+}
+.MuiInputLabel-outlined.MuiInputLabel-shrink {
+  padding: 4px !important;
+}
+
+.css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  padding: 0px !important;
+}
+.css-1pysi21-MuiFormLabel-root-MuiInputLabel-root {
+  padding: 5px 0px 0px 0px!important;
+}
+
+.MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-outlined.MuiFormLabel-colorPrimary.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-outlined.css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
+  padding: 0px 0px 0px 0px !important;
+}
+.MuiSnackbarContent-root{
+
+  background-color: rgb(232, 231, 231) !important;
+
+  color: black !important;
+}
+

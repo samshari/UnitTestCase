@@ -9,7 +9,9 @@ namespace Exelon.Domain
 		public long HutPermittingID { get; set; }
 		public string InstallYear { get; set; }
 		public string Substation { get; set; }
-		public int FK_EOCID { get; set; }
+		public Nullable<int> FK_EOCID { get; set; }
+		public string EOCName { get; set; }
+		public string SizeName { get; set; }
 		public Nullable<int> FK_SizeID { get; set; }
 		public string Location_Municipality { get; set; }
 		public string Location_County { get; set; }

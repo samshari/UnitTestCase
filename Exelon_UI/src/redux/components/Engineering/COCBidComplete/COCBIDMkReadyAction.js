@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_COCBIDMk_REQUEST = "GET_COCBIDMk_REQUEST";
 
 export function getMkApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/GetMCOCMK`
+      `${BASE_URL}/api/common/GetMCOCMK`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

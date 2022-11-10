@@ -17,6 +17,8 @@ namespace Exelon.Domain.Abstractions
         /// </summary>
         /// <returns></returns>
         Task<ExecutionCompletedFiberMile> GetCompletedFiberMileById(int id);
-        Task<ExecutionCompletedFiberMile> SaveUpdateCompletedFiberMile(ExecutionCompletedFiberMile model);
+        Task<Dictionary<ExecutionCompletedFiberMile, string>> SaveUpdateCompletedFiberMile(ExecutionCompletedFiberMile model);
+        Task<ExecutionCompletedFiberMile> GetCompletedFiberMileByLinkId(int id);
+        Task<ExecutionCompletedFiberMile> UpdateCompletedFiberMile(ExecutionCompletedFiberMile model);
     }
 }

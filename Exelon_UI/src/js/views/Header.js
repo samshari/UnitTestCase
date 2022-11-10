@@ -73,7 +73,7 @@ const Header = (props) => {
             return <option>{item.value}</option>;
           })}
         </select> */}
-        <div>Header</div>
+        <div>REACTS Data Manager</div>
         </>
         }
       </div>

@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_FIBER_REQUEST = "GET_FIBER_REQUEST";
 
 export function getFiberApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/Getfiber`
+      `${BASE_URL}/api/common/Getfiber`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

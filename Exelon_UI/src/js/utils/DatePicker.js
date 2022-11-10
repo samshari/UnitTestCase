@@ -8,15 +8,21 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 export default function BasicDatePicker(props) {
   const [value, setValue] = React.useState(null);
 
+  const date= new Date();
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
+      <DatePicker style={{fontSize:'0.3rem',marginTop:'-7px'}}
+        disabled={props.disable}
         label={props.placeholder}
-        value={props.value}
+        value={props.value?props.value:null}
         onChange={
           props.onChange
         }
-        renderInput={(params) => <TextField {...params} />}
+        views={props.views}
+        minDate={props.views && "2019"}
+        maxDate={props.views && `${date.getFullYear()+10}`}
+
+        renderInput={(params) => <TextField  {...params}  />}
       />
     </LocalizationProvider>
   );

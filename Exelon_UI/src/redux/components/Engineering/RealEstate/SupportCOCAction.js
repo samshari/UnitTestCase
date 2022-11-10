@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_SUPCOC_REQUEST = "GET_SUPCOC_REQUEST";
 
 export function getSupCOCApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/GetMREALEOC`
+      `${BASE_URL}/api/common/GetMREALEOC`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

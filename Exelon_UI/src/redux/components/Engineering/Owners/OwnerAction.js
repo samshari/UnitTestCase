@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_OWNER_SUCCESS = "GET_OWNER_SUCCESS";
 export const UPDATE_OWNER_SUCCESS = "UPDATE_OWNER_SUCCESS";
 export const CREATE_OWNER_SUCCESS = "CREATE_OWNER_SUCCESS";
@@ -8,7 +9,7 @@ export function getApi() {
 return (dispatch)=>{
     return new Promise((resolve, reject) => {  
         fetch(
-          `http://localhost:63006/api/engineering/getowner`
+          `${BASE_URL}/api/engineering/getowner`
         )
           .then((res) => {
               const data = res.json().then((res)=> {
@@ -32,11 +33,11 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,dropData,apiData) {
+export function updateApi(id,data,dropData,linkID) {
     
-    return new Promise((resolve, reject) => {  
+  return id===0?createApi(data,dropData,linkID,1) : new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/engineering/updateowner/${id}`,
+     fetch(`${BASE_URL}/api/engineering/updateowner/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
@@ -71,7 +72,7 @@ export function updateApi(id,data,dropData,apiData) {
 
     export function createApi(data,dropData,linkID,stepID) {
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/engineering/createowner`,
+            fetch(`${BASE_URL}/api/engineering/createowner`,
             {
               method:'POST',
               body: JSON.stringify({

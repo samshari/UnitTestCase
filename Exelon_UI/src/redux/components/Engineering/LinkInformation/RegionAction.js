@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_REGION_REQUEST = "GET_REGION_REQUEST";
 
 export function getRegionApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/GetMREGION`
+      `${BASE_URL}/api/common/GetMREGION`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

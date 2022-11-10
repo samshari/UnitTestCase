@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_OVHD_SUCCESS = "GET_OVHD_SUCCESS";
 export const UPDATE_OVHD_SUCCESS = "UPDATE_OVHD_SUCCESS";
 export const CREATE_OVHD_SUCCESS = "CREATE_OVHD_SUCCESS";
@@ -6,7 +7,7 @@ export function getApi() {
 return (dispatch)=>{
     return new Promise((resolve, reject) => {  
         fetch(
-          `http://localhost:63006/api/executionlinks/GetOVHD`
+          `${BASE_URL}/api/executionlinks/GetOVHD`
         )
           .then((res) => {
               const data = res.json().then((res)=> {
@@ -30,17 +31,10 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,dropData,apiData) {
-    console.log(JSON.stringify({
-      'fK_OVHDCOCID':dropData[0].value==0? null :dropData[0].value,
-      'startDate': data[1].value,
-      'endDate': data[2].value,
-      'issuesOrComments':data[3].value,
-      'weeklyFTECount':data[4].value
-  }))
-    return new Promise((resolve, reject) => {  
+export function updateApi(id,data,dropData,linkID) {
+    return id==0?createApi(data,dropData,linkID): new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/executionlinks/UpdateOvhd/${id}`,
+        fetch(`${BASE_URL}/api/executionlinks/UpdateOvhd/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
@@ -75,15 +69,14 @@ export function updateApi(id,data,dropData,apiData) {
     };
 
 
-    export function createApi(data,dropData,linkID,stepID) {
+    export function createApi(data,dropData,linkID) {
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/executionlinks/CreateOVHD`,
+            fetch(`${BASE_URL}/api/executionlinks/CreateOVHD`,
             {
               method:'POST',
               body: JSON.stringify({
-                'FK_LinkingID':linkID,
-                'StepId':stepID,
-                'fK_OVHDCOCID':dropData[0],
+                'fK_LinkingID':linkID,
+                'fK_OVHDCOCID':dropData[0].value===0?null:dropData[0].value,
                 'startDate': data[1].value,
                 'endDate': data[2].value,
                 'issuesOrComments':data[3].value,

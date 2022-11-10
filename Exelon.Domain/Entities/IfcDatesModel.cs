@@ -8,7 +8,6 @@ namespace Exelon.Domain
     {
 		public int IFCDateID { get; set; }
 		public long FK_LinkingID { get; set; }
-		public int FK_StepID { get; set; }
 		public Nullable<DateTime> IFCMkReadyScheduledIssueDate { get; set; }
 		public Nullable<DateTime> IFCFiberCurrentScheduledIssueDt { get; set; }
         public string StrIFCMkReadyScheduledIssueDate { get; set; }

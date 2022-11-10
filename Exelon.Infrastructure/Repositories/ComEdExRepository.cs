@@ -71,7 +71,6 @@ namespace Exelon.Infrastructure.Repositories
                                     com.LinkingId = (long)dataReader["ExecutionLinkingID"];
                                     if (dataReader["FK_LNLID"] != DBNull.Value)
                                         com.LNLId = (int)dataReader["FK_LNLID"];
-                                    com.Name = dataReader["Name"].ToString();
                                     com.IsActive = Convert.ToBoolean(dataReader["IsActive"]);
                                     result.Add(com);
                                 }
@@ -89,6 +88,11 @@ namespace Exelon.Infrastructure.Repositories
             return await Task.Run(() =>
             {
                 var result = new Dictionary<COMEDEXModel, string>();
+                if(string.IsNullOrEmpty(model.LNLId.ToString()))
+                {
+                    result[model] = "LNL/Labor for OH make ready is required";
+                    return result;
+                }
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))

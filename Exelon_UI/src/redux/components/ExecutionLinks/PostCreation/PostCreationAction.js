@@ -1,3 +1,5 @@
+import { create } from "@mui/material/styles/createTransitions";
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_POSTCOMPLETION_SUCCESS = "GET_POSTCOMPLETION_SUCCESS";
 export const UPDATE_POSTCOMPLETION_SUCCESS = "UPDATE_POSTCOMPLETION_SUCCESS";
 export const CREATE_POSTCOMPLETION_SUCCESS = "CREATE_POSTCOMPLETION_SUCCESS";
@@ -6,7 +8,7 @@ export function getApi() {
 return (dispatch)=>{
     return new Promise((resolve, reject) => {  
         fetch(
-          `http://localhost:63006/api/executionlinks/GetPostCompletion`
+          `${BASE_URL}/api/executionlinks/GetPostCompletion`
         )
           .then((res) => {
               const data = res.json().then((res)=> {
@@ -30,14 +32,19 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,dropData,apiData) {
+export function updateApi(id,data,linkID) {
     
-    return new Promise((resolve, reject) => {  
+    return id===0?createApi(data,linkID) :new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/executionlinks/UpdatePostCompletion/${id}`,
+        fetch(`${BASE_URL}/api/executionlinks/UpdatePostCompletion/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
+          'asBuiltsReceived':data[0].value,
+          'locationsReadyToInspect':data[1].value,
+          'locationsInspected':data[2].value,
+          'tedUpdated':data[3].value,
+          'pniUpdatedIS':data[4].value
 
         }),
         headers: {
@@ -65,14 +72,18 @@ export function updateApi(id,data,dropData,apiData) {
     };
 
 
-    export function createApi(data,dropData,linkID,stepID) {
+    export function createApi(data,linkID) {
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/engineering/createowner`,
+            fetch(`${BASE_URL}/api/executionlinks/CreatePostCompletion`,
             {
               method:'POST',
               body: JSON.stringify({
-                'FK_LinkingID':linkID,
-                'StepId':stepID
+                'fK_LinkingID':linkID,
+                'asBuiltsReceived':data[0].value,
+                'locationsReadyToInspect':data[1].value,
+                'locationsInspected':data[2].value,
+                'tedUpdated':data[3].value,
+                'pniUpdatedIS':data[4].value
               }),
               headers: {
                 'Content-Type': 'application/json; charset=utf-8'

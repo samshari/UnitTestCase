@@ -10,6 +10,68 @@
   padding-left: 0.1rem;
   padding-bottom: 0.5rem;
 }
+.css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  padding: 4px !important;
+}
+.MuiInputLabel-formControl {
+
+  margin-right: 5px !important;
+
+
+
+}
+
+.MuiYearPicker-root{
+
+  max-height: 365px !important;
+
+}
+
+
+
+
+.MuiInputLabel-outlined.MuiInputLabel-shrink {
+
+  /*margin-right: 0px !important; */
+
+  padding: 2px !important;
+
+}
+
+.css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+
+  padding: 4px !important;
+
+}
+
+
+
+.datepicker{
+
+  padding: 0px 0px 50px 50px !important;
+
+}
+
+
+.css-1pysi21-MuiFormLabel-root-MuiInputLabel-root {
+
+  padding:5px 0px 0px 5px !important;}
+
+
+
+  .MuiOutlinedInput-inputMultiline {
+
+    height: 36px !important;
+
+  }
+
+
+
+  .MuiInput-underline:after {
+
+    border: 0px !important;
+
+}
 .card_inputArea {
   display: flex;
   align-items: flex-start;
@@ -57,7 +119,7 @@ input:not([type="radio"]),
   /* margin: 7px; */
   margin-bottom: 1px;
   margin-right: 2px !important;
-  width: 14.75rem;
+  width: 200px;
   text-overflow: ellipsis;
 }
 input[type="checkbox"] {
@@ -115,9 +177,9 @@ textarea {
   margin: 7px;
   margin-bottom: 1px;
 }
-textarea:focus {
+/* textarea:focus {
   border: 2px solid #922c88;
-}
+} */
 .save {
   background-color: #922c88;
 }
@@ -220,7 +282,7 @@ input[type="radio"] {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 0.5rem;
+  margin-top: 2rem;
   margin-right: 0.5rem;
 }
 .Button {
@@ -284,6 +346,27 @@ label.Mui-focused{
 .css-1d3z3hw-MuiOutlinedInput-notchedOutline{
   padding: 0px 0.32em !important;
 }
-.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root{
-  font-size: none !important;
+
+/* .MuiInputLabel-root{
+  font-size: 0.85rem !important;
+  margin-top: -7px !important;
+
+} */
+
+.MuiOutlinedInput-inputMultiline {
+  height: 52px !important;
+  font-size: 0.85rem !important;
+}
+
+.MuiInputLabel-outlined.MuiInputLabel-marginDense{
+  font-size: 0.83rem !important;
+}
+
+/* .MuiInputBase-root textarea{
+  padding-left: 10px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+} */
+.Textarea .MuiOutlinedInput-marginDense{
+  padding:10px !important
 }

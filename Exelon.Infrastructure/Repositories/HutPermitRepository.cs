@@ -157,13 +157,104 @@ namespace Exelon.Infrastructure.Repositories
             });
         }
 
-
-
-        public async Task<HUTPERMITTINGModel> CreateHUT(HUTPERMITTINGModel hUTPERMITTINGModel)
+        public async Task<List<HUTPERMITTINGModel>> GetHutBySub(string id)
         {
             return await Task.Run(() =>
             {
-               
+                var result = new List<HUTPERMITTINGModel>();
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        connection.Open();
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = _storedProcedure;
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@HutPermittingID", 0);
+                            cmd.Parameters.AddWithValue("@InstallYear", string.Empty);
+                            cmd.Parameters.AddWithValue("@Substation", id);
+                            cmd.Parameters.AddWithValue("@FK_EOCID", 1);
+                            cmd.Parameters.AddWithValue("@FK_SizeID", 1);
+                            cmd.Parameters.AddWithValue("@Location_Municipality", string.Empty);
+                            cmd.Parameters.AddWithValue("@Location_County", string.Empty);
+                            cmd.Parameters.AddWithValue("@FK_RequiredCountyStormwater", 1);
+                            cmd.Parameters.AddWithValue("@FK_ArmyCorpsPermitRequired", 1);
+                            cmd.Parameters.AddWithValue("@FK_TROWPermitRequired", 1);
+                            cmd.Parameters.AddWithValue("@FK_HwyOrIDOTPermit", 1);
+                            cmd.Parameters.AddWithValue("@FK_SiteDevelopmentPermitRequired", 1);
+                            cmd.Parameters.AddWithValue("@FK_BuildingOrOtherPermitRequired", 1);
+                            cmd.Parameters.AddWithValue("@OH_RequiredCountyStormwater", string.Empty);
+                            cmd.Parameters.AddWithValue("@OH_ArmyCorpsPermitRequired", string.Empty);
+                            cmd.Parameters.AddWithValue("@OH_TROWPermitRequired", string.Empty);
+                            cmd.Parameters.AddWithValue("@OH_SiteDevelopmentPermitRequired", string.Empty);
+                            cmd.Parameters.AddWithValue("@OH_HwyOrIDOTPermit", string.Empty);
+                            cmd.Parameters.AddWithValue("@OH_BuildingOrOtherPermitRequired", string.Empty);
+                            cmd.Parameters.AddWithValue("@Status", string.Empty);
+                            cmd.Parameters.AddWithValue("@Comments", string.Empty);
+                            cmd.Parameters.AddWithValue("@PermitExpiration", string.Empty);
+                            cmd.Parameters.AddWithValue("@Notes", string.Empty);
+                            cmd.Parameters.AddWithValue("@CivilIFADate", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@CivilIFCDate", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@PermitSubmissionDate", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@PermitReadyDate", DBNull.Value);
+                            cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);
+                            cmd.Parameters.AddWithValue("@UpdatedBy", string.Empty);
+                            cmd.Connection = connection;
+                            cmd.Parameters.AddWithValue("@procId", 6);
+                            using (SqlDataReader dataReader = cmd.ExecuteReader())
+                            {
+                                while (dataReader.Read())
+                                {
+                                    var onlyDate = "MM'/'dd'/'yyyy";
+                                    var dateWithTime = "MM'/'dd'/'yyyy h:mm tt";
+                                    var hut = new HUTPERMITTINGModel();
+                                    hut.HutPermittingID = (long)dataReader["HutPermittingID"];
+                                    hut.InstallYear = dataReader["InstallYear"].ToString();
+                                    hut.Substation = dataReader["Substation"].ToString();
+                                    hut.Location_Municipality = dataReader["Location_Municipality"].ToString();
+                                    hut.Location_County = dataReader["Location_County"].ToString();
+                                    hut.SizeName = dataReader["SizeName"].ToString();
+                                    hut.EOCName = dataReader["EOCName"].ToString();
+                                    hut.Status = dataReader["Status"].ToString();
+                                    if (dataReader["FK_SizeID"] != DBNull.Value)
+                                        hut.FK_SizeID = (int)dataReader["FK_SizeID"];
+                                    if (dataReader["FK_EOCID"] != DBNull.Value)
+                                        hut.FK_EOCID = (int)dataReader["FK_EOCID"];
+                                    result.Add(hut);
+                                }
+                            }
+
+                        }
+                        connection.Close();
+                    }
+
+                    return result;
+                }
+                catch (Exception ex) { return new  List<HUTPERMITTINGModel>(); }
+            });
+        }
+
+        public async Task<Dictionary<HUTPERMITTINGModel,string>> CreateHUT(HUTPERMITTINGModel hUTPERMITTINGModel)
+        {
+            return await Task.Run(() =>
+            {
+                var result = new Dictionary<HUTPERMITTINGModel, string>();
+                
+                if(string.IsNullOrEmpty(hUTPERMITTINGModel.FK_EOCID.ToString()) && string.IsNullOrEmpty(hUTPERMITTINGModel.Substation)){
+                    result[hUTPERMITTINGModel] = "Substation and Eoc can't be Empty!";
+                    return result;
+                }
+                else if (string.IsNullOrEmpty(hUTPERMITTINGModel.FK_EOCID.ToString()))
+                {
+                    result[hUTPERMITTINGModel] = "EOC can't be Empty!";
+                    return result;
+                }
+                else if (string.IsNullOrEmpty(hUTPERMITTINGModel.Substation))
+                {
+                    result[hUTPERMITTINGModel] = "Substation can't be Empty!";
+                    return result;
+                }
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -173,7 +264,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 1);
+                            cmd.Parameters.AddWithValue("@procId", 7);
                             cmd.Parameters.AddWithValue("@HutPermittingID", 0);
                             cmd.Parameters.AddWithValue("@InstallYear", string.IsNullOrEmpty(hUTPERMITTINGModel.InstallYear) ? string.Empty : hUTPERMITTINGModel.InstallYear);
                             cmd.Parameters.AddWithValue("@Substation", string.IsNullOrEmpty(hUTPERMITTINGModel.Substation) ? string.Empty : hUTPERMITTINGModel.Substation);
@@ -205,22 +296,39 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", hUTPERMITTINGModel.CreatedBy);
                             cmd.Connection = connection; 
                             connection.Open();
+                            int check = (int)cmd.ExecuteScalar();
+                            if(check == 1)
+                            {
+                                cmd.Parameters["@procId"].Value = 1;
+                            }
+                            else
+                            {
+                                connection.Close();
+                                result[hUTPERMITTINGModel] = "Substation is Already Exists!";
+                                return result;
+                            }
                             hUTPERMITTINGModel.HutPermittingID =(long)cmd.ExecuteScalar();
                             connection.Close();
-                            return hUTPERMITTINGModel;
+                            result[hUTPERMITTINGModel] = "ok";
+                            return result;
                         }
                     }
                 }
-                catch (Exception ex) { return new HUTPERMITTINGModel(); }
+                catch (Exception ex) { return new Dictionary<HUTPERMITTINGModel, string>(); }
 
             });
         }
 
-        public async Task<HUTPERMITTINGModel> UpdateHUT(HUTPERMITTINGModel hUTPERMITTINGModel)
+        public async Task<Dictionary<HUTPERMITTINGModel,string>> UpdateHUT(HUTPERMITTINGModel hUTPERMITTINGModel)
         {
             return await Task.Run(() =>
             {
-
+                var result = new Dictionary<HUTPERMITTINGModel, string>();
+                if (string.IsNullOrEmpty(hUTPERMITTINGModel.Substation))
+                {
+                    result[hUTPERMITTINGModel] = "Substation is Empty!";
+                    return result;
+                }
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -230,7 +338,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 2);
+                            cmd.Parameters.AddWithValue("@procId", 7);
                             cmd.Parameters.AddWithValue("@HutPermittingID", hUTPERMITTINGModel.HutPermittingID);
                             cmd.Parameters.AddWithValue("@InstallYear", string.IsNullOrEmpty(hUTPERMITTINGModel.InstallYear) ? string.Empty : hUTPERMITTINGModel.InstallYear);
                             cmd.Parameters.AddWithValue("@Substation", string.IsNullOrEmpty(hUTPERMITTINGModel.Substation) ? string.Empty : hUTPERMITTINGModel.Substation);
@@ -262,13 +370,24 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", hUTPERMITTINGModel.UpdatedBy);
                             cmd.Connection = connection;
                             connection.Open();
+                            int check = (int)cmd.ExecuteScalar();
+                            if(check == 1){
+                                cmd.Parameters["@procId"].Value = 2;
+                            }
+                            else
+                            {
+                                connection.Close();
+                                result[hUTPERMITTINGModel] = "Substation is Already Exists!";
+                                return result;
+                            }
                             cmd.ExecuteNonQuery();
                             connection.Close();
-                            return hUTPERMITTINGModel;
+                            result[hUTPERMITTINGModel] = "ok";
+                            return result;
                         }
                     }
                 }
-                catch (Exception ex) { return new HUTPERMITTINGModel(); }
+                catch (Exception ex) { return new Dictionary<HUTPERMITTINGModel, string>(); }
 
             });
         }

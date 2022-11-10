@@ -30,6 +30,89 @@ namespace Exelon.API.Controllers
         }
 
 
+        #region Linking Information
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllExLinkInfo()
+        {
+            var result = await _unitOfWorkService.exLinkingInfoService.GetExLinkInfo();
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetExLinkInfo(int id)
+        {
+            var result = await _unitOfWorkService.exLinkingInfoService.GetExLinkInfo(id);
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateExLinkInfo([FromBody] ExLinkingInfoModel linkingInfoModel)
+        {
+            linkingInfoModel.CreatedBy = "1";
+            var result = await _unitOfWorkService.exLinkingInfoService.CreateExLinkInfo(linkingInfoModel);
+            KeyValuePair<ExLinkingInfoModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { ID = linkingInfoModel.ExecutionLinkingID });
+            else if (i.Value == "")
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return BadRequest(new { status = 400, message = i.Value });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateExLinkInfo(int id, [FromBody] ExLinkingInfoModel linkingInfoModel)
+        {
+            linkingInfoModel.ExecutionLinkingID = id;
+            linkingInfoModel.UpdatedBy = "1";
+            var result = await _unitOfWorkService.exLinkingInfoService.UpdateExLinkInfo(linkingInfoModel);
+            KeyValuePair<ExLinkingInfoModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { status = 200 });
+            else if (i.Value == "")
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+            else
+                return BadRequest(new { status = 400, message = i.Value });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteExLinkInfo(int id)
+        {
+            var result = await _unitOfWorkService.exLinkingInfoService.DeleteExLinkInfo(id);
+            if (result == 1)
+                return Ok(new { status = 200 });
+            else
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetProjectIdsByPDId(int id)
+        {
+            var result = await _unitOfWorkService.exLinkingInfoService.GetProjectIDsByPDId(id);
+            if (result.Count == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetLinkInfoIdByProjectId(string id)
+        {
+            long linkInfoId = await _unitOfWorkService.exLinkingInfoService.GetLinkInfoIdByProjectId(id);
+            if (linkInfoId == 0)
+                return NotFoundResult();
+
+            var result = await _unitOfWorkService.exLinkingInfoService.GetExLinkInfo((int)linkInfoId);
+            return Ok(result);
+        }
+        #endregion
+
         #region Engineering Invest
         [HttpGet]
         public async Task<ActionResult> GetENGINVEST()
@@ -353,15 +436,7 @@ namespace Exelon.API.Controllers
             else
                 return Ok(result);
         }
-        [HttpGet("{linkingId}")]
-        public async Task<ActionResult> GetComEdIdByLinkingId(int linkingId)
-        {
-            var comEdId = await _unitOfWorkService.cOMEDEXService.GetComEdIdByLinkingId(linkingId);
-            if (comEdId == 0)
-                return NotFoundResult();
-            else
-                return Ok(comEdId);
-        }
+        
         #endregion
 
         #region Boring
@@ -705,6 +780,22 @@ namespace Exelon.API.Controllers
                 return Ok(result);
         }
         #endregion
+        #region [Get Execution Device BY link id]
+        /// <summary>
+        /// Get Execution Device
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetExecutionDeviceBYLinkId(int id)
+        {
+            var result = await _unitOfWorkService.deviceServices.GetExecutionDeviceBYLinkId(id);
+            if (result.ExecutionDeviceId == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+        #endregion
 
         #region [Save Execution Device]
         /// <summary>
@@ -718,12 +809,13 @@ namespace Exelon.API.Controllers
             model.CreatedBy = "1";
             model.UpdatedBy = "1";
             var result = await _unitOfWorkService.deviceServices.SaveUpdateExecutionDevice(model);
-            if (result.ExecutionDeviceId > 0)
-                return Ok(new { ID = result.ExecutionDeviceId });
-            else if (result.ExecutionDeviceId == 0)
-                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = "Oops Something Went Wrong!" });
+            KeyValuePair<ExecutionDeviceModel, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { ID = i.Key.ExecutionDeviceId });
+            else if (i.Value == "")
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
-                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = result.ExecutionDeviceId });
+                return BadRequest(new { status = 400, message = i.Value });
         }
         #endregion
 
@@ -734,10 +826,11 @@ namespace Exelon.API.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateExecutionDevice([FromBody] ExecutionDeviceModel model)
+        public async Task<ActionResult> UpdateExecutionDevice(int id,[FromBody] ExecutionDeviceModel model)
         {
             model.UpdatedBy = "1";
-            var result = await _unitOfWorkService.deviceServices.SaveUpdateExecutionDevice(model);
+            model.ExecutionDeviceId = id;
+            var result = await _unitOfWorkService.deviceServices.UpdateExecutionDevice(model);
             if (result.ExecutionDeviceId == 0)
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
@@ -765,6 +858,22 @@ namespace Exelon.API.Controllers
         }
         #endregion
 
+        #region [Get Completed Fiber Mile By Link id]
+        /// <summary>
+        /// Get Completed Fiber Mile
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetCompletedFiberMileByLinkId(int id)
+        {
+            var result = await _unitOfWorkService.fIBERService.GetCompletedFiberMileByLinkId(id);
+            if (result.CompletedFiberMileId == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+        #endregion
         #region [Save Completed Fiber Mile]
         /// <summary>
         /// Save Completed Fiber Mile
@@ -777,12 +886,13 @@ namespace Exelon.API.Controllers
             model.CreatedBy = "1";
             model.UpdatedBy = "1";
             var result = await _unitOfWorkService.fIBERService.SaveUpdateCompletedFiberMile(model);
-            if (result.CompletedFiberMileId > 0)
-                return Ok(new { ID = result.CompletedFiberMileId });
-            else if (result.CompletedFiberMileId == 0)
-                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = "Oops Something Went Wrong!" });
+            KeyValuePair<ExecutionCompletedFiberMile, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { ID = i.Key.CompletedFiberMileId });
+            else if (i.Value == "")
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
-                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = result.CompletedFiberMileId });
+                return BadRequest(new { status = 400, message = i.Value });
         }
         #endregion
 
@@ -793,11 +903,12 @@ namespace Exelon.API.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCompletedFiberMile([FromBody] ExecutionCompletedFiberMile model)
+        public async Task<ActionResult> UpdateCompletedFiberMile(int id,[FromBody] ExecutionCompletedFiberMile model)
         {
             model.CreatedBy = "1";
             model.UpdatedBy = "1";
-            var result = await _unitOfWorkService.fIBERService.SaveUpdateCompletedFiberMile(model);
+            model.CompletedFiberMileId = id;
+            var result = await _unitOfWorkService.fIBERService.UpdateCompletedFiberMile(model);
             if (result.CompletedFiberMileId == 0)
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
@@ -824,6 +935,22 @@ namespace Exelon.API.Controllers
                 return Ok(result);
         }
         #endregion
+        #region [Get Completed Pole Mile By Link Id]
+        /// <summary>
+        /// Get Completed Pole Mile
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetCompletedPoleMileByLinkId(int id)
+        {
+            var result = await _unitOfWorkService.completedPoleMileService.GetCompletedPoleMileByLinkId(id);
+            if (result.CompletedPoleMileId == 0)
+                return NotFoundResult();
+            else
+                return Ok(result);
+        }
+        #endregion
 
         #region [Save Completed Pole Mile]
         /// <summary>
@@ -837,12 +964,13 @@ namespace Exelon.API.Controllers
             model.CreatedBy = "1";
             model.UpdatedBy = "1";
             var result = await _unitOfWorkService.completedPoleMileService.SaveUpdateCompletedPoleMile(model);
-            if (result.CompletedPoleMileId > 0)
-                return Ok(new { ID = result.CompletedPoleMileId });
-            else if (result.CompletedPoleMileId == 0)
-                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = "Oops Something Went Wrong!" });
+            KeyValuePair<CompletedPoleAndMile, string> i = result.First();
+            if (i.Value == "ok")
+                return Ok(new { ID = i.Key.CompletedPoleMileId });
+            else if (i.Value == "")
+                return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
-                return BadRequest(new { status = (int)HttpStatusCode.BadRequest, message = result.CompletedPoleMileId });
+                return BadRequest(new { status = 400, message = i.Value });
         }
         #endregion
 
@@ -853,15 +981,25 @@ namespace Exelon.API.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCompletedPoleMile([FromBody] CompletedPoleAndMile model)
+        public async Task<ActionResult> UpdateCompletedPoleMile(int id,[FromBody] CompletedPoleAndMile model)
         {
-            model.CreatedBy = "1";
             model.UpdatedBy = "1";
-            var result = await _unitOfWorkService.completedPoleMileService.SaveUpdateCompletedPoleMile(model);
+            model.CompletedPoleMileId = id;
+            var result = await _unitOfWorkService.completedPoleMileService.UpdateCompletedPoleMile(model);
             if (result.CompletedPoleMileId == 0)
                 return BadRequest(new { status = 400, message = "Oops Something Went Wrong!" });
             else
                 return Ok(new { status = 200 });
+        }
+
+        [HttpGet("{linkingId}")]
+        public async Task<ActionResult> GetComEdIdByLinkingId(int linkingId)
+        {
+            var comEdId = await _unitOfWorkService.cOMEDEXService.GetComEdIdByLinkingId(linkingId);
+            if (comEdId == 0)
+                return NotFoundResult();
+            else
+                return Ok(comEdId);
         }
         #endregion 
         #endregion
