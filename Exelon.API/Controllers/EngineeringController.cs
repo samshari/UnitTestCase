@@ -26,7 +26,7 @@ namespace ExelonPOC.API.Controllers
 
         }
 
-
+        [NonAction]
         public ActionResult NotFoundResult()
         {
             return NotFound(new { status = 404, message = "Not Exists!" });

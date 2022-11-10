@@ -19,6 +19,7 @@ namespace Exelon.API.Controllers
             _unitOfWorkService = unitOfWorkService;
         }
 
+        [NonAction]
         public ActionResult NotFoundResult()
         {
             return NotFound(new { status = 404, message = "Not Exists!" });
