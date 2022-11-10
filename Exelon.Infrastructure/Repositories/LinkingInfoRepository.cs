@@ -188,6 +188,11 @@ namespace Exelon.Infrastructure.Repositories
             return await Task.Run(() =>
             {
                 var result = new Dictionary<LinkingInfoModel, string>();
+                if (string.IsNullOrEmpty(infoModel.PrimaryKey))
+                {
+                    result[infoModel] = "Primary key is Empty!";
+                    return result;
+                }
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))

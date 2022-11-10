@@ -162,6 +162,9 @@ table {
   border-radius: 12px;
   margin-top: 0.2rem;
 }
+.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root{
+  font-size: none !important;
+}
 .css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
   padding: 4px !important;
 }
@@ -185,3 +188,4 @@ table {
 
   color: black !important;
 }
+

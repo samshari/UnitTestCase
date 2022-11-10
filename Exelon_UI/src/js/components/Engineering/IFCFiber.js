@@ -8,7 +8,7 @@ import CustomSnackBar from "../../utils/Snackbar";
 
 let stepID = 1;
 const IFCFiber = (props) => {
-
+  let count = 0;
   const [apiData,setapiData]=useState([]);  
   const [loading,setLoading]=useState(true) 
   const [ID,setID]=useState(0);
@@ -63,9 +63,14 @@ useEffect( ()=>{
       if(data.fK_LinkingID === datatest.linkingId){
         setID(data.ifcFiberID);
         setapiData(data);
+        count = count + 1;
       }
       return data;
     })
+    if(count === 0){
+      setID(0);
+      setapiData([]);
+    }
     setLoading(false);
   }):setLoading(false)
 setapiData([])}

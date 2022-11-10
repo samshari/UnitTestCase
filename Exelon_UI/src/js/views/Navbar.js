@@ -11,24 +11,18 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const [isActive, setIsActive] = useState(1);
   const NavbarItems = [
-    {
-      id: "0",
-      elementName: "Admin",
-      path: "/Admin",
-      icon: `${icon}`,
-    },
+    // {
+    //   id: "0",
+    //   elementName: "Admin",
+    //   path: "/Admin",
+    //   icon: `${icon}`,
+    // },
     {
       id: "1",
       elementName: "Engineering",
       path: "/",
       icon: `${icon}`,
     },
-    // {
-    //   id: "2",
-    //   elementName: "Hut Permitting",
-    //   path: "/HutPermitting",
-    //   icon: `${hutpermittingIcon}`,
-    // },
     // // { id: "3", elementName: "Huts", path: "/Huts", icon: `${icon}` },
     // {
     //   id: "4",
@@ -40,6 +34,12 @@ const Navbar = () => {
       id: "5",
       elementName: "Execution Links",
       path: "/ExecutionLinks",
+      icon: `${icon}`,
+    },
+    {
+      id: "2",
+      elementName: "Hut Permitting",
+      path: "/HutPermitting",
       icon: `${icon}`,
     },
     // {

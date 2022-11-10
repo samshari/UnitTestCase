@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_COMPLETEDFIBERMILES_SUCCESS = "GET_COMPLETEDFIBERMILES_SUCCESS";
 export const UPDATE_COMPLETEDFIBERMILES_SUCCESS = "UPDATE_COMPLETEDFIBERMILES_SUCCESS";
 export const CREATE_COMPLETEDFIBERMILES_SUCCESS = "CREATE_COMPLETEDFIBERMILES_SUCCESS";
@@ -6,7 +7,7 @@ export function getApi(id) {
 return (dispatch)=>{
     return new Promise((resolve, reject) => {  
         fetch(
-          `http://localhost:63006/api/executionlinks/GetCompletedFiberMile/${id}`
+          `${BASE_URL}/api/executionlinks/GetCompletedFiberMileByLinkId/${id}`
         )
           .then((res) => {
               const data = res.json().then((res)=> {
@@ -30,22 +31,16 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,dropData,apiData) {
-    console.log(JSON.stringify({
-      'ExecutionLinkingID':dropData[0].value==0? null :dropData[0].value,
-      'FiberMilesInstalled': data[1].value,
-      'FiberMilesCompleted': data[2].value
-      
-  }))
-    return new Promise((resolve, reject) => {  
+export function updateApi(id,data,dropData,linkId) {
+
+    return id===0?createApi(data,dropData,linkId) : new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/executionlinks/UpdateCompletedFiberMile/${id}`,
+        fetch(`${BASE_URL}/api/executionlinks/UpdateCompletedFiberMile/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
-            'ExecutionLinkingID':dropData[0].value==0? null :dropData[0].value,
-      'FiberMilesInstalled': data[1].value,
-      'FiberMilesCompleted': data[2].value
+            'fiberMilesInstalled': data[0].value,
+            'fiberMilesCompleted': data[1].value
         }),
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
@@ -74,13 +69,13 @@ export function updateApi(id,data,dropData,apiData) {
 
     export function createApi(data,dropData,linkID) {
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/executionlinks/SaveCompletedFiberMile`,
+            fetch(`${BASE_URL}/api/executionlinks/SaveCompletedFiberMile`,
             {
               method:'POST',
               body: JSON.stringify({
-                'ExecutionLinkingID':dropData[0].value,
-                'FiberMilesInstalled': data[1].value,
-                'FiberMilesCompleted': data[2].value
+                'executionLinkingId':linkID,
+                'fiberMilesInstalled': data[0].value,
+                'fiberMilesCompleted': data[1].value
               }),
               headers: {
                 'Content-Type': 'application/json; charset=utf-8'

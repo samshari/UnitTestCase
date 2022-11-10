@@ -1,12 +1,14 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_DEVICE_REQUEST = "GET_DEVICE_REQUEST";
 export const UPDATE_DEVICE_REQUEST = "UPDATE_DEVICE_REQUEST"
 export const CREATE_DEVICE_REQUEST = "CREATE_DEVICE_REQUEST"
+export const GET_TOTAL_DEVICE="GET_TOTAL_DEVICE";
 
 export function getApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/engineering/Getdevice`
+      `${BASE_URL}/api/engineering/Getdevice`
     )
       .then((res) => {
           const data = res.json().then((res)=> {
@@ -34,7 +36,7 @@ export function updateApi(id,data,linkID) {
     
       return id===0?createApi(data,linkID,1) : new Promise((resolve, reject) => {  
         
-      fetch(`http://localhost:63006/api/engineering/updatedevice/${id}`,
+      fetch(`${BASE_URL}/api/engineering/updatedevice/${id}`,
         {
             method:'PUT',
             body: JSON.stringify({
@@ -70,7 +72,7 @@ export function updateApi(id,data,linkID) {
     export function createApi(data,linkID,stepID) {
       
         return new Promise((resolve, reject) => {  
-              fetch(`http://localhost:63006/api/engineering/createdevice`,
+              fetch(`${BASE_URL}/api/engineering/createdevice`,
             {
             method:'POST',
             body: JSON.stringify({
@@ -103,4 +105,10 @@ export function updateApi(id,data,linkID) {
           };
         };
 
+export function gettotalDevice(value) {
+    return {
+        type: GET_TOTAL_DEVICE,
+            data: value
+        }
+    }
 

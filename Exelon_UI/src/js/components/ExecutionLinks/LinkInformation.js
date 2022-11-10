@@ -9,7 +9,10 @@ import {getProjectStatusApi} from '../../../redux/components/Engineering/LinkInf
 import {getTechApi} from '../../../redux/components/Engineering/LinkInformation/TechAction'
 import {getFiberApi} from '../../../redux/components/Engineering/LinkInformation/FiberAction'
 import { selectProjectID } from "../../../redux/views/Header/HeaderAction";
-import { getExLabelData, getExLinkID } from "../../../redux/components/ExecutionLinks/ExecutionLinksAction";
+import { getallProjectId, getExLabelData, getExLinkID, getProjectId, getProjectIDByPD } from "../../../redux/components/ExecutionLinks/ExecutionLinksAction";
+import { disableTabs } from "../../../redux/utils/Tabs/TabsAction";
+import { getPDApi } from "../../../redux/components/Engineering/PD/PDAction";
+import CustomSnackBar from "../../utils/Snackbar";
 
 
 
@@ -22,7 +25,6 @@ const LinkInformation = (props) => {
   let regionName = '';
   let barnName = '';
   let projectName ='';
-  let id =3;
 
   const pdID =useSelector((state)=> state.engineeringFormReducer.id); 
   const [apiData,setApiData]=useState([]); 
@@ -35,11 +37,15 @@ const LinkInformation = (props) => {
   const [loading5,setLoading5]=useState(true);
   const [isDataUpdated,setDataUpdated]=useState(false);
   const dispatch= useDispatch();
-
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = useState("");
+  const handleToClose = (event, reason) => {
+    if ("clickaway" == reason) return;
+    setOpen(false);
+  };
   const datatest = useSelector((state) => state.hideExecutionLinksFormReducer?.data);
 
   const updateData=(data,dropData)=>{
-    console.log('updatedata',dropData);
     let fiberCount='';
     data[7]?.value?.map((val)=>{
       item5.map((value)=>{
@@ -51,10 +57,20 @@ const LinkInformation = (props) => {
     })
     updateExLinkApi(ID,data,dropData,fiberCount,apiData).then((res)=>{
       setDataUpdated(!isDataUpdated);
-      if(res.status === 200)
-        alert(`Data Updated SuccessFully!`);
-      else 
-        alert(res.message);
+      if (res.status === 200){
+        setDataUpdated(!isDataUpdated);
+        setOpen(true);
+        setMessage(`Data Updated SuccessFully!`);
+      }
+      else if(res.id>0){
+        setID(res.id);
+        setOpen(true);
+        setMessage(`Data Created SuccessFully`);
+      }
+      else{
+        setOpen(true);
+        setMessage(res.message);
+	    }
       })
   }
 
@@ -70,11 +86,24 @@ const LinkInformation = (props) => {
     })
     createExLinkApi(data,dropData,fiberCount,pdID).then(res=>{
       if(res.id>0){
+        dispatch(getPDApi());
+        dispatch(getProjectId(0)).then((res) => {
+          res?.status !== 404 && dispatch(getallProjectId(res.map((item) => {
+            return item.projectId;
+          })))
+        })
+        dispatch(getProjectId(pdID)).then((res) => {
+          dispatch(getProjectIDByPD(res));
+        })
         dispatch(getExLinkID(res.id));
-        alert(`Data Created SuccessFully!`);
+        dispatch(disableTabs(false));
+        setOpen(true);
+        setMessage(`Data Created SuccessFully!`);
       }
-      else 
-        alert(res.message);
+      else{
+        setOpen(true);
+        setMessage(res.message);
+      }
     });
   }
 
@@ -98,14 +127,13 @@ const LinkInformation = (props) => {
     { 
       setLoading(false);
       setApiData([])
-
-  }
+    }
     dispatch(getBarnApi()).then((res)=>setLoading1(false));
     dispatch(getRegionApi()).then((res)=>setLoading2(false));
     dispatch(getTechApi()).then((res)=>setLoading3(false));
     dispatch(getProjectStatusApi()).then((res)=>setLoading4(false));
     dispatch(getFiberApi()).then((res)=>setLoading5(false));
-  }, [dispatch,datatest,isDataUpdated]);
+  }, [dispatch,datatest?.executionLinkingID,isDataUpdated]);
 
 
 let item5 = data2?.FiberReducer?.data;
@@ -129,7 +157,7 @@ optionsID?.map((val)=>{
 
 let item1 = data2?.TechReducer?.data;
 
-item1?.status!==404 && item1?.map((value)=>{
+item1?.status !==404 && item1?.status!==404 && item1?.map((value)=>{
   let id = 0; 
   if(data2?.exlinkInformationReducer?.data ){
     id = data2?.exlinkInformationReducer?.data[0].technologyId
@@ -142,7 +170,7 @@ item1?.status!==404 && item1?.map((value)=>{
 
 let item2 = data2?.RegionReducer?.data;
 
-item2?.status!==404 && item2?.map((value)=>{
+item2?.status !==404 && item2?.status!==404 && item2?.map((value)=>{
   let id = 0; 
   if(data2?.exlinkInformationReducer?.data ){
     id = data2?.exlinkInformationReducer?.data[0].regionId
@@ -155,13 +183,13 @@ item2?.status!==404 && item2?.map((value)=>{
 
 let item3 = data2?.BarnReducer?.data;
 
-item3?.status!==404 && item3?.map((value)=>{
+item3?.status !==404 && item3?.status!==404 && item3?.map((value)=>{
   let id = 0; 
   if(data2?.exlinkInformationReducer?.data ){
     id = data2?.exlinkInformationReducer?.data[0].barnId
   }
   if(value.barnID === id){
-    fK_BarnID = value.barnId
+    fK_BarnID = value.barnID
     barnName = value.barnName
   }
 
@@ -169,7 +197,7 @@ item3?.status!==404 && item3?.map((value)=>{
 
 let item4 = data2?.ProjectStatusReducer?.data;
 
-item4?.status!==404 && item4?.map((value)=>{
+item4?.status !==404 && item4?.status!==404 && item4?.map((value)=>{
   let id = 0; 
   if(data2?.exlinkInformationReducer?.data ){
     id = data2?.exlinkInformationReducer?.data[0].projectStatusId
@@ -182,8 +210,8 @@ item4?.status!==404 && item4?.map((value)=>{
 })
 
   const data = [
-    { placeholder: "Engineering Year",defaultValue: apiData?.executionLinkingID>0?apiData?.engineeringYear:"" },
-    { placeholder: "Execution Year",defaultValue: apiData?.executionLinkingID>0?apiData?.executionYear:'' },
+    { type:"year", placeholder: "Engineering Year",defaultValue: apiData?.executionLinkingID>0?apiData?.engineeringYear:"" },
+    { type:"year",placeholder: "Execution Year",defaultValue: apiData?.executionLinkingID>0?apiData?.executionYear:'' },
     { 
       type: "dropdown",
       placeholder: "Technology",
@@ -206,7 +234,7 @@ item4?.status!==404 && item4?.map((value)=>{
       defaultValue: barnName
     },
     { placeholder: "Work Order",defaultValue:apiData?.executionLinkingID>0? apiData?.workOrder:'' },
-    { placeholder: "Project Id", defaultValue: apiData?.executionLinkingID>0? apiData?.projectId:'' },
+    { required:true,placeholder: "Project Id", defaultValue: apiData?.executionLinkingID>0? apiData?.projectId:'' },
     // {placeholder:"Fiber PID Split",defaultValue:''},
     { 
       type: "multiSelect",
@@ -237,6 +265,11 @@ item4?.status!==404 && item4?.map((value)=>{
         onSubmit={createData}
       />
     }
+    <CustomSnackBar
+        open={open}
+        onClose={() => handleToClose()}
+        message={message}
+      />
     </>
   );
 };

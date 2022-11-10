@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_PROJECTSTATUS_REQUEST = "GET_PROJECTSTATUS_REQUEST";
 
 export function getProjectStatusApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/GetMprojectstatus`
+      `${BASE_URL}/api/common/GetMprojectstatus`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

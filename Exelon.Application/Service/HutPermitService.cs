@@ -22,12 +22,12 @@ namespace Exelon.Application.Service
             return await _hUTPERMITRepository.GetHUT(id);
         }
 
-        public async Task<HUTPERMITTINGModel> CreateHUT(HUTPERMITTINGModel hUTPERMITTINGModel)
+        public async Task<Dictionary<HUTPERMITTINGModel, string>> CreateHUT(HUTPERMITTINGModel hUTPERMITTINGModel)
         {
             return await _hUTPERMITRepository.CreateHUT(hUTPERMITTINGModel);
         }
 
-        public async Task<HUTPERMITTINGModel> UpdateHUT(HUTPERMITTINGModel hUTPERMITTINGModel)
+        public async Task<Dictionary<HUTPERMITTINGModel, string>> UpdateHUT(HUTPERMITTINGModel hUTPERMITTINGModel)
         {
             return await _hUTPERMITRepository.UpdateHUT(hUTPERMITTINGModel);
         }
@@ -35,6 +35,10 @@ namespace Exelon.Application.Service
         public async Task<int> DeleteHUT(int id)
         {
             return await _hUTPERMITRepository.DeleteHUT(id);
+        }
+        public async Task<List<HUTPERMITTINGModel>> GetHutBySub(string id)
+        {
+            return await _hUTPERMITRepository.GetHutBySub(id);
         }
     }
 }

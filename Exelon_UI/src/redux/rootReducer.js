@@ -38,6 +38,16 @@ import OvhdCOCReducer from "./components/ExecutionLinks/Ovhd/OvhdCocReduer";
 import IfcDatesReducer from './components/ExecutionLinks/IfcDates/IfcDatesReducer'
 import exlinkInformationReducer from "./components/ExecutionLinks/Linkinformation/LinkInformationReducer";
 import ComEdReducer from "./components/ExecutionLinks/ComEdExternal/ComEdReducer";
+import CivilCOCReducer from "./components/ExecutionLinks/Civil/CivilCocReducer";
+import CIVILReducer from "./components/ExecutionLinks/Civil/CivilReducer";
+import ExFiberReducer from "./components/ExecutionLinks/Fiber/FiberReducer";
+import PreConstructionReducer from "./components/ExecutionLinks/PreConstruction/PreConstructionReducer";
+import PreConstructionCOCReducer from "./components/ExecutionLinks/PreConstruction/PreConstructionCocReducer";
+import BoringCOCReducer from "./components/ExecutionLinks/Boring/BoringCocReducer";
+import BoringReducer from "./components/ExecutionLinks/Boring/BoringReducer";
+import LnlReducer from "./components/ExecutionLinks/ComEdExternal/LnlReducer";
+import SizeReducer from "./components/HutPermitting/Size/SizeReducer";
+
 
 import TabsReducer from "./utils/Tabs/TabsReducer";
 
@@ -84,8 +94,18 @@ const rootReducer= combineReducers({
     OVHDReducer:OVHDReducer,
     OvhdCOCReducer:OvhdCOCReducer,
     IfcDatesReducer:IfcDatesReducer,
-    ComEdReducer:ComEdReducer
-    exlinkInformationReducer:exlinkInformationReducer
+    ComEdReducer:ComEdReducer,
+    exlinkInformationReducer:exlinkInformationReducer,
+    CivilCOCReducer:CivilCOCReducer,
+    CIVILReducer:CIVILReducer,
+    ExFiberReducer:ExFiberReducer,
+    PreConstructionReducer:PreConstructionReducer,
+    BoringCOCReducer:BoringCOCReducer,
+    BoringReducer:BoringReducer,
+    LnlReducer:LnlReducer,
+    PreConstructionCOCReducer:PreConstructionCOCReducer,
+    SizeReducer:SizeReducer
+
 })
 
 export default rootReducer;

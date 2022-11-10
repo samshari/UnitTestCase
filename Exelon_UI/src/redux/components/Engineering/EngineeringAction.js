@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../ApiConstant";
 export const HIDE_ENGINEERING_FORM = "HIDE_ENGINEERING_FORM"; // action types
 export const SHOW_UPDATE_BUTTON = "SHOW_UPDATE_BUTTON";
 export const GET_PD_ID = "GET_PD_ID";
@@ -90,7 +91,7 @@ export function getPrimaryKey(id) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       fetch(
-        `http://localhost:63006/api/engineering/GetPrimaryKeysByPDId/${id}`
+        `${BASE_URL}/api/engineering/GetPrimaryKeysByPDId/${id}`
       )
         .then((res) => {
           const data = res.json().then((res) => {
@@ -108,7 +109,7 @@ export function getLinkInfoByPrimaryKey(pk) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       fetch(
-        `http://localhost:63006/api/engineering/GetDetailsByLinkId/${pk}`
+        `${BASE_URL}/api/engineering/GetDetailsByLinkId/${pk}`
       )
         .then((res) => {
           const data = res.json().then((res) => {

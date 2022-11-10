@@ -1,13 +1,13 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_LINK_SUCCESS = "GET_LINK_SUCCESS";
 export const UPDATE_LINK_SUCCESS = "UPDATE_LINK_SUCCESS";
 export const CREATE_LINK_SUCCESS = "CREATE_LINK_SUCCESS";
-
 
 export function getApi(id) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       fetch(
-        `http://localhost:63006/api/engineering/GetLinkInfo/${id}`
+        `${BASE_URL}/api/engineering/GetLinkInfo/${id}`
       )
       .then((res) => {
         const data = res.json().then((res)=> {
@@ -32,7 +32,7 @@ const getApiSuccess = (value) => {
 export function updateApi(id,data,dropData,fiberCount,apiData) {
   return new Promise((resolve, reject) => {  
       
-      fetch(`http://localhost:63006/api/engineering/updatelinkinfo/${id}`,
+      fetch(`${BASE_URL}/api/engineering/updatelinkinfo/${id}`,
       {
       method:'PUT',
       body: JSON.stringify({
@@ -80,7 +80,7 @@ export function updateApi(id,data,dropData,fiberCount,apiData) {
 
   export function createApi(data,dropData,fiberCount,stepID,pdID) {
       return new Promise((resolve, reject) => {  
-          fetch(`http://localhost:63006/api/engineering/createlinkinfo`,
+          fetch(`${BASE_URL}/api/engineering/createlinkinfo`,
           {
             method:'POST',
             body: JSON.stringify({

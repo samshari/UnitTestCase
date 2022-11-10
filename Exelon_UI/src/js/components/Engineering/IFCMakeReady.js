@@ -16,6 +16,7 @@ const IFCMakeReady = (props) => {
   const [open, setOpen] = React.useState(false);
   const [isDataUpdated,setDataUpdated]=useState(false);
 
+  let count =0;
   const [message, setMessage] = useState("");
   const handleToClose = (event, reason) => {
     if ("clickaway" == reason) return;
@@ -64,9 +65,14 @@ useEffect( ()=>{
       if(data.fK_LinkingID === datatest.linkingId){
         setID(data.ifcMakeReadyID);
         setapiData(data);
+        count = count +1;
       }
       return data;
     })
+    if(count === 0){
+      setID(0);
+      setapiData([]);
+    }
     setLoading(false);
   }):setLoading(false)
     setapiData([])}

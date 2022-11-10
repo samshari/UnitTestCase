@@ -26,7 +26,7 @@ const DropDown = (props) => {
           disabled={props.disable}
           class="dropdown"
           labelId="id"
-          value={props.value}
+        value={props.value}
           label={props.placeholder}
           style={{
             borderColor: "lightgray",

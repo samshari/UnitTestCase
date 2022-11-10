@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../ApiConstant";
 export const  HIDE_EXECUTION_LINKS_FORM = "HIDE_EXECUTION_LINKS_FORM"; // action types
 export const GET_PROJECTID_SUCCESS ="GET_PROJECTID_SUCCESS"
 export const GET_LINK_INFO_PROJECT_ID="GET_LINK_INFO_PROJECT_ID"
@@ -52,7 +53,7 @@ export function getProjectId(id) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       fetch(
-        `http://localhost:63006/api/executionlinks/GetProjectIdsByPDId/${id}`
+        `${BASE_URL}/api/executionlinks/GetProjectIdsByPDId/${id}`
       )
         .then((res) => {
           const data = res.json().then((res) => {
@@ -70,7 +71,7 @@ export function GetLinkInfoIdByProjectId(projectID) {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
       fetch(
-        `http://localhost:63006/api/executionlinks/GetLinkInfoIdByProjectId/${projectID}`
+        `${BASE_URL}/api/executionlinks/GetLinkInfoIdByProjectId/${projectID}`
       )
         .then((res) => {
           const data = res.json().then((res) => {

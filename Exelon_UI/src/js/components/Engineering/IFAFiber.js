@@ -11,7 +11,7 @@ import { disableTabs } from "../../../redux/utils/Tabs/TabsAction";
 let stepID =1;
 const IFAFiber = (props) => {
 
-
+  let count = 0;
   const [apiData,setapiData]=useState([]);  
   const [loading,setLoading]=useState(true) 
   const [ID,setID]= useState(0);
@@ -61,18 +61,19 @@ const IFAFiber = (props) => {
     })
   }
 useEffect(()=>{
-  setID(0);
-  console.log('mainid',ID);
-  console.log('mainidlink',datatest.linkingId);
   if(datatest?.linkingId!==undefined) { dispatch(getApi()).then((res)=>{
     res?.status!==404 && res.map((data)=>{
       if(data.fK_LinkingID === datatest.linkingId){
-        console.log('mainiddata',data);
         setID(data.ifaFiberID);
         setapiData(data);
+        count = count +1;
       }
       return data;
     })
+    if(count === 0){
+      setID(0);
+      setapiData([]);
+    }
     setLoading(false)
   })}else{
     setID(0);

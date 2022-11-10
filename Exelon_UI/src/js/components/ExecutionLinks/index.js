@@ -21,7 +21,10 @@ import PreConstruction from "./PreConstruction";
 import CustomTabs from "../../utils/Tabs";
 import { selectPrimaryKey } from "../../../redux/views/Header/HeaderAction";
 import { getPDApi } from "../../../redux/components/Engineering/PD/PDAction";
-import { getallProjectId, getExLabelData, getExLinkData, GetLinkInfoIdByProjectId, getPDID, getProjectId, getProjectIDByPD } from "../../../redux/components/ExecutionLinks/ExecutionLinksAction";
+import { getallProjectId, getExLabelData, getExLinkData, GetLinkInfoIdByProjectId, getProjectId, getProjectIDByPD } from "../../../redux/components/ExecutionLinks/ExecutionLinksAction";
+import {getallPrimaryKey, getPDID, getPrimaryKey} from "../../../redux/components/Engineering/EngineeringAction"
+import { disableTabs } from "../../../redux/utils/Tabs/TabsAction";
+
 
 function createData(projectID, linkNickname, workOrder, status) {
   return { projectID, linkNickname, workOrder, status };
@@ -255,6 +258,7 @@ const ExecutionLinks = (props) => {
   const allprojectIdData = PDData?.hideExecutionLinksFormReducer?.projectID;
   const allprojectData = PDData?.hideExecutionLinksFormReducer?.allprojectId;
   const labelData = PDData?.hideExecutionLinksFormReducer?.labelData;
+  console.log('all',labelData);
 
   useEffect(() => {
     dispatch(getPDApi()).then((res) => setLoading(false));
@@ -294,7 +298,9 @@ const ExecutionLinks = (props) => {
               PDValuesOptions
             }
             onChange={(event, value) => {
+              value===null && dispatch(disableTabs(true));
               setSelectedValue(value);
+              setSelectedProjectID(null);
               dispatch(selectProjectID(null));
               dispatch(getExLinkData([]));
               PDValuesIDs?.filter((item) => {
@@ -302,6 +308,9 @@ const ExecutionLinks = (props) => {
                   dispatch(getProjectId(item.pdid)).then((Res) => {
                     setFilteredData(Res);
                     dispatch(getProjectIDByPD(Res));
+                  })
+                  dispatch(getPrimaryKey(item.pdid)).then((Res) => {
+                    dispatch(getallPrimaryKey(Res));
                   })
                 }
               })
@@ -350,7 +359,6 @@ const ExecutionLinks = (props) => {
               value !== null ? dispatch(selectProjectID(value)) : dispatch(selectProjectID(null));
 
               dispatch(GetLinkInfoIdByProjectId(value)).then((res)=>{
-                  console.log('res',res);
                   dispatch(getExLabelData(res));
                   dispatch(getExLinkData(res[0]));
               })
@@ -379,16 +387,16 @@ const ExecutionLinks = (props) => {
                 Work Order:{" "}
                 <span>
                   {labelData!==undefined && labelData.length>0  && labelData
-                    .filter((item) => item.projectID === selectedProjectID)
+                    .filter((item) => item.projectId === selectedProjectID)
                     .map((item) => item.workOrder)}
                 </span>
               </label>
               <label>
-                Link Nickname:{" "}
+                ITN:{" "}
                 <span>
                   {labelData!==undefined && labelData.length>0  && labelData
-                    .filter((item) => item.projectID === selectedProjectID)
-                    .map((item) => item.linkNickname)}
+                    .filter((item) => item.projectId === selectedProjectID)
+                    .map((item) => item.itn)}
                 </span>
               </label>
               <label>
@@ -407,8 +415,8 @@ const ExecutionLinks = (props) => {
                 // }}
                 >
                   {labelData!==undefined && labelData.length>0  && labelData
-                    .filter((item) => item.projectID === selectedProjectID)
-                    .map((item) => item.status)}
+                    .filter((item) => item.projectId === selectedProjectID)
+                    .map((item) => item.statusName)}
                 </span>
               </label>
             </div>

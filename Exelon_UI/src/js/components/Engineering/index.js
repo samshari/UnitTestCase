@@ -15,6 +15,7 @@ import { selectPD } from "../../../redux/views/Header/HeaderAction";
 import { selectPrimaryKey } from "../../../redux/views/Header/HeaderAction";
 import { TextField, Autocomplete } from "@mui/material";
 import "../../../styles/components/Engineering.css";
+import "../../../styles/utils/DatePicker.css";
 
 // ** MUI Imports
 import { Checkbox } from "@material-ui/core";
@@ -33,6 +34,7 @@ import Owners from "../Engineering/Owners";
 import CustomTabs from "../../utils/Tabs";
 import { getPDApi } from "../../../redux/components/Engineering/PD/PDAction";
 import { disableTabs } from "../../../redux/utils/Tabs/TabsAction";
+import { getProjectId, getProjectIDByPD } from "../../../redux/components/ExecutionLinks/ExecutionLinksAction";
 
 const current = new Date();
 const date = `${current.getMonth()}/${current.getDate() + 1
@@ -178,7 +180,6 @@ const id = pd.map((item, index) => {
 const allRowsData = [].concat(...allRows);
 
 const Engineering = (props) => {
-  const pdID = useSelector((state) => state.engineeringFormReducer.id)
   const [loading, setLoading] = useState(true);
   const [PDID, selectedPDID] = useState(null);
 
@@ -233,7 +234,7 @@ const Engineering = (props) => {
       tabColor: "#00bfff",
       disable:  true,
       component: <RealEstate tabColor="#00bfff" linkingID={linkingID} 
-      disableFields={(createlinkID >0 ) || (updatelinkID>0) ?false:true}
+      disableFields={(createlinkID >0 ) || (updatelinkID>0) || selectedPD.length>0 ?false:true}
       />,
     },
     {
@@ -346,14 +347,20 @@ const Engineering = (props) => {
       ),
     },
   ];
-
+  const pdID = useSelector((state) => state.engineeringFormReducer.id);
+  console.log('pdid',pdID);
   useEffect(() => {
     dispatch(showUpdateButton(false));
     dispatch(hideEngineeringForm(false));
     dispatch(getPDApi()).then((res) => setLoading(false))
-    dispatch(getPrimaryKey(0)).then((res)=> { res?.status!==404 && dispatch(getAllprimaryKeys(res.map((item)=>{
+    dispatch(getPrimaryKey(0)).then((res)=> { res?.status!==404 && 
+      dispatch(getAllprimaryKeys(res.map((item)=>{
       return item.primaryKey;
     })))
+    pdID!==undefined && pdID!==null && dispatch(getPrimaryKey(pdID)).then((Res) => {
+      // setFilteredData(Res);
+      dispatch(getallPrimaryKey(Res));
+    })
   })
     return () => {
       dispatch(selectPrimaryKey(null))
@@ -400,8 +407,11 @@ const Engineering = (props) => {
                 PDValuesIDs?.filter((item) => {
                   if (item.name === value) {
                     dispatch(getPrimaryKey(item.pdid)).then((Res) => {
-                      setFilteredData(Res);
+                      // setFilteredData(Res);
                       dispatch(getallPrimaryKey(Res));
+                    })
+                    dispatch(getProjectId(item.pdid)).then((Res) => {
+                      dispatch(getProjectIDByPD(Res));
                     })
                   }
                 })
@@ -438,7 +448,7 @@ const Engineering = (props) => {
               }}
               options={
                 selectedPD.length===0 ?
-                 allPrimaryKey?.map((item)=>item):
+                allPrimaryKey?.length>0? allPrimaryKey?.map((item)=>item):[]:
                  allprimaryData?.length>0 ? allprimaryData?.map((item) => {
                   return item.primaryKey;
                 }):[]

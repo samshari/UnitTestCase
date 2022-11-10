@@ -10,7 +10,10 @@ namespace Exelon.Application.IServices
         public Task<Dictionary<DeviceModel, string>> CreateDevice(DeviceModel dEVICEModel);
         public Task<DeviceModel> UpdateDevice(DeviceModel dEVICEModel);
         public Task<int> DeleteDevice(int id);
-        Task<ExecutionDeviceModel> GetExecutionDevice(int id);
-        Task<ExecutionDeviceModel> SaveUpdateExecutionDevice(ExecutionDeviceModel model);
+        public Task<ExecutionDeviceModel> GetExecutionDevice(int id);
+        public Task<ExecutionDeviceModel> GetExecutionDeviceBYLinkId(int id);
+        public Task<Dictionary<ExecutionDeviceModel,string>> SaveUpdateExecutionDevice(ExecutionDeviceModel model);
+        public Task<ExecutionDeviceModel> UpdateExecutionDevice(ExecutionDeviceModel model);
+
     }
 }

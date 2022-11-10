@@ -1,12 +1,14 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_COCBID_REQUEST = "GET_COCBID_REQUEST";
 export const UPDATE_COCBID_REQUEST = "UPDATE_COCBID_REQUEST"
 export const CREATE_COCBID_REQUEST = "CREATE_COCBID_REQUEST"
+
 
 export function getApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/engineering/GetMCOCBID`
+      `${BASE_URL}/api/engineering/GetMCOCBID`
     )
       .then((res) => {
           const data = res.json().then((res)=> {
@@ -32,7 +34,7 @@ const getApiSuccess = (value) => {
 
 export function updateApi(id,data,dropData,linkID) {
   return id ===0 ?createApi(data,dropData,linkID,1)  :new Promise((resolve, reject) => {  
-      fetch(`http://localhost:63006/api/engineering/UpdateMCOCBID/${id}`,
+      fetch(`${BASE_URL}/api/engineering/UpdateMCOCBID/${id}`,
         {
             method:'PUT',
             body: JSON.stringify({
@@ -66,7 +68,7 @@ export function updateApi(id,data,dropData,linkID) {
 
     export function createApi(data,dropData,linkID,stepID) {
         return new Promise((resolve, reject) => {  
-              fetch(`http://localhost:63006/api/engineering/CreateMCOCBID`,
+              fetch(`${BASE_URL}/api/engineering/CreateMCOCBID`,
             {
             method:'POST',
             body: JSON.stringify({

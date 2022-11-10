@@ -10,6 +10,8 @@ namespace Exelon.Domain.Abstractions
         public Task<DeviceModel> UpdateDevice(DeviceModel model);
         public Task<int> DeleteDevice(int id);
         public Task<ExecutionDeviceModel> GetExecutionDevice(int id);
-        public Task<ExecutionDeviceModel> SaveUpdateExecutionDevice(ExecutionDeviceModel model);
+        public Task<ExecutionDeviceModel> GetExecutionDeviceBYLinkId(int id);
+        public Task<Dictionary<ExecutionDeviceModel,string>> SaveUpdateExecutionDevice(ExecutionDeviceModel model);
+        public Task<ExecutionDeviceModel> UpdateExecutionDevice(ExecutionDeviceModel model);
     }
 }

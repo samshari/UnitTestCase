@@ -8,6 +8,7 @@ using Exelon.Application.IServices;
 using Exelon.Application.Service;
 using Exelon.Domain.Abstractions;
 using Exelon.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Cors;
 
 namespace Exelon.API
 {
@@ -22,7 +23,7 @@ namespace Exelon.API
 
             services.AddCors();
             services.AddMvc();
-
+            
             services.AddSingleton<IAppSettings, AppSettings>();
             services.AddTransient<IUnitOfWorkService, UnitOfWorkService>();
 
@@ -251,14 +252,13 @@ namespace Exelon.API
 
             app.UseRouting();
 
-
+            
             app.UseCors(builder => builder
             .AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader());
-            
-            
-            
+
+
             app.UseAuthorization();
 
             

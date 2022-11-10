@@ -4,38 +4,64 @@ import { useEffect,useState } from "react";
 import { useDispatch , useSelector} from "react-redux";
 import { getApi,updateApi,createApi } from "../../../redux/components/ExecutionLinks/Engginvestigation/EngginvestigationAction";
 import {getInnerApi} from '../../../redux/components/ExecutionLinks/Engginvestigation/InnerDuctCOCAction'
+import CustomSnackBar from "../../utils/Snackbar";
 
 
 const EnggInvestigation = (props) => {
-  let id =3;
+  // let id =3;
   let fK_InnerductCOC =0;
   let innerName = '';
+  let count =0;
   const [apiData,setapiData]=useState([]);  
   const [loading,setLoading]=useState(true) 
   const [loading1,setLoading1]=useState(true);
   const [ID,setID]= useState(0);
+  const [isDataUpdated,setDataUpdated]=useState(false);
 
   const datatest = useSelector((state) => state.hideExecutionLinksFormReducer?.data);
+  const createLink = useSelector((state)=>state.hideExecutionLinksFormReducer?.globallinkID);
   const data2 = useSelector((state)=>{
     return state
   })
 
+  const [open, setOpen] = React.useState(false);
+  const [message, setMessage] = useState("");
+  const handleToClose = (event, reason) => {
+    if ("clickaway" == reason) return;
+    setOpen(false);
+  };
+
   const dispatch = useDispatch();
   const updateData=(data,dropData)=>{
-    updateApi(ID,data,dropData,apiData).then((res)=>{
-      if(res.status === 200)
-        alert(`Data Updated SuccessFully!`);
-      else 
-        alert(res.message);
+    updateApi(ID,data,dropData,datatest?.executionLinkingID).then((res)=>{
+      if (res.status === 200){
+        setDataUpdated(!isDataUpdated);
+        setOpen(true);
+        setMessage(`Data Updated SuccessFully!`);
+      }
+      else if(res.id>0){
+        setID(res.id);
+        setOpen(true);
+        setMessage(`Data Created SuccessFully`);
+      }
+      else{
+        setOpen(true);
+        setMessage(res.message);
+	    }
       })
   }
 
   const createData=(data,dropData,multiDrop)=>{
-    createApi(data,dropData,id).then((res)=>{
-      if(res.id>0)
-        alert(`Data Created SuccessFully!`);
-      else 
-        alert(res.message);
+    createApi(data,dropData,createLink).then((res)=>{
+      if (res.id > 0){
+        setID(res.id);
+        setOpen(true)
+        setMessage(`Data Created SuccessFully!`);
+      }
+      else{
+      setOpen(true)
+      setMessage(res.message);
+      }
     })
   }
 
@@ -48,9 +74,14 @@ useEffect(()=>{
       if(data.fK_LinkingID === datatest?.executionLinkingID){
         setID(data.enggInvestigationID);
         setapiData(data);
+        count = count +1;
       }
       return data;
     })
+    if(count === 0){
+      setID(0);
+      setapiData([]);
+    }
     setLoading(false)
   })}
   else{
@@ -58,16 +89,15 @@ useEffect(()=>{
     setapiData([]);
   }
   dispatch(getInnerApi()).then((res)=>setLoading1(false))
-},[dispatch])
+},[dispatch,datatest?.executionLinkingID,ID,isDataUpdated])
 
 let item = data2?.InnerDuctCOCReducer?.data;
 
-console.log('item',data2?.EnggInvestReducer?.data);
-item?.map((value)=>{
+item?.status !==404 && item?.map((value)=>{
   let inner_id = 0; 
-  if(data2?.EnggInvestReducer?.data ){
+  if(data2?.EnggInvestReducer?.data && data2?.EnggInvestReducer?.data?.status!=404 ){
     data2?.EnggInvestReducer?.data?.filter((res)=>{
-      if(res.fK_LinkingID === id)
+      if(res.fK_LinkingID === datatest?.executionLinkingID)
         inner_id = res.fK_InnerductCOC;
     })
   }
@@ -94,6 +124,11 @@ item?.map((value)=>{
         onClick={updateData}
         onSubmit={createData}
       />}
+      <CustomSnackBar
+        open={open}
+        onClose={() => handleToClose()}
+        message={message}
+      />
     </>
   );
 };

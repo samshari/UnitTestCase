@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_INNER_REQUEST = "GET_INNER_REQUEST";
 
 export function getInnerApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/Getinnerduct`
+      `${BASE_URL}/api/common/Getinnerduct`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

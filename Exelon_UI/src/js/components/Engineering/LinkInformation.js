@@ -100,7 +100,7 @@ const LinkInformation = (props) => {
           dispatch(disableTabs(false));
           setOpen(true);
           setMessage(`Data Created SuccessFully!`);
-           dispatch(createLinkData(res.id))
+          dispatch(createLinkData(res.id))
       }
       else
       {
@@ -191,7 +191,7 @@ const LinkInformation = (props) => {
       id = data2?.linkInformationReducer?.data[0]?.barnId
     }
     if (value.barnID === id) {
-      fK_BarnID = value.barnId
+      fK_BarnID = value.barnID
       barnName = value.barnName
     }
 

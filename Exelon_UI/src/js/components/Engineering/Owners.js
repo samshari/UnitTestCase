@@ -16,8 +16,8 @@ const Owners = (props) => {
   let lreName = '';
   let ucomName = '';
   let pmName = '';
-  let id =1;
   let stepID=1; 
+  let count = 0;
   const [apiData,setapiData]=useState([]); 
   const [loading,setLoading]=useState(true);
   const [loading1,setLoading1]=useState(true);  
@@ -80,9 +80,14 @@ useEffect( ()=>{
       if(data.fK_LinkingID === datatest.linkingId){
         setID(data.ownerID);
         setapiData(data);
+        count = count +1;
       }
       return data;
     })
+    if(count === 0){
+      setID(0);
+      setapiData([]);
+    }
     setLoading(false)
   }):setLoading(false)
   setapiData([])}
@@ -97,8 +102,8 @@ let item1 = data2?.ReactLREReducer?.data;
 
 item1?.status !==404 && item1?.map((value)=>{
   let id = 0; 
-  if(data2?.OwnerReducer?.data ){
-    data2?.OwnerReducer?.data.filter((res)=>{
+  if(data2?.OwnerReducer?.data && data2?.OwnerReducer?.data?.status!=404 ){
+    data2?.OwnerReducer?.data?.filter((res)=>{
       if(res.fK_LinkingID === datatest?.linkingId)
         id = res.fK_ReactsLRE_ID;
     })
@@ -113,7 +118,7 @@ let item2 = data2?.UcomSPOCReducer?.data;
 
 item2?.status !==404 && item2?.map((value)=>{
   let id = 0; 
-  if(data2?.OwnerReducer?.data){
+  if(data2?.OwnerReducer?.data && data2?.OwnerReducer?.data?.status!=404){
     data2?.OwnerReducer?.data.filter((res)=>{
       if(res.fK_LinkingID === datatest?.linkingId)
         id = res.fK_UCOMMSPOC_ID;
@@ -130,7 +135,7 @@ let item3 = data2?.PMReducer?.data;
 item3?.status !==404 && item3?.map((value)=>{
   
   let id = 0; 
-  if(data2?.OwnerReducer?.data){
+  if(data2?.OwnerReducer?.data && data2?.OwnerReducer?.data?.status!=404){
     data2?.OwnerReducer?.data.filter((res)=>{
       if(res.fK_LinkingID === datatest?.linkingId)
         id = res.fK_ProjectManagerID;

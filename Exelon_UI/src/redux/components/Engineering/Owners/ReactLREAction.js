@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_REACTLRE_REQUEST = "GET_REACTLRE_REQUEST";
 
 export function getReactApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/GetMREACT`
+      `${BASE_URL}/api/common/GetMREACT`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

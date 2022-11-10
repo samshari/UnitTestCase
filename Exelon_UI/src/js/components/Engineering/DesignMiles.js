@@ -13,7 +13,7 @@ const DesignMiles = (props) => {
   const [loading,setLoading] = useState(true);
   const [ID,setID]=useState(0);
   const [isDataUpdated,setDataUpdated]=useState(false);
-
+  let count =0;
   const [open, setOpen] = React.useState(false);
 
   const [message, setMessage] = useState("");
@@ -64,21 +64,26 @@ const DesignMiles = (props) => {
         if(data.fK_LinkingID === datatest.linkingId){
           setID(data.designMilesID);
           setapiData(data);
+          count = count +1;
         }
         return data;
       })
+      if(count === 0){
+        setID(0);
+        setapiData([]);
+      }
       setLoading(false)
     }):setLoading(false)
-    setapiData([])
+      setapiData([])
   }
     
  },[dispatch,datatest?.linkingId,ID,isDataUpdated])
 
 
   const data = [
-    {  placeholder: "UG Miles", defaultValue : apiData?.designMilesID>0? apiData.ugMiles:'' },
-    {  placeholder: "OH Miles",defaultValue: apiData?.designMilesID>0?apiData.ohMiles:'' },
-    {  disable:true,placeholder: "Total Miles", defaultValue: apiData?.designMilesID>0?(apiData.ugMiles+apiData.ohMiles).toFixed(2):''},
+    {  type:"number",  placeholder: "UG Miles", defaultValue : apiData?.designMilesID>0? apiData.ugMiles:'' },
+    {  type:"number", placeholder: "OH Miles",defaultValue: apiData?.designMilesID>0?apiData.ohMiles:'' },
+    {  type:"number", disable:true,placeholder: "Total Miles", defaultValue: apiData?.designMilesID>0?(apiData.ugMiles+apiData.ohMiles).toFixed(2):''},
   ];
 
   return (

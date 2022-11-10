@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_UCOM_REQUEST = "GET_UCOM_REQUEST";
 
 export function getUcomApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/GetMUCO`
+      `${BASE_URL}/api/common/GetMUCO`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

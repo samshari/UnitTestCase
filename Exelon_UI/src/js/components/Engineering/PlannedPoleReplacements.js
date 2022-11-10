@@ -16,7 +16,7 @@ const PlannedPoleReplacements = (props) => {
 
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
-
+  let count =0;
   const [message, setMessage] = useState("");
   const handleToClose = (event, reason) => {
     if ("clickaway" == reason) return;
@@ -63,9 +63,14 @@ useEffect( ()=>{
       if(data.fK_LinkingID === datatest.linkingId){
         setID(data.polesRepacementID);
         setapiData(data);
+        count = count +1;
       }
       return data;
     })
+    if(count === 0){
+      setID(0);
+      setapiData([]);
+    }
     setLoading(false);
   }): setLoading(false)
     setapiData([])}
@@ -83,7 +88,7 @@ useEffect( ()=>{
     { type: "number", placeholder: "Total Poles Needing Replaced/Set",defaultValue: apiData?.polesRepacementID>0?apiData.totalPolesNeedingReplaced:'' },
     { type: "number", placeholder: "New Guy/Anchor",defaultValue: apiData?.polesRepacementID>0?apiData.newAnchor:'' },
     { type: "number", placeholder: "Other Work on Pole",defaultValue: apiData?.polesRepacementID>0?apiData.otherWorkOnPole:'' },
-    { type: "number", placeholder: "Pole replacement %" , defaultValue: apiData?.polesRepacementID>0?String(apiData.poleReplacementPercentage):''},
+    { disable:"true", type: "number", placeholder: "Pole replacement %" , defaultValue: apiData?.polesRepacementID>0?String(((apiData.totalPolesNeedingReplaced/apiData.totalNoOfPolesInRoute)*100).toFixed(2)):''},
   ];
   return (
     <>

@@ -13,6 +13,7 @@ const Devices = (props) => {
   const [isDataUpdated,setDataUpdated]=useState(false);
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
+  let count =0;
 
   const [message, setMessage] = useState("");
   const handleToClose = (event, reason) => {
@@ -64,9 +65,14 @@ useEffect( ()=>{
       if(data.linkingId === datatest.linkingId){
         setID(data.deviceId);
         setapiData(data);
+        count = count +1;
       }
       return data;
     })
+    if(count === 0){
+      setID(0);
+      setapiData([]);
+    }
     setLoading(false);
   }): setLoading(false)
     setapiData([])
@@ -77,7 +83,7 @@ useEffect( ()=>{
 
 
   const data = [
-    { type: "number", placeholder: "Total Devices" ,defaultValue:apiData?.deviceId>0? apiData.totalDevices:''  },
+    { type: "number", placeholder: "Device Count" ,defaultValue:apiData?.deviceId>0? apiData.totalDevices:''  },
     { placeholder: "Device Type",defaultValue: apiData?.deviceId>0?apiData.deviceType:'' },
   ];
   

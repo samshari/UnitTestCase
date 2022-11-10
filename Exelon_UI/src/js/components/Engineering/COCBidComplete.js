@@ -23,7 +23,7 @@ const COCBidComplete = (props) => {
   const [Mk, setMk] = useState([]);
   const [Fiber, setFiber] = useState([]);
   const [isDataUpdated,setDataUpdated]=useState(false);
-
+  let count =0;
   const dispatch = useDispatch();
 
   const [open, setOpen] = React.useState(false);
@@ -85,9 +85,14 @@ const COCBidComplete = (props) => {
           if (data.fK_LinkingID === datatest.linkingId) {
             setID(data.cocBidCompleteID);
             setapiData(data);
+            count = count +1;
           }
           return data;
         })
+        if(count === 0){
+          setID(0);
+          setapiData([]);
+        }
         setLoading(false)
       }) : setLoading(false)
       setapiData([])

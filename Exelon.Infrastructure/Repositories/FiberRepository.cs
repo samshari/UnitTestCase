@@ -130,11 +130,11 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@procId", 6);
                             cmd.Parameters.AddWithValue("@FiberID", fIBERModel.FiberID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", fIBERModel.FK_LinkingID);
-                            cmd.Parameters.AddWithValue("@FK_FiberCOCID",checkNull(fIBERModel.FK_FiberCOCID));
+                            cmd.Parameters.AddWithValue("@FK_FiberCOCID", checkNull(fIBERModel.FK_FiberCOCID));
                             cmd.Parameters.AddWithValue("@IssuesOrComments", string.IsNullOrEmpty(fIBERModel.IssuesOrComments) ? string.Empty : fIBERModel.IssuesOrComments);
-                            cmd.Parameters.AddWithValue("@StartDate",checkNull(fIBERModel.StartDate));
-                            cmd.Parameters.AddWithValue("@EndDate",checkNull(fIBERModel.EndDate));
-                            cmd.Parameters.AddWithValue("@OTDRCompletionDate",checkNull(fIBERModel.OTDRCompletionDate));
+                            cmd.Parameters.AddWithValue("@StartDate", checkNull(fIBERModel.StartDate));
+                            cmd.Parameters.AddWithValue("@EndDate", checkNull(fIBERModel.EndDate));
+                            cmd.Parameters.AddWithValue("@OTDRCompletionDate", checkNull(fIBERModel.OTDRCompletionDate));
                             cmd.Parameters.AddWithValue("@WeeklyFTECount", string.IsNullOrEmpty(fIBERModel.WeeklyFTECount) ? string.Empty : fIBERModel.WeeklyFTECount);
                             cmd.Parameters.AddWithValue("@CreatedBy", fIBERModel.CreatedBy);
                             cmd.Parameters.AddWithValue("@UpdatedBy", fIBERModel.CreatedBy);
@@ -281,8 +281,9 @@ namespace Exelon.Infrastructure.Repositories
                     }
                     return model;
                 }
-                catch (Exception){
-                    return new ExecutionCompletedFiberMile(); 
+                catch (Exception)
+                {
+                    return new ExecutionCompletedFiberMile();
                 }
             });
         }
@@ -294,11 +295,11 @@ namespace Exelon.Infrastructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<ExecutionCompletedFiberMile> SaveUpdateCompletedFiberMile(ExecutionCompletedFiberMile model)
+        public async Task<Dictionary<ExecutionCompletedFiberMile,string>> SaveUpdateCompletedFiberMile(ExecutionCompletedFiberMile model)
         {
             return await Task.Run(() =>
             {
-                var result = new ExecutionCompletedFiberMile();
+                var result = new Dictionary<ExecutionCompletedFiberMile, string>();
                 try
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -307,10 +308,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = "sp_ExeCompletedFiberMileActions";
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            if (model.CompletedFiberMileId == 0)
-                                cmd.Parameters.AddWithValue("@procId", 1);
-                            else if (model.CompletedFiberMileId > 0)
-                                cmd.Parameters.AddWithValue("@procId", 2);
+                            cmd.Parameters.AddWithValue("@procId", 5);
                             cmd.Parameters.AddWithValue("@completedFiberMilesId", model.CompletedFiberMileId);
                             cmd.Parameters.AddWithValue("@executionLinkingId", model.ExecutionLinkingId);
                             cmd.Parameters.AddWithValue("@fiberMilesInstalled", model.FiberMilesInstalled);
@@ -319,18 +317,121 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@updatedBy", model.CreatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                            result.CompletedFiberMileId = (Int64)cmd.ExecuteScalar();
+                            int check = (int)cmd.ExecuteScalar();
+                            if(check == 1)
+                            {
+                                cmd.Parameters["@procId"].Value = 1;
+                            }
+                            else
+                            {
+                                connection.Close();
+                                result[model] = "Linking Id Already Exists!";
+                                return result;
+                            }
+                            model.CompletedFiberMileId = (long)cmd.ExecuteScalar();
                             connection.Close();
+                            result[model] = "ok";
                             return result;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    return new ExecutionCompletedFiberMile();}
+                    return new Dictionary<ExecutionCompletedFiberMile, string>();
+                }
             });
         }
         #endregion
+        #endregion
+        #region [Save Update Completed Fiber Mile]
+        /// <summary>
+        /// Save Update Completed Fiber Mile
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<ExecutionCompletedFiberMile> UpdateCompletedFiberMile(ExecutionCompletedFiberMile model)
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = "sp_ExeCompletedFiberMileActions";
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@procId", 2);
+                            cmd.Parameters.AddWithValue("@completedFiberMilesId", model.CompletedFiberMileId);
+                            cmd.Parameters.AddWithValue("@executionLinkingId", model.ExecutionLinkingId);
+                            cmd.Parameters.AddWithValue("@fiberMilesInstalled", model.FiberMilesInstalled);
+                            cmd.Parameters.AddWithValue("@fiberMilesCompleted", model.FiberMilesCompleted);
+                            cmd.Parameters.AddWithValue("@createdBy", model.CreatedBy);
+                            cmd.Parameters.AddWithValue("@updatedBy", model.CreatedBy);
+                            cmd.Connection = connection;
+                            connection.Open();
+                            cmd.ExecuteNonQuery();
+                            connection.Close();
+                            return model;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return new ExecutionCompletedFiberMile();
+                }
+            });
+        }
+        #endregion
+
+        #region
+        public async Task<ExecutionCompletedFiberMile> GetCompletedFiberMileByLinkId(int id)
+        {
+            return await Task.Run(() =>
+            {
+                var model = new ExecutionCompletedFiberMile();
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        connection.Open();
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = "sp_ExeCompletedFiberMileActions";
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@procId", 4);
+                            cmd.Parameters.AddWithValue("@completedFiberMilesId", 0);
+                            cmd.Parameters.AddWithValue("@executionLinkingId", id);
+                            cmd.Parameters.AddWithValue("@fiberMilesInstalled", 0);
+                            cmd.Parameters.AddWithValue("@fiberMilesCompleted", 0);
+                            cmd.Parameters.AddWithValue("@createdBy", string.Empty);
+                            cmd.Parameters.AddWithValue("@updatedBy", string.Empty);
+                            cmd.Connection = connection;
+
+                            using (SqlDataReader dataReader = cmd.ExecuteReader())
+                            {
+                                while (dataReader.Read())
+                                {
+                                    model.CompletedFiberMileId = (Int64)dataReader["CompletedFiberMileID"];
+                                    model.ExecutionLinkingId = (Int64)dataReader["ExecutionLinkingID"];
+                                    model.FiberMilesInstalled = (int)dataReader["FiberMilesInstalled"];
+                                    model.FiberMilesCompleted = (int)dataReader["FiberMilesCompleted"];
+                                    model.CreatedBy = dataReader["CreatedBy"].ToString();
+                                    model.UpdatedBy = dataReader["UpdatedBy"].ToString();
+                                }
+                            }
+                        }
+                        connection.Close();
+                    }
+                    return model;
+                }
+                catch (Exception)
+                {
+                    return new ExecutionCompletedFiberMile();
+                }
+            });
+
+        }
         #endregion
     }
 }

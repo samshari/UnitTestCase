@@ -56,8 +56,8 @@ namespace Exelon.Application.Service
         private readonly IOVHDMKService _oVHDMKService;
         private readonly IPostCompletionService _postCompletionService;
         private readonly IExLinkingInfoService _exlinkingInfoService;
-        private readonly IPDDetailsService pDDetails;
-        private readonly ICompletedPoleMileService poleMileService;
+        private readonly IPDDetailsService _pDDetails;
+        private readonly ICompletedPoleMileService _poleMileService;
         #endregion
 
         #region Engineering Declaration 
@@ -116,7 +116,7 @@ namespace Exelon.Application.Service
             IIFCDATESService iFCDATESService, IPRECONSTRUCTIONService pRECONSTRUCTIONService,
             ICOMEDEXService cOMEDEXService, ICIVILService cIVILService, IBORINGService bORINGService,
             IFIBERService fIBERService, IOVHDMKService oVHDMKService, IPostCompletionService postCompletionService,
-            IExLinkingInfoService exLinkingInfoService,
+            IExLinkingInfoService exLinkingInfoService, ICompletedPoleMileService poleMileService,
 
             //Engineering 
             ILinkingInfoService linkingInfoService,
@@ -196,6 +196,7 @@ namespace Exelon.Application.Service
             _oVHDMKService = oVHDMKService;
             _postCompletionService = postCompletionService;
             _exlinkingInfoService = exLinkingInfoService;
+            _poleMileService = poleMileService;
             #endregion
 
             #region Engineering Initialization 
@@ -236,7 +237,7 @@ namespace Exelon.Application.Service
             #endregion
 
             #region PD Details Initialization 
-            pDDetails = pdDetailsService ;
+            _pDDetails = pdDetailsService ;
             #endregion
         }
 
@@ -586,7 +587,10 @@ namespace Exelon.Application.Service
         }
         public ICompletedPoleMileService completedPoleMileService
         {
-            get { return poleMileService; }
+            get 
+            { 
+                return _poleMileService; 
+            }
         }
         public IExLinkingInfoService exLinkingInfoService
         {
@@ -806,7 +810,7 @@ namespace Exelon.Application.Service
         {
             get
             {
-                return pDDetails;
+                return _pDDetails;
             }
         }
 

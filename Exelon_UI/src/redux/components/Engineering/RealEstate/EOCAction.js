@@ -1,10 +1,11 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_EOC_REQUEST = "GET_EOC_REQUEST";
 
 export function getEOCApi() {
 return(dispatch) =>{
   return new Promise((resolve, reject) => {  
     fetch(
-      `http://localhost:63006/api/common/GetEOC`
+      `${BASE_URL}/api/common/GetEOC`
     )
       .then((res) => {
           const data = res.json().then((res)=> {

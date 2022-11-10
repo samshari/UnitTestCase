@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_DESIGN_REQUEST = "GET_DESIGN_REQUEST";
 export const UPDATE_DESIGN_REQUEST = "UPDATE_DESIGN_REQUEST"
 export const CREATE_DESIGN_REQUEST = "CREATE_DESIGN_REQUEST"
@@ -6,7 +7,7 @@ export function getApi() {
   return (dispatch)=>{
     return new Promise((resolve, reject) => {  
       fetch(
-        `http://localhost:63006/api/engineering/getdesign`
+        `${BASE_URL}/api/engineering/getdesign`
       )
         .then((res) => {
             const data = res.json().then((res)=> {
@@ -34,7 +35,7 @@ export function updateApi(id,data,linkID) {
     
   return id===0?createApi(data,linkID,1) : new Promise((resolve, reject) => {  
         
-      fetch(`http://localhost:63006/api/engineering/updatedesign/${id}`,
+      fetch(`${BASE_URL}/api/engineering/updatedesign/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
@@ -69,7 +70,7 @@ export function updateApi(id,data,linkID) {
 
     export function createApi(data,linkID,stepID) {
         return new Promise((resolve, reject) => {  
-        fetch(`http://localhost:63006/api/engineering/createdesign`,
+        fetch(`${BASE_URL}/api/engineering/createdesign`,
             {
             method:'POST',
             body: JSON.stringify({

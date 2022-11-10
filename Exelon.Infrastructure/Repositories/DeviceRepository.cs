@@ -250,13 +250,14 @@ namespace Exelon.Infrastructure.Repositories
         }
         #endregion
 
-        #region [Save Update Execution Device]
+        #region [Execution Device]
+        #region [Get Execution Device By Link id]
         /// <summary>
-        /// Save Update Execution Device
+        /// Get Execution Device
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<ExecutionDeviceModel> SaveUpdateExecutionDevice(ExecutionDeviceModel model)
+        public async Task<ExecutionDeviceModel> GetExecutionDeviceBYLinkId(int id)
         {
             return await Task.Run(() =>
             {
@@ -265,14 +266,63 @@ namespace Exelon.Infrastructure.Repositories
                 {
                     using (SqlConnection connection = new SqlConnection(this._connectionString))
                     {
+                        connection.Open();
                         using (SqlCommand cmd = new SqlCommand())
                         {
                             cmd.CommandText = "sp_ExecutionDeviceActions";
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            if (model.ExecutionDeviceId == 0)
-                                cmd.Parameters.AddWithValue("@procId", 1);
-                            else if (model.ExecutionDeviceId > 0)
-                                cmd.Parameters.AddWithValue("@procId", 2);
+                            cmd.Parameters.AddWithValue("@procId", 4);
+                            cmd.Parameters.AddWithValue("@executionDeviceId", 0);
+                            cmd.Parameters.AddWithValue("@executionLinkingId", id);
+                            cmd.Parameters.AddWithValue("@installedDevices", 0);
+                            cmd.Parameters.AddWithValue("@CreatedBy", string.Empty);
+                            cmd.Parameters.AddWithValue("@UpdatedBy", string.Empty);
+                            cmd.Connection = connection;
+
+                            using (SqlDataReader dataReader = cmd.ExecuteReader())
+                            {
+                                while (dataReader.Read())
+                                {
+                                    var model = new ExecutionDeviceModel();
+                                    model.ExecutionDeviceId = (long)dataReader["ExecutionDeviceID"];
+                                    model.ExecutionLinkidId = (long)dataReader["ExecutionLinkidID"];
+                                    model.InstalledDevice = (int)dataReader["InstalledDevice"];
+                                    model.CreatedBy = dataReader["CreatedBy"].ToString();
+                                    model.UpdatedBy = dataReader["UpdatedBy"].ToString();
+                                    result = model;
+                                }
+                            }
+                        }
+                        connection.Close();
+                    }
+                    return result;
+                }
+                catch (Exception) { return new ExecutionDeviceModel(); }
+            });
+        }
+        #endregion
+        #endregion
+
+        #region [Save Update Execution Device]
+        /// <summary>
+        /// Save Update Execution Device
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<Dictionary<ExecutionDeviceModel,string>> SaveUpdateExecutionDevice(ExecutionDeviceModel model)
+        {
+            return await Task.Run(() =>
+            {
+                var result = new Dictionary<ExecutionDeviceModel, string>();
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = "sp_ExecutionDeviceActions";
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@procId", 5);
                             cmd.Parameters.AddWithValue("@executionDeviceId", model.ExecutionDeviceId);
                             cmd.Parameters.AddWithValue("@executionLinkingId", model.ExecutionLinkidId);
                             cmd.Parameters.AddWithValue("@installedDevices", model.InstalledDevice);
@@ -280,18 +330,71 @@ namespace Exelon.Infrastructure.Repositories
                             cmd.Parameters.AddWithValue("@UpdatedBy", model.CreatedBy);
                             cmd.Connection = connection;
                             connection.Open();
-                          result.ExecutionDeviceId=  (Int64)cmd.ExecuteScalar();
+                            int check = (int)cmd.ExecuteScalar();
+                            if (check == 1)
+                            {
+                                cmd.Parameters["@procId"].Value = 1;
+                            }
+                            else
+                            {
+                                connection.Close();
+                                result[model] = "Linking Id Already Exists!";
+                                return result;
+                            }
+                            model.ExecutionDeviceId = (long)cmd.ExecuteScalar();
                             connection.Close();
+                            result[model] = "ok";
                             return result;
                         }
                     }
                 }
                 catch (Exception ex) {
-                    throw ex;//return new ExecutionDeviceModel();
+                    return new Dictionary<ExecutionDeviceModel, string>();
                 }
             });
         }
         #endregion
         #endregion
+
+        #region [Update Execution Device]
+        /// <summary>
+        /// Save Update Execution Device
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<ExecutionDeviceModel> UpdateExecutionDevice(ExecutionDeviceModel model)
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    using (SqlConnection connection = new SqlConnection(this._connectionString))
+                    {
+                        using (SqlCommand cmd = new SqlCommand())
+                        {
+                            cmd.CommandText = "sp_ExecutionDeviceActions";
+                            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@procId", 2);
+                            cmd.Parameters.AddWithValue("@executionDeviceId", model.ExecutionDeviceId);
+                            cmd.Parameters.AddWithValue("@executionLinkingId", model.ExecutionLinkidId);
+                            cmd.Parameters.AddWithValue("@installedDevices", model.InstalledDevice);
+                            cmd.Parameters.AddWithValue("@CreatedBy", model.UpdatedBy);
+                            cmd.Parameters.AddWithValue("@UpdatedBy", model.UpdatedBy);
+                            cmd.Connection = connection;
+                            connection.Open();
+                            cmd.ExecuteNonQuery();
+                            connection.Close();
+                            return model;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return new ExecutionDeviceModel();
+                }
+            });
+        }
+        #endregion
+        
     }
 }

@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_EXLINK_SUCCESS = "GET_EXLINK_SUCCESS";
 export const UPDATE_EXLINK_SUCCESS = "UPDATE_EXLINK_SUCCESS";
 export const CREATE_EXLINK_SUCCESS = "CREATE_EXLINK_SUCCESS";
@@ -7,7 +8,7 @@ export function getExLinkApi(id) {
     return (dispatch) => {
         return new Promise((resolve, reject) => {
             fetch(
-                `http://localhost:63006/api/executionlinks/GetExLinkInfo/${id}`
+                `${BASE_URL}/api/executionlinks/GetExLinkInfo/${id}`
             )
                 .then((res) => {
                     const data = res.json().then((res) => {
@@ -50,7 +51,7 @@ export function updateExLinkApi(id, data, dropData, fiberCount, apiData) {
     }))
     return new Promise((resolve, reject) => {
 
-        fetch(`http://localhost:63006/api/executionlinks/UpdateExLinkInfo/${id}`,
+        fetch(`${BASE_URL}/api/executionlinks/UpdateExLinkInfo/${id}`,
             {
                 method: 'PUT',
                 body: JSON.stringify({
@@ -98,7 +99,7 @@ const updateApiSuccess = (value) => {
 
 export function createExLinkApi(data, dropData, fiberCount, pdID) {
     return new Promise((resolve, reject) => {
-        fetch(`http://localhost:63006/api/executionlinks/CreateExLinkInfo`,
+        fetch(`${BASE_URL}/api/executionlinks/CreateExLinkInfo`,
             {
                 method: 'POST',
                 body: JSON.stringify({

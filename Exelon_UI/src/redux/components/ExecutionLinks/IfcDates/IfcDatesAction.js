@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_IFCDATES_SUCCESS = "GET_IFCDATES_SUCCESS";
 export const UPDATE_IFCDATES_SUCCESS = "UPDATE_IFCDATES_SUCCESS";
 export const CREATE_IFCDATES_SUCCESS = "CREATE_IFCDATES_SUCCESS";
@@ -6,7 +7,7 @@ export function getApi() {
 return (dispatch)=>{
     return new Promise((resolve, reject) => {  
         fetch(
-          `http://localhost:63006/api/executionlinks/GetIFCDATES`
+          `${BASE_URL}/api/executionlinks/GetIFCDATES`
         )
           .then((res) => {
               const data = res.json().then((res)=> {
@@ -30,11 +31,11 @@ const getApiSuccess = (value) => {
   };
 };
 
-export function updateApi(id,data,dropData,apiData) {
+export function updateApi(id,data,dropData,linkID) {
   
-    return new Promise((resolve, reject) => {  
+    return id ===0?createApi(data,linkID): new Promise((resolve, reject) => {  
         
-        fetch(`http://localhost:63006/api/executionlinks/UpdateIFCDATES/${id}`,
+        fetch(`${BASE_URL}/api/executionlinks/UpdateIFCDATES/${id}`,
         {
         method:'PUT',
         body: JSON.stringify({
@@ -66,13 +67,13 @@ export function updateApi(id,data,dropData,apiData) {
     };
 
 
-    export function createApi(data,dropData,linkID) {
+    export function createApi(data,linkID) {
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/executionlinks/CreateIFCDATES`,
+            fetch(`${BASE_URL}/api/executionlinks/CreateIFCDATES`,
             {
               method:'POST',
               body: JSON.stringify({
-                'FK_LinkingID':linkID,
+                'fK_LinkingID':linkID,
                 'ifcMkReadyScheduledIssueDate':data[0].value,
                 'ifcFiberCurrentScheduledIssueDt':data[1].value
               }),

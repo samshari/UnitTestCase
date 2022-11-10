@@ -1,3 +1,4 @@
+import { BASE_URL } from "../../../../ApiConstant";
 export const GET_REAL_SUCCESS = "GET_REAL_SUCCESS";
 export const UPDATE_REAL_SUCCESS = "UPDATE_REAL_SUCCESS";
 export const CREATE_REAL_SUCCESS = "CREATE_REAL_SUCCESS";
@@ -6,7 +7,7 @@ export function getApi() {
 return (dispatch)=>{
     return new Promise((resolve, reject) => {  
        fetch(
-          `http://localhost:63006/api/engineering/GetMEOCREALSTATE`
+          `${BASE_URL}/api/engineering/GetMEOCREALSTATE`
         )
           .then((res) => {
               const data = res.json().then((res)=> {
@@ -32,7 +33,7 @@ const getApiSuccess = (value) => {
 export function updateApi(id,data,dropData,linkID) {
   return id === 0?createApi(data,dropData,linkID,1):new Promise((resolve, reject) => {  
         
-    fetch(`http://localhost:63006/api/engineering/UpdateMEOCREALSTATE/${id}`,
+    fetch(`${BASE_URL}/api/engineering/UpdateMEOCREALSTATE/${id}`,
     {
       method:'PUT',
       body: JSON.stringify({
@@ -78,7 +79,7 @@ export function updateApi(id,data,dropData,linkID) {
     export function createApi(data,dropData,linkID,stepID) {
       
         return new Promise((resolve, reject) => {  
-            fetch(`http://localhost:63006/api/engineering/CreateMEOCREALSTATE`,
+            fetch(`${BASE_URL}/api/engineering/CreateMEOCREALSTATE`,
     {
       method:'POST',
       body: JSON.stringify({

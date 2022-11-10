@@ -156,7 +156,7 @@ namespace Exelon.Infrastructure.Repositories
                             else
                             {
                                 connection.Close();
-                                result[linkingInfoModel] = "Primary key Already Exists!";
+                                result[linkingInfoModel] = "Project Id Already Exists!";
                                 return result;
                             }
                             linkingInfoModel.ExecutionLinkingID = (long)cmd.ExecuteScalar();
@@ -176,6 +176,11 @@ namespace Exelon.Infrastructure.Repositories
                 return await Task.Run(() =>
                 {
                     var result = new Dictionary<ExLinkingInfoModel, string>();
+                    if (string.IsNullOrEmpty(infoModel.ProjectId))
+                    {
+                        result[infoModel] = "ProjectId is Empty!";
+                        return result;
+                    }
                     try
                     {
                         using (SqlConnection connection = new SqlConnection(this._connectionString))

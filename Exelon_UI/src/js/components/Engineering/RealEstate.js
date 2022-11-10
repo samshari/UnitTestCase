@@ -15,7 +15,7 @@ const RealEstate = (props) => {
   let fK_EOCID = 0;
   let fK_RealEstateSupportCOCID = 0;
   let stepID =1;
-  
+  let count = 0;
   const [apiData,setapiData]=useState([]); 
   const [loading,setLoading] = useState(true);
   const [loading1,setLoading1] = useState(true);
@@ -73,11 +73,16 @@ const data2 = useSelector((state)=>{
 useEffect( ()=>{
   {datatest?.linkingId!==undefined? dispatch(getApi()).then((res)=>{
     res?.status!==404 && res.filter((data)=>{
-      if(data.fK_LinkingID === datatest.linkingId){
+      if(data.fK_LinkingID === datatest?.linkingId){
         setID(data.eocRealEstateID);
         setapiData(data);
+        count = count +1;
       }
     })
+    if(count === 0){
+      setID(0);
+      setapiData([]);
+    }
     setLoading(false);
   }):
   setLoading(false);
@@ -93,8 +98,8 @@ let item2 = data2?.SupportCOCReducer?.data;
 
 item1?.status !==404 && item1?.map((value)=>{
   let id = 0; 
-  if(data2?.RealEstateReducer?.data){
-    data2?.RealEstateReducer?.data.filter((res)=>{
+  if(data2?.RealEstateReducer?.data && data2?.RealEstateReducer?.data?.status!=404   ){
+    data2?.RealEstateReducer?.data?.filter((res)=>{
       if(res.fK_LinkingID === datatest?.linkingId)
         id = res.fK_EOCID;
     })
@@ -110,8 +115,8 @@ item1?.status !==404 && item1?.map((value)=>{
 
 item2?.status !==404 && item2?.map((value)=>{
   let id = 0; 
-  if(data2?.RealEstateReducer?.data ){
-    data2?.RealEstateReducer?.data.filter((res)=>{
+  if(data2?.RealEstateReducer?.data && data2?.RealEstateReducer?.data?.status!=404 ){
+    data2?.RealEstateReducer?.data?.filter((res)=>{
       if(res.fK_LinkingID === datatest?.linkingId)
         id = res.fK_RealEstateSupportCOCID;
     })

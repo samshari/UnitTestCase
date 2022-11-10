@@ -170,7 +170,7 @@ namespace Exelon.Infrastructure.Repositories
                         {
                             cmd.CommandText = _storedProcedure;
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@procId", 5);
+                            cmd.Parameters.AddWithValue("@procId", 2);
                             cmd.Parameters.AddWithValue("@CivilID", cIVILModel.CivilID);
                             cmd.Parameters.AddWithValue("@FK_LinkingID", cIVILModel.FK_LinkingID);
                             cmd.Parameters.AddWithValue("@FK_CivilCOCID", checkNull(cIVILModel.FK_CivilCOCID));
