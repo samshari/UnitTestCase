@@ -1,0 +1,10 @@
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Domain\bin\Debug\netcoreapp3.1\Exelon.Domain.deps.json
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Domain\bin\Debug\netcoreapp3.1\Exelon.Domain.dll
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Domain\bin\Debug\netcoreapp3.1\Exelon.Domain.pdb
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Domain\obj\Debug\netcoreapp3.1\Exelon.Domain.csproj.AssemblyReference.cache
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Domain\obj\Debug\netcoreapp3.1\Exelon.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Domain\obj\Debug\netcoreapp3.1\Exelon.Domain.AssemblyInfoInputs.cache
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Domain\obj\Debug\netcoreapp3.1\Exelon.Domain.AssemblyInfo.cs
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Domain\obj\Debug\netcoreapp3.1\Exelon.Domain.csproj.CoreCompileInputs.cache
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Domain\obj\Debug\netcoreapp3.1\Exelon.Domain.dll
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Domain\obj\Debug\netcoreapp3.1\Exelon.Domain.pdb

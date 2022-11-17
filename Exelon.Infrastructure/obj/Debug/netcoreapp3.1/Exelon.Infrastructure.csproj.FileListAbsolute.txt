@@ -1,0 +1,13 @@
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\bin\Debug\netcoreapp3.1\Exelon.Infrastructure.deps.json
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\bin\Debug\netcoreapp3.1\Exelon.Infrastructure.dll
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\bin\Debug\netcoreapp3.1\Exelon.Infrastructure.pdb
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\bin\Debug\netcoreapp3.1\Exelon.Domain.dll
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\bin\Debug\netcoreapp3.1\Exelon.Domain.pdb
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\obj\Debug\netcoreapp3.1\Exelon.Infrastructure.csproj.AssemblyReference.cache
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\obj\Debug\netcoreapp3.1\Exelon.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\obj\Debug\netcoreapp3.1\Exelon.Infrastructure.AssemblyInfoInputs.cache
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\obj\Debug\netcoreapp3.1\Exelon.Infrastructure.AssemblyInfo.cs
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\obj\Debug\netcoreapp3.1\Exelon.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\obj\Debug\netcoreapp3.1\Exelon.Infrastructure.csproj.CopyComplete
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\obj\Debug\netcoreapp3.1\Exelon.Infrastructure.dll
+C:\Development\Exelon_bkp_up\BackEnd\ExelonUnitTest\REACTS Data Manager\Exelon.Infrastructure\obj\Debug\netcoreapp3.1\Exelon.Infrastructure.pdb

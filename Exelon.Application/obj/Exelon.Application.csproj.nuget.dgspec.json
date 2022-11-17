@@ -1,0 +1,150 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Development\\Exelon_bkp_up\\BackEnd\\ExelonUnitTest\\REACTS Data Manager\\Exelon.Application\\Exelon.Application.csproj": {}
+  },
+  "projects": {
+    "C:\\Development\\Exelon_bkp_up\\BackEnd\\ExelonUnitTest\\REACTS Data Manager\\Exelon.Application\\Exelon.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Development\\Exelon_bkp_up\\BackEnd\\ExelonUnitTest\\REACTS Data Manager\\Exelon.Application\\Exelon.Application.csproj",
+        "projectName": "Exelon.Application",
+        "projectPath": "C:\\Development\\Exelon_bkp_up\\BackEnd\\ExelonUnitTest\\REACTS Data Manager\\Exelon.Application\\Exelon.Application.csproj",
+        "packagesPath": "C:\\Users\\sampathhari.tr\\.nuget\\packages\\",
+        "outputPath": "C:\\Development\\Exelon_bkp_up\\BackEnd\\ExelonUnitTest\\REACTS Data Manager\\Exelon.Application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\sampathhari.tr\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "C:\\Development\\Exelon_bkp_up\\BackEnd\\ExelonUnitTest\\REACTS Data Manager\\Exelon.Domain\\Exelon.Domain.csproj": {
+                "projectPath": "C:\\Development\\Exelon_bkp_up\\BackEnd\\ExelonUnitTest\\REACTS Data Manager\\Exelon.Domain\\Exelon.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.AspNetCore.Mvc.Core": {
+              "target": "Package",
+              "version": "[2.2.5, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.4.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Development\\Exelon_bkp_up\\BackEnd\\ExelonUnitTest\\REACTS Data Manager\\Exelon.Domain\\Exelon.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Development\\Exelon_bkp_up\\BackEnd\\ExelonUnitTest\\REACTS Data Manager\\Exelon.Domain\\Exelon.Domain.csproj",
+        "projectName": "Exelon.Domain",
+        "projectPath": "C:\\Development\\Exelon_bkp_up\\BackEnd\\ExelonUnitTest\\REACTS Data Manager\\Exelon.Domain\\Exelon.Domain.csproj",
+        "packagesPath": "C:\\Users\\sampathhari.tr\\.nuget\\packages\\",
+        "outputPath": "C:\\Development\\Exelon_bkp_up\\BackEnd\\ExelonUnitTest\\REACTS Data Manager\\Exelon.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\sampathhari.tr\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.AspNetCore.Mvc.Core": {
+              "target": "Package",
+              "version": "[2.2.5, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.4.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
