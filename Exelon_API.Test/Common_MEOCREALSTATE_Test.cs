@@ -50,7 +50,7 @@ namespace Exelon_API.Test
 
 
             //Act
-            var result = await _CommonController.GetMEOCREALSTATE(1);
+            var result = await _CommonController.GetMEOC(1);
 
             //Assert
             result.Should().NotBeNull();
@@ -74,7 +74,7 @@ namespace Exelon_API.Test
 
 
             //Act
-            var result = await _CommonController.GetMEOCREALSTATE(1);
+            var result = await _CommonController.GetMEOC(1);
 
             //Assert
             result.Should().NotBeNull();
@@ -96,7 +96,7 @@ namespace Exelon_API.Test
 
 
             // Act
-            var result = await _CommonController.CreateMEOCREALSTATE(meocRealStateModel.FirstOrDefault());
+            var result = await _CommonController.CreateMEOC(meocRealStateModel.FirstOrDefault());
 
             //Assert
             Assert.NotNull(result);

@@ -48,7 +48,7 @@ namespace Exelon_API.Test
 
 
             //Act
-            var result = await _commonController.GetCOC(1);
+            var result = await _commonController.GetCOCMaster(1);
             var resval = ((ObjectResult)result).Value;
 
             //Assert
@@ -74,7 +74,7 @@ namespace Exelon_API.Test
 
 
             //Act
-            var result = await _commonController.GetCOC(1);
+            var result = await _commonController.GetCOCMaster(1);
             var resval = ((ObjectResult)result).Value;
 
             //Assert
@@ -96,7 +96,7 @@ namespace Exelon_API.Test
 
 
             // Act
-            var result = await _commonController.CreateCOC(mcocMasterModel.FirstOrDefault());
+            var result = await _commonController.CreateCOCMaster(mcocMasterModel.FirstOrDefault());
 
             //Assert
             Assert.NotNull(result);
@@ -118,7 +118,7 @@ namespace Exelon_API.Test
 
 
             // Act
-            var result = await _commonController.CreateCOC(mcocMasterModel.FirstOrDefault());
+            var result = await _commonController.CreateCOCMaster(mcocMasterModel.FirstOrDefault());
 
             //Assert
             Assert.NotNull(result);
@@ -140,7 +140,7 @@ namespace Exelon_API.Test
 
 
             // Act
-            var result = await _commonController.UpdateCOC(id, mcocMasterModel.FirstOrDefault());
+            var result = await _commonController.UpdateCOCMaster(id, mcocMasterModel.FirstOrDefault());
 
             //Assert
             Assert.NotNull(result);
@@ -162,7 +162,7 @@ namespace Exelon_API.Test
 
 
             // Act
-            var result = await _commonController.UpdateCOC(id, mcocMasterModel.FirstOrDefault());
+            var result = await _commonController.UpdateCOCMaster(id, mcocMasterModel.FirstOrDefault());
 
             //Assert
             Assert.NotNull(result);
@@ -183,7 +183,7 @@ namespace Exelon_API.Test
 
 
             // Act
-            var result = await _commonController.DeleteCOC(id);
+            var result = await _commonController.DeleteCOCMaster(id);
 
             //Assert
             Assert.NotNull(result);
@@ -205,7 +205,7 @@ namespace Exelon_API.Test
 
 
             // Act
-            var result = await _commonController.DeleteCOC(id);
+            var result = await _commonController.DeleteCOCMaster(id);
 
             //Assert
             Assert.NotNull(result);
